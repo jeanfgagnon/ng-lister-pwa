@@ -1,0 +1,37 @@
+<div #container fxLayout="column" fxLayoutAlign="stretch stretch">
+
+  <div class='pad10' fxFlexFill>
+    <mat-card-title>List Management</mat-card-title>
+
+    <form *ngIf="formVisible" (submit)="formSubmitted($event)">
+
+      <mat-form-field class="example-form-field" style='width: 150px;'>
+        <mat-label>List name</mat-label>
+        <input name="txtListName" matInput type="text" [(ngModel)]="listName">
+      </mat-form-field>
+      &nbsp;<button mat-raised-button color="primary" [disabled]="listName===''">Add</button>&nbsp;
+      <button mat-raised-button color="accent" type="button" (click)="toggleFormVisibility()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <br />
+      <mat-divider></mat-divider>
+
+    </form>
+
+    <div *ngIf="headers">
+      <mat-card-subtitle>Existing lists</mat-card-subtitle>
+      <div #scrollDiv class='prel scroll'>
+        <mat-nav-list>
+          <a mat-list-item *ngFor="let header of headers" [routerLink]="['/ManageItem', header.id]">{{ header.name }}</a>
+        </mat-nav-list>
+      </div>
+    </div>
+
+    <button mat-mini-fab color="primary" type="button" (click)="toggleFormVisibility()" class="add-fab"
+      matTooltip="Add list">
+      <mat-icon *ngIf="!formVisible">add</mat-icon>
+      <mat-icon *ngIf="formVisible">remove</mat-icon>
+    </button>
+
+  </div>
+</div>
