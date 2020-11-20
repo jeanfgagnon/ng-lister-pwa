@@ -64,7 +64,6 @@ export class ManageListComponent implements OnInit, AfterViewInit {
   // privates
 
   private replaceScollerDiv(): void {
-    console.log('ot', this.scrollDiv.nativeElement.offsetTop)
     let h = window.innerHeight - (this.container.nativeElement.offsetTop + this.scrollDivTop);
     if (this.formVisible) {
       h -= 40;
@@ -72,7 +71,6 @@ export class ManageListComponent implements OnInit, AfterViewInit {
     else {
       h += 30;
     }
-    console.log('h de marde', h);
     this.scrollDiv.nativeElement.style.height = `${h}px`;
   }
 }

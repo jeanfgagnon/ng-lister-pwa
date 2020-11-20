@@ -4,8 +4,11 @@
     <mat-toolbar>Menu</mat-toolbar>
 
     <mat-nav-list>
-      <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
-      <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/ManageList']">Manage List</a>
+
+      <a *ngIf="isHandset$ | async" mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
+      <a *ngIf="isHandset$ | async" mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/ManageList']">Manage List</a>
+      <a *ngIf="!(isHandset$ | async)" mat-list-item href="#" [routerLink]="['/Liste']">List</a>
+      <a *ngIf="!(isHandset$ | async)" mat-list-item href="#" [routerLink]="['/ManageList']">Manage List</a>
       <mat-divider></mat-divider>
       <a mat-list-item href="#">Link 3</a>
 
