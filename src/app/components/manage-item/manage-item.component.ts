@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ListHeader } from 'src/app/models/list-header';
 
 import { PersistService } from 'src/app/services/persist.service';
@@ -15,6 +15,7 @@ export class ManageItemComponent implements OnInit {
   public header = new ListHeader();
 
   constructor(
+    private route: Router,
     private activatedRoute: ActivatedRoute,
     private persistService: PersistService
   ) {
@@ -29,9 +30,12 @@ export class ManageItemComponent implements OnInit {
     });
   }
 
+  // event handlers
+
+  public addItem(): void {
+    this.route.navigate(['/EditItem', this.header.id, ''])
+  }
+
   // helpers
 
-  public get xxheader(): ListHeader {
-    return this.header;
-  }
 }

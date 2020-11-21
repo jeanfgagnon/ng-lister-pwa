@@ -18,6 +18,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { ListeComponent } from './components/liste/liste.component';
 import { ManageListComponent } from './components/manage-list/manage-list.component';
 import { ManageItemComponent } from './components/manage-item/manage-item.component';
+import { EditItemComponent } from './components/manage-item/edit-item/edit-item.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ManageItemComponent } from './components/manage-item/manage-item.compon
     MainNavComponent,
     ListeComponent,
     ManageListComponent,
-    ManageItemComponent
+    ManageItemComponent,
+    EditItemComponent
   ],
   imports: [
     BrowserModule,
