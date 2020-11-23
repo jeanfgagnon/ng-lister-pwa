@@ -1,7 +1,7 @@
 .add-fab {
   position: fixed;
   right: 20px;
-  bottom: 10px;
+  bottom: 55px;
   left: auto;
 }
 
@@ -9,4 +9,9 @@
   margin-top: 20px;
   color: #808080;
   text-align: center;
+}
+
+.pos-bottom {
+  position: fixed;
+  bottom: 0;
 }

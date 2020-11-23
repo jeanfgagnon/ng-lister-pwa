@@ -61,13 +61,7 @@ export class ManageItemComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
       if (dialogResult) {
-        for(let i = 0; i < this.listItems.length; i++) {
-          this.persistService.delete('items', this.listItems[i].id).subscribe(() => {
-
-          });
-        }
-        this.listItems = [];
-        this.itemSubject.next(this.listItems);
+        this.clearList();
       }
     });
   }
@@ -81,7 +75,10 @@ export class ManageItemComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(dialogResult => {
       if (dialogResult) {
-        console.log('ok on delete la liste');
+        this.clearList();
+        this.persistService.delete('headers', this.header.id).subscribe(() => {
+          this.route.navigateByUrl('/ManageList');
+        });
       }
     });
   }
@@ -113,9 +110,22 @@ export class ManageItemComponent implements OnInit {
   }
 
   public addItem(): void {
-    this.route.navigate(['/EditItem', this.header.id, ''])
+    this.route.navigate(['/EditItem', this.header.id, '']);
   }
 
   // helpers
+
+  // privates
+
+  private clearList(): void {
+    for (let i = 0; i < this.listItems.length; i++) {
+      this.persistService.delete('items', this.listItems[i].id).subscribe(() => {
+        // noop
+      });
+    }
+
+    this.listItems = [];
+    this.itemSubject.next(undefined);
+  }
 
 }

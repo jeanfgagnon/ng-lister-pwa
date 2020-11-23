@@ -1,13 +1,27 @@
 <div class='pad10'>
-  <mat-card-title>Manage list <b [contentEditable]="true" (keypress)="onKeypress($event)" (input)="onNameChanged($event)">{{ title }}</b></mat-card-title><br />
+  <mat-card-title>Manage list
+    <b
+      [contentEditable]="true"
+      (keypress)="onKeypress($event)"
+      (input)="onNameChanged($event)">{{ title }}
+    </b>
+  </mat-card-title><br />
 
-  <button *ngIf="itemSubject$ | async" mat-icon-button aria-label="Clear item list" (click)="confirmClear()">
-    <mat-icon>delete_sweep</mat-icon>
-  </button>
+  <mat-toolbar class='pos-bottom' fxLayoutAlign="space-evenly center">
 
-  <button mat-icon-button aria-label="Delete list" (click)="confirmDelete()">
-    <mat-icon>delete_forever</mat-icon>
-  </button>
+    <button mat-icon-button aria-label="Diggiddine">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+
+    <button *ngIf="itemSubject$ | async" mat-icon-button aria-label="Clear item list" (click)="confirmClear()">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
+
+    <button mat-icon-button aria-label="Delete list" (click)="confirmDelete()">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+
+  </mat-toolbar>
 
   <div class="list-item" *ngIf="itemSubject$ | async as items; else loading">
     <mat-card-subtitle>Existing items</mat-card-subtitle>
