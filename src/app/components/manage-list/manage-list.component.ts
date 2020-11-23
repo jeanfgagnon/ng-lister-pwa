@@ -11,16 +11,13 @@ import { PersistService } from 'src/app/services/persist.service';
   templateUrl: './manage-list.component.html',
   styleUrls: ['./manage-list.component.scss']
 })
-export class ManageListComponent implements OnInit, AfterViewInit {
+export class ManageListComponent implements OnInit {
 
   public listName = '';
   public formVisible = false;
   public headers: ListHeader[] = [];
 
   private scrollDivTop = 0;
-
-  @ViewChild('container') container!: ElementRef;
-  @ViewChild('scrollDiv') scrollDiv!: ElementRef;
 
   constructor(
     private persistService: PersistService
@@ -30,13 +27,6 @@ export class ManageListComponent implements OnInit, AfterViewInit {
     this.persistService.query("headers").subscribe((pair: any) => {
       this.headers.push(pair.value);
     });
-  }
-
-  ngAfterViewInit(): void {
-    //this.container.nativeElement.style.height = (window.innerHeight - this.container.nativeElement.offsetTop - 10) + 'px';
-    this.scrollDiv.nativeElement.style.width = `${window.innerWidth - this.scrollDiv.nativeElement.offsetLeft - 10}px`;
-    this.scrollDivTop = this.scrollDiv.nativeElement.offsetTop;
-    this.replaceScollerDiv();
   }
 
   // event handlers
@@ -49,28 +39,24 @@ export class ManageListComponent implements OnInit, AfterViewInit {
         this.headers.push(h);
         this.listName = '';
         this.formVisible = false;
-        this.replaceScollerDiv();
       });
     }
   }
 
   // helpers
 
+  public get sortedHeaders(): ListHeader[] {
+    return this.headers.sort((a: ListHeader, b: ListHeader) => {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+      return 0;
+    });
+  }
+
   public toggleFormVisibility() {
     this.formVisible = !this.formVisible;
-    this.replaceScollerDiv();
   }
 
   // privates
 
-  private replaceScollerDiv(): void {
-    let h = window.innerHeight - (this.container.nativeElement.offsetTop + this.scrollDivTop);
-    if (this.formVisible) {
-      h -= 40;
-    }
-    else {
-      h += 30;
-    }
-    this.scrollDiv.nativeElement.style.height = `${h}px`;
-  }
 }

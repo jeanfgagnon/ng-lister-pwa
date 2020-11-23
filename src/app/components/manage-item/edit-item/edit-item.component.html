@@ -1,7 +1,40 @@
 <div class='pad10'>
-  <mat-card-title>{{ verb }} item for <b>{{ header.name }}</b> List</mat-card-title>
+  <mat-card-title>{{ verb }} item for <b>{{ header.name }}</b></mat-card-title>
 
-  <div class='tar'>
-    <button mat-raised-button color="accent" (click)="cancel()">Cancel</button>
-  </div>
+  <form (submit)="formSubmitted($event)">
+
+    <mat-form-field class="cpc">
+      <mat-label>Item text</mat-label>
+      <input name="txtItemText" matInput type="text" [(ngModel)]="item.text">
+    </mat-form-field>
+
+    <mat-checkbox color="primary" name="chkSubItem" [(ngModel)]="subItem">Add sub item</mat-checkbox>
+
+    <div *ngIf="subItem" class="cpc">
+
+      <mat-form-field class="cpc">
+        <mat-label>Sub item 1 text</mat-label>
+        <input name="txtSubText1" matInput type="text" [(ngModel)]="subItemText1">
+      </mat-form-field>
+
+      <mat-form-field class="cpc">
+        <mat-label>Sub item 2 text</mat-label>
+        <input name="txtSubText2" matInput type="text" [(ngModel)]="subItemText2">
+      </mat-form-field>
+
+    </div>
+
+    <br />
+
+    <div fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" [disabled]="item.text===''">Save</button>&nbsp;
+      <button mat-raised-button color="accent" type="button" (click)="cancel()">Return</button>
+    </div>
+
+    <br />
+    <br />
+    <mat-checkbox *ngIf="verb==='Add'" class="add-more" color="primary" name="chkAddMore" [(ngModel)]="addMore">Continue adding item</mat-checkbox>
+
+  </form>
+
 </div>

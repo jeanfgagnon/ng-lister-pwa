@@ -1,11 +1,16 @@
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-html, body {
+html,
+body {
   height: 100%;
   min-height: 100%;
   padding: 0;
   margin: 0;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+body {
+  overflow: hidden;
 }
 
 .orange {
@@ -23,4 +28,8 @@ html, body {
 
 .tar {
   text-align: right;
+}
+
+.cpc {
+  width: 100%;
 }

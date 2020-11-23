@@ -3,8 +3,9 @@ import { Subject, ReplaySubject, Observable, Observer } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { ListHeader } from '../models/list-header';
+import { ListItem } from '../models/list-item';
 
-const VERSION = 3;
+const VERSION = 1;
 const STORE_NAME = 'lister-pwa';
 
 @Injectable({
@@ -122,7 +123,8 @@ export class PersistService {
     });
   }
 
-  public query(storeName: string): Observable<any> {
+  // retourne la clef et l'objet pour tout le store itérativement
+  public query(storeName: string, valueOnly = false): Observable<any> {
     console.log('localdb.query()');
     return new Observable((observer: Observer<any>) => {
       try {
@@ -146,11 +148,48 @@ export class PersistService {
           req.onsuccess = function (e: any) {
             const cursor = e.target.result;
             if (cursor) {
-              observer.next({ key: cursor.key, value: cursor.value });
+              if (valueOnly) {
+                observer.next(cursor.value);
+              }
+              else {
+                observer.next({ key: cursor.key, value: cursor.value });
+              }
               cursor.continue();
             } else {
               observer.complete();
             }
+          };
+        });
+      } catch (err) {
+        observer.error(err);
+      }
+    });
+  }
+
+  delete(storeName: string, key: any): Observable<any> {
+    console.log('localdb.delete()');
+    return new Observable((observer: Observer<any>) => {
+      try {
+        console.log('localdb.delete() - subscribed!');
+        this.db.pipe(
+          take(1)
+        ).subscribe(db => {
+          console.log('localdb.delete() got db:', db);
+          if (!db) {
+            observer.error('IndexDB not supported!');
+            return;
+          }
+
+          const txn = db.transaction([storeName], 'readwrite');
+          const store = txn.objectStore(storeName);
+          const req = store.delete(key);
+          req.onerror = function(e: any) {
+            observer.error(e.target.error);
+            return;
+          };
+          req.onsuccess = function(e: any) {
+            observer.next(e.target.result);
+            observer.complete();
           };
         });
       } catch (err) {
@@ -197,7 +236,16 @@ export class PersistService {
     return rv;
   }
 
+  public newItemInstance(idHeader: string): ListItem {
+    const rv: ListItem = {
+      id: this.uuidv4(),
+      idHeader: idHeader,
+      text: '',
+      checked: false
+    };
 
+    return rv;
+  }
 
   // privates
 
