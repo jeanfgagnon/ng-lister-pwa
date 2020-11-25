@@ -8,22 +8,47 @@
       <input name="txtItemText" matInput type="text" [(ngModel)]="item.text">
     </mat-form-field>
 
-    <mat-checkbox color="primary" name="chkSubItem" [(ngModel)]="subItem">Add sub item</mat-checkbox>
-
-    <div *ngIf="subItem" class="cpc">
-
-      <mat-form-field class="cpc">
-        <mat-label>Sub item 1 text</mat-label>
-        <input name="txtSubText1" matInput type="text" [(ngModel)]="subItemText1">
-      </mat-form-field>
-
-      <mat-form-field class="cpc">
-        <mat-label>Sub item 2 text</mat-label>
-        <input name="txtSubText2" matInput type="text" [(ngModel)]="subItemText2">
-      </mat-form-field>
-
+    <!-- <mat-checkbox color="primary" name="chkSubItem" [(ngModel)]="hasSubItem">Add sub item</mat-checkbox> -->
+    <div (click)="onIncrementSubItem()" [ngClass]="canAddSubItem() ? '' : 'disabled'" fxLayoutAlign="start center">
+      <mat-icon>add_circle</mat-icon>&nbsp;
+      <span>Add Sub Item</span>
     </div>
 
+    <!-- <div (click)="onIncrementSubItem(1)" fxLayoutAlign="start center">
+      <mat-icon [color]="canAddSubItem() ? 'primary' : ''">add_circle</mat-icon>&nbsp;
+      <span [ngClass]="canAddSubItem() ? '' : 'disabled'">Add Sub Item</span>
+    </div> -->
+
+    <div *ngIf="nbSubItem > 0" class="cpc">
+      <br />
+      <div fxLayout='row'>
+        <div fxFlex="85">
+          <mat-form-field class="cpc">
+            <mat-label>Sub item #1</mat-label>
+            <input name="txtSubText1" matInput type="text" [(ngModel)]="subItemText1">
+          </mat-form-field>
+        </div>
+        <div fxFlex="15">
+          <button mat-icon-button type="button" (click)="onDecrementSubItem()">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div fxLayout fxLayout='row' *ngIf="nbSubItem > 1">
+        <div fxFlex="85">
+
+          <mat-form-field class="cpc">
+            <mat-label>Sub item #2</mat-label>
+            <input name="txtSubText2" matInput type="text" [(ngModel)]="subItemText2">
+          </mat-form-field>
+        </div>
+        <div fxFlex="15">
+          <button mat-icon-button type="button" (click)="onDecrementSubItem()">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
     <br />
 
     <div fxLayoutAlign="end center">
@@ -33,7 +58,8 @@
 
     <br />
     <br />
-    <mat-checkbox *ngIf="verb==='Add'" class="add-more" color="primary" name="chkAddMore" [(ngModel)]="addMore">Continue adding item</mat-checkbox>
+    <mat-checkbox *ngIf="verb==='Add'" class="add-more" color="primary" name="chkAddMore" [(ngModel)]="addMore">Continue
+      adding item</mat-checkbox>
 
   </form>
 

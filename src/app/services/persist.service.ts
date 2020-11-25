@@ -4,6 +4,7 @@ import { take } from 'rxjs/operators';
 
 import { ListHeader } from '../models/list-header';
 import { ListItem } from '../models/list-item';
+import { SubItem } from '../models/sub-item';
 
 const VERSION = 1;
 const STORE_NAME = 'lister-pwa';
@@ -247,9 +248,21 @@ export class PersistService {
     return rv;
   }
 
+  public newSubitemInstance(idItem: string): SubItem {
+    const rv: SubItem = {
+      id: this.uuidv4(),
+      idItem: idItem,
+      text: '',
+      rank: 0,
+      checked: false
+    };
+
+    return rv;
+  }
+
   // privates
 
-  private uuidv4() {
+  private uuidv4(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);

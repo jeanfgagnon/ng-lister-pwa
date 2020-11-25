@@ -9,8 +9,8 @@
 
   <mat-toolbar class='pos-bottom' fxLayoutAlign="space-evenly center">
 
-    <button mat-icon-button aria-label="Diggiddine">
-      <mat-icon>keyboard_arrow_left</mat-icon>
+    <button mat-icon-button aria-label="Diggiddine" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
     </button>
 
     <button *ngIf="itemSubject$ | async" mat-icon-button aria-label="Clear item list" (click)="confirmClear()">

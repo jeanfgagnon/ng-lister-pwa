@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -31,6 +32,7 @@ export class ManageItemComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private persistService: PersistService,
     public dialog: MatDialog,
+    private location: Location
   ) {
   }
 
@@ -111,6 +113,10 @@ export class ManageItemComponent implements OnInit {
 
   public addItem(): void {
     this.route.navigate(['/EditItem', this.header.id, '']);
+  }
+
+  public goBack(): void {
+    this.location.back();
   }
 
   // helpers
