@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { ListHeader } from 'src/app/models/list-header';
 import { PersistService } from 'src/app/services/persist.service';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
+import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-edit-item',
@@ -32,7 +35,8 @@ export class EditItemComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private persistService: PersistService,
-    private location: Location
+    private location: Location,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -58,6 +62,26 @@ export class EditItemComponent implements OnInit {
   }
 
   // event handlers
+
+  public onDeleteItem(): void {
+    const dialogData = new ConfirmDialogModel("You want to delete this item?", "Confirm Action");
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "300px",
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
+      if (dialogResult) {
+        this.persistService.delete('items', this.item.id).subscribe(() => {
+          for (let i = 0; i < this.subItems.length; i++) {
+            this.persistService.delete('subitems', this.subItems[i].id).subscribe(() => {
+              this.location.back();
+            });
+          }
+        });
+      }
+    });
+  }
 
   public onIncrementSubItem(): void {
     if (this.canAddSubItem()) {
@@ -87,22 +111,20 @@ export class EditItemComponent implements OnInit {
 
   public formSubmitted(e: Event) {
 
-    let listItem;
+    let listItem = this.item;
+
     if (this.verb === 'Add') {
       listItem = this.persistService.newItemInstance(this.header.id);
       listItem.text = this.item.text;
     }
-    else {
-      listItem = this.item;
-    }
 
     this.persistService.put('items', listItem.id, listItem).subscribe((key: any) => {
-      this.saveSubitems();
+      this.saveSubitems(listItem.id);
       if (this.addMore) {
         this.reset();
       }
       else {
-        this.location.back(); // ou navigate pour le reload? weeeellll sees ssoon
+        this.location.back();
       }
     });
   }
@@ -117,7 +139,7 @@ export class EditItemComponent implements OnInit {
 
   // private
 
-  private loadSubitems(idItem: string) {
+  private loadSubitems(idItem: string): void {
     this.subItems = [];
     this.persistService.query('subitems', true).subscribe((si: SubItem) => {
       if (si.idItem === idItem) {
@@ -134,9 +156,9 @@ export class EditItemComponent implements OnInit {
     });
   }
 
-  private saveSubitems(): void {
-    if (this.validateSubitemText()) {
-      let subItem = this.persistService.newSubitemInstance(this.item.id);
+  private saveSubitems(idItem: string): void {
+    if (this.nbSubItem > 0) {
+      let subItem = this.persistService.newSubitemInstance(idItem);
       if (this.subItems.length > 0) {
         subItem = this.subItems[0];
       }
@@ -144,31 +166,20 @@ export class EditItemComponent implements OnInit {
       subItem.rank = 1;
       this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
         if (this.subItemText2) {
-          subItem = this.persistService.newSubitemInstance(this.item.id);
+          subItem = this.persistService.newSubitemInstance(idItem);
           if (this.subItems.length > 1) {
             subItem = this.subItems[1];
           }
           subItem.text = this.subItemText2;
           subItem.rank = 2;
-          this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
-
-          });
+          this.persistService.put('subitems', subItem.id, subItem).subscribe(() => { /* noop */ });
         }
       });
     }
-  }
 
-  private validateSubitemText(): boolean {
-    if (this.subItemText1 || this.subItemText2) {
-      if (!this.subItemText1) {
-        this.subItemText1 = this.subItemText2;
-        this.subItemText2 = '';
-      }
-
-      return true;
+    for (let i = this.nbSubItem; i < this.subItems.length; i++) {
+      this.persistService.delete('subitems', this.subItems[i].id).subscribe(() => { /* noop */});
     }
-
-    return false;
   }
 
   private reset(): void {

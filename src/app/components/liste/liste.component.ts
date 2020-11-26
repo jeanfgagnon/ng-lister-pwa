@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { MatTabGroup } from '@angular/material/tabs';
 import { ListHeader } from 'src/app/models/list-header';
 
 import { PersistService } from 'src/app/services/persist.service';
@@ -8,19 +9,41 @@ import { PersistService } from 'src/app/services/persist.service';
   templateUrl: './liste.component.html',
   styleUrls: ['./liste.component.scss']
 })
-export class ListeComponent implements OnInit {
+export class ListeComponent implements OnInit, AfterViewInit {
 
   public headers: ListHeader[] = [];
+
+  @ViewChild('tabgroup') tabgroup!: MatTabGroup;
 
   constructor(
     private persistService: PersistService
   ) { }
 
   ngOnInit(): void {
-    this.persistService.query("headers").subscribe((pair: any) => {
-      this.headers.push(pair.value);
-    });
+    this.persistService.query("headers", true).subscribe(
+      (header: ListHeader) => {
+        this.headers.push(header);
+      },
+      (err) => {
+        console.log('Error %s', err);
+      },
+      () => {
+        console.log('---------HEADERS LOADED');
+      }
+    );
+  }
 
+  ngAfterViewInit() {
+    this.tabgroup.selectedIndex = 0;
+  }
+
+  // helpers
+  public get sortedHeaders(): ListHeader[] {
+    return this.headers.sort((a: ListHeader, b: ListHeader) => {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+      return 0;
+    });
   }
 
 }

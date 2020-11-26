@@ -1,5 +1,5 @@
-<mat-tab-group >
-  <mat-tab *ngFor="let header of headers" label="{{ header.name }}">
+<mat-tab-group #tabgroup>
+  <mat-tab *ngFor="let header of sortedHeaders" label="{{ header.name }}">
     {{ header.id }}
   </mat-tab>
 

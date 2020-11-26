@@ -3,6 +3,7 @@ import { ElementRef } from '@angular/core';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ListHeader } from 'src/app/models/list-header';
+import { ListItem } from 'src/app/models/list-item';
 
 import { PersistService } from 'src/app/services/persist.service';
 
@@ -16,16 +17,19 @@ export class ManageListComponent implements OnInit {
   public listName = '';
   public formVisible = false;
   public headers: ListHeader[] = [];
-
-  private scrollDivTop = 0;
+  public allItems: ListItem[] = [];
 
   constructor(
     private persistService: PersistService
   ) { }
 
   ngOnInit(): void {
-    this.persistService.query("headers").subscribe((pair: any) => {
-      this.headers.push(pair.value);
+    this.persistService.query("headers", true).subscribe((header: ListHeader) => {
+      this.headers.push(header);
+    });
+
+    this.persistService.query("items", true).subscribe((item: ListItem) => {
+      this.allItems.push(item);
     });
   }
 
@@ -44,6 +48,15 @@ export class ManageListComponent implements OnInit {
   }
 
   // helpers
+
+  public itemCount(idHeader: string): string {
+    let rv = '';
+    const count = this.allItems.filter(x=>x.idHeader === idHeader).length;
+    if (count > 0) {
+      rv = `(${count})`;
+    }
+    return rv;
+  }
 
   public get sortedHeaders(): ListHeader[] {
     return this.headers.sort((a: ListHeader, b: ListHeader) => {

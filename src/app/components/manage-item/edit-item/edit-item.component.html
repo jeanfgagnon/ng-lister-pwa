@@ -3,10 +3,19 @@
 
   <form (submit)="formSubmitted($event)">
 
-    <mat-form-field class="cpc">
-      <mat-label>Item text</mat-label>
-      <input name="txtItemText" matInput type="text" [(ngModel)]="item.text">
-    </mat-form-field>
+    <div fxLayout='row'>
+      <div fxFlex="85">
+        <mat-form-field class="cpc">
+          <mat-label>Item text</mat-label>
+          <input name="txtItemText" matInput type="text" [(ngModel)]="item.text">
+        </mat-form-field>
+      </div>
+      <div fxFlex="15">
+        <button mat-icon-button type="button" (click)="onDeleteItem()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
 
     <!-- <mat-checkbox color="primary" name="chkSubItem" [(ngModel)]="hasSubItem">Add sub item</mat-checkbox> -->
     <div (click)="onIncrementSubItem()" [ngClass]="canAddSubItem() ? '' : 'disabled'" fxLayoutAlign="start center">
@@ -29,7 +38,7 @@
           </mat-form-field>
         </div>
         <div fxFlex="15">
-          <button mat-icon-button type="button" (click)="onDecrementSubItem()">
+          <button mat-icon-button type="button" (click)="onDecrementSubItem()" *ngIf="nbSubItem===1">
             <mat-icon>delete_outline</mat-icon>
           </button>
         </div>

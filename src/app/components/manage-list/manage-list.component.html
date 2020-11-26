@@ -22,7 +22,9 @@
       <mat-card-subtitle>Existing lists</mat-card-subtitle>
       <div class='scroll-container'>
         <mat-nav-list>
-          <a mat-list-item *ngFor="let header of sortedHeaders" [routerLink]="['/ManageItem', header.id]">{{ header.name }}</a>
+          <a mat-list-item *ngFor="let header of sortedHeaders" [routerLink]="['/ManageItem', header.id]">
+            {{ header.name }} {{ itemCount(header.id) }}
+          </a>
         </mat-nav-list>
       </div>
     <!-- </div> -->
