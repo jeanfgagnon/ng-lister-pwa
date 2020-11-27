@@ -1,4 +1,4 @@
-<mat-tab-group #tabgroup>
+<mat-tab-group #tabgroup *ngIf="loaded">
   <mat-tab *ngFor="let header of sortedHeaders" label="{{ header.name }}">
     {{ header.id }}
   </mat-tab>
