@@ -20,6 +20,8 @@ import { ManageListComponent } from './components/manage-list/manage-list.compon
 import { ManageItemComponent } from './components/manage-item/manage-item.component';
 import { EditItemComponent } from './components/manage-item/edit-item/edit-item.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { CheckListComponent } from './components/check-list/check-list.component';
+import { CheckItemComponent } from './components/check-item/check-item.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     ManageListComponent,
     ManageItemComponent,
     EditItemComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CheckListComponent,
+    CheckItemComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 <mat-tab-group #tabgroup *ngIf="loaded">
+
   <mat-tab *ngFor="let header of sortedHeaders" label="{{ header.name }}">
-    {{ header.id }}
+    <app-check-list [idHeader]="header.id"></app-check-list>
   </mat-tab>
 
 </mat-tab-group>
