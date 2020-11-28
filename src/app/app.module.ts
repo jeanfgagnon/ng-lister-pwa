@@ -43,12 +43,7 @@ import { CheckItemComponent } from './components/check-item/check-item.component
     ReactiveFormsModule,
     FlexLayoutModule,
     MyMaterialModule,
-    LayoutModule,
-    // MatToolbarModule,
-    // MatButtonModule,
-    // MatSidenavModule,
-    // MatIconModule,
-    // MatListModule,
+    LayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

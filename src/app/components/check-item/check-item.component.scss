@@ -1,10 +1,18 @@
+:root {
+  --my-scale: 1;
+}
+
+.kingsize {
+  --my-scale: 1.5;
+}
+
 .check-item {
   font-size: 16pt;
 }
 
-.mat-checkbox-frame.kingsize,
-.mat-checkbox-background.kingsize,
-.mat-checkbox-anim-unchecked-checked.kingsize
-.mat-checkbox-anim-checked-unchecked.kingsize {
-  transform: scale(1.5);
+.mat-checkbox-frame,
+.mat-checkbox-background,
+.mat-checkbox-anim-unchecked-checked
+.mat-checkbox-anim-checked-unchecked {
+  transform: scale(var(--my-scale));
 }
