@@ -1,0 +1,10 @@
+.check-item {
+  font-size: 16pt;
+}
+
+.mat-checkbox-frame.kingsize,
+.mat-checkbox-background.kingsize,
+.mat-checkbox-anim-unchecked-checked.kingsize
+.mat-checkbox-anim-checked-unchecked.kingsize {
+  transform: scale(1.5);
+}

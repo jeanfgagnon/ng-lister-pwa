@@ -1,0 +1,14 @@
+<div fxLayout='row'>
+  <div class="check-item" fxFlex="40">
+    <mat-checkbox class='kingsize' color="primary"> {{ item?.text }}</mat-checkbox>
+  </div>
+
+  <div fxFlex="30" *ngIf="subItems.length > 0">
+    <mat-checkbox color="primary"> {{ subItems[0].text }}</mat-checkbox>
+
+  </div>
+  <div fxFlex="30" *ngIf="subItems.length > 1">
+    <mat-checkbox color="primary"> {{ subItems[1].text }}</mat-checkbox>
+
+  </div>
+</div>
