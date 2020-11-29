@@ -17,7 +17,6 @@
       </div>
     </div>
 
-    <!-- <mat-checkbox color="primary" name="chkSubItem" [(ngModel)]="hasSubItem">Add sub item</mat-checkbox> -->
     <div (click)="onIncrementSubItem()" [ngClass]="canAddSubItem() ? '' : 'disabled'" fxLayoutAlign="start center">
       <mat-icon>add_circle</mat-icon>&nbsp;
       <span>Add Sub Item</span>
@@ -67,8 +66,9 @@
 
     <br />
     <br />
-    <mat-checkbox *ngIf="verb==='Add'" class="add-more" color="primary" name="chkAddMore" [(ngModel)]="addMore">Continue
-      adding item</mat-checkbox>
+    <mat-checkbox *ngIf="verb==='Add'" class="add-more" color="primary" name="chkAddMore" [(ngModel)]="addMore">
+      Continue adding item
+    </mat-checkbox>
 
   </form>
 

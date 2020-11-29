@@ -26,4 +26,13 @@ export class CheckListComponent implements OnInit {
     });
   }
 
+  // helpers
+
+  public get sortedItems(): ListItem[] {
+    return this.items.sort((i1: ListItem, i2: ListItem) => {
+      const i1check = i1.checked ? 1 : 0;
+      const i2check = i2.checked ? 1 : 0;
+      return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
+    })
+  }
 }

@@ -25,8 +25,6 @@ export class EditItemComponent implements OnInit {
   public subItems: SubItem[] = [];
   public nbSubItem = 0;
   public addMore = false;
-  public itemText = '';
-  public hasSubItem = false;
   public subItemText1 = '';
   public subItemText2 = '';
 
@@ -145,7 +143,6 @@ export class EditItemComponent implements OnInit {
       if (si.idItem === idItem) {
         this.subItems.push(si);
         this.nbSubItem++;
-        this.hasSubItem = true;
         if (si.rank === 1) {
           this.subItemText1 = si.text;
         }
@@ -183,9 +180,9 @@ export class EditItemComponent implements OnInit {
   }
 
   private reset(): void {
-    this.itemText = '';
+    this.item.text = '';
+    this.nbSubItem = 0;
     this.subItemText1 = '';
     this.subItemText2 = '';
-    this.hasSubItem = false;
   }
 }

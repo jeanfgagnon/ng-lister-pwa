@@ -1,6 +1,6 @@
 <div fxLayout='row'>
 
-  <div class="check-item kingsize" fxFlex="40" *ngIf="item">
+  <div class="main-item kingsize" fxFlex="40" *ngIf="item">
     <mat-checkbox color="primary" (change)="onCheckboxChange($event, 0)" [checked]="item.checked">
       {{ item?.text }}</mat-checkbox>
   </div>

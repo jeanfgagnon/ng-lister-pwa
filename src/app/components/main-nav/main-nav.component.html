@@ -6,11 +6,12 @@
     <mat-nav-list>
 
       <a *ngIf="isHandset$ | async" mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
-      <a *ngIf="isHandset$ | async" mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/ManageList']">Manage List</a>
       <a *ngIf="!(isHandset$ | async)" mat-list-item href="#" [routerLink]="['/Liste']">List</a>
-      <a *ngIf="!(isHandset$ | async)" mat-list-item href="#" [routerLink]="['/ManageList']">Manage List</a>
+      <a *ngIf="isHandset$ | async" mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">Consolidated</a>
+      <a *ngIf="!(isHandset$ | async)" mat-list-item href="#" [routerLink]="['/Liste']">Consolidated</a>
       <mat-divider></mat-divider>
-      <a mat-list-item href="#">Link 3</a>
+      <a *ngIf="isHandset$ | async" mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/ManageList']">Manage List</a>
+      <a *ngIf="!(isHandset$ | async)" mat-list-item href="#" [routerLink]="['/ManageList']">Manage List</a>
 
     </mat-nav-list>
   </mat-sidenav>

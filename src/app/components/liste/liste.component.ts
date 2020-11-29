@@ -36,6 +36,13 @@ export class ListeComponent implements OnInit {
   }
 
   // helpers
+
+  // return mat-tab label and an * when there is checked item in the list
+  public getLabel(h: ListHeader): string {
+    let rv = h.name;
+    return rv;
+  }
+
   public get sortedHeaders(): ListHeader[] {
     if (!this.loaded) {
       setTimeout(() => { this.tabgroup.selectedIndex = 0 });
