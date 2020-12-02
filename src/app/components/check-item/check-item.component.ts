@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
@@ -17,6 +17,7 @@ export class CheckItemComponent implements OnInit {
   public subItems: SubItem[] = [];
 
   @Input() item!: ListItem;
+  @Output() checkChange = new EventEmitter<boolean>();
 
   constructor(
     private persistService: PersistService,
@@ -34,16 +35,20 @@ export class CheckItemComponent implements OnInit {
 
   // event handlers
 
-  public onCheckboxChange(event: MatCheckboxChange, srcval: number): void {
-    if (srcval === 0) {
+  public onCheckboxChange(event: MatCheckboxChange, src: number): void {
+    if (src === 0) {
       // persist item
       this.item.checked = event.checked;
-      this.persistService.put('items', this.item.id, this.item).subscribe(() => { /* noop */ });
+      this.persistService.put('items', this.item.id, this.item).subscribe(() => {
+        if (this.checkChange) {
+          this.checkChange.emit(event.checked);
+        }
+       });
     }
     else {
       // persist subitem
-      this.subItems[srcval - 1].checked = event.checked;
-      this.persistService.put('subitems', this.subItems[srcval - 1].id, this.subItems[srcval - 1]).subscribe(() => { /* noop */ });
+      this.subItems[src - 1].checked = event.checked;
+      this.persistService.put('subitems', this.subItems[src - 1].id, this.subItems[src - 1]).subscribe(() => { /* noop */ });
     }
   }
 }

@@ -231,7 +231,8 @@ export class PersistService {
   public newHeaderInstance(): ListHeader {
     const rv: ListHeader = {
       id: this.uuidv4(),
-      name: 'xxx'
+      name: 'xxx',
+      items: []
     };
 
     return rv;

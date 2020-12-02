@@ -1,7 +1,23 @@
 <mat-tab-group #tabgroup *ngIf="loaded">
 
-  <mat-tab *ngFor="let header of sortedHeaders" label="{{ getLabel(header) }}">
-    <app-check-list [idHeader]="header.id"></app-check-list>
+  <mat-tab *ngFor="let header of sortedHeaders">
+
+    <ng-template mat-tab-label>
+      {{ header.name }}
+    </ng-template>
+
+    <app-check-list [header]="header" (itemClicked)="onItemClicked($event)"></app-check-list>
+
+    <mat-toolbar class='pos-bottom quick-div' fxLayoutAlign="space-evenly center">
+
+      Quick add
+      <input class='quick-input' name="txtItemText" type="text" [(ngModel)]="quickText">
+      <button mat-icon-button color="primary" type="button" (click)="onQuickAddClick(header.id)">
+        <mat-icon>add_circle_outline</mat-icon>
+      </button>
+
+    </mat-toolbar>
+
   </mat-tab>
 
 </mat-tab-group>
