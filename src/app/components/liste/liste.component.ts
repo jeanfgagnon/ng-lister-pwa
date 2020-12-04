@@ -92,10 +92,10 @@ export class ListeComponent implements OnInit {
 
   private quickAdd(idHeader: string): void {
     const splitted = this.quickText.split(/[,;]/);
-    const itemText = splitted.shift() as string;
 
     const item = this.persistService.newItemInstance(idHeader);
-    item.text = itemText;
+    item.text = splitted.shift() as string;
+
     this.persistService.put('items', item.id, item).subscribe(() => {
       const header = this.headers.find(x => x.id === idHeader);
       if (header) {
