@@ -24,6 +24,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { CheckListComponent } from './components/check-list/check-list.component';
 import { CheckItemComponent } from './components/check-item/check-item.component';
 import { environment } from '../environments/environment';
+import { DumpDatabaseComponent } from './components/dump-database/dump-database.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { environment } from '../environments/environment';
     EditItemComponent,
     ConfirmDialogComponent,
     CheckListComponent,
-    CheckItemComponent
+    CheckItemComponent,
+    DumpDatabaseComponent
   ],
   imports: [
     BrowserModule,

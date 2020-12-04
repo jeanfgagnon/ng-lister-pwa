@@ -243,7 +243,8 @@ export class PersistService {
       id: this.uuidv4(),
       idHeader: idHeader,
       text: '',
-      checked: false
+      checked: false,
+      subs: []
     };
 
     return rv;
