@@ -4,9 +4,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { MyMaterialModule } from './modules/my-material.module';
 import { MainNavComponent } from './components/main-nav/main-nav.component';
@@ -48,6 +48,7 @@ import { DumpDatabaseComponent } from './components/dump-database/dump-database.
     FlexLayoutModule,
     MyMaterialModule,
     LayoutModule,
+    ClipboardModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],

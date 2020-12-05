@@ -5,7 +5,7 @@ import { PersistService } from 'src/app/services/persist.service';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
-import { combineLatest, forkJoin, Observable, Subscription } from 'rxjs';
+import { combineLatest, forkJoin, Observable, Subscription, zip } from 'rxjs';
 
 import { map } from 'rxjs/operators';
 @Component({
@@ -19,6 +19,8 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
   private items: ListItem[] = [];
   private subItems: SubItem[] = [];
 
+  public json = '';
+
   @ViewChild('dumpzone') dumpzone!: ElementRef;
 
   constructor(
@@ -29,39 +31,18 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.loadTree();
-  }
-
-  // privates
-
-  private loadTree(): void {
-    this.persistService.query('headers', true).subscribe(
-      (header: ListHeader) => {
-        this.headers.push(header);
-      },
-      (error) => { },
-      (/* complete */) => {
-        this.loadItems();
-      }
+    const tree$ = combineLatest(
+      [
+        this.persistService.query('headers', true),
+        this.persistService.query('items', true),
+        this.persistService.query('subitems', true)
+      ]
     );
-  }
-
-  private loadItems(): void {
-    this.persistService.query('items', true).subscribe(
-      (item: ListItem) => {
-        this.items.push(item);
-      },
-      (error) => { },
-      (/* complete */) => {
-        this.loadSubItems();
-      }
-    );
-  }
-
-  private loadSubItems(): void {
-    this.persistService.query('subitems', true).subscribe(
-      (subItem: SubItem) => {
-        this.subItems.push(subItem);
+    tree$.subscribe(
+      ([v1, v2, v3]) => {
+        this.appendObject(this.headers, v1);
+        this.appendObject(this.items, v2);
+        this.appendObject(this.subItems, v3);
       },
       (error) => { },
       (/* complete */) => {
@@ -69,6 +50,14 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
         this.writeTree();
       }
     );
+  }
+
+  // privates
+
+  private appendObject(srcArray: any[], v: ListHeader | ListItem | SubItem): void {
+    if (srcArray.findIndex(x => x.id === v.id) === -1) {
+      srcArray.push(v);
+    }
   }
 
   private tieAll(): void {
@@ -82,6 +71,8 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
   }
 
   private writeTree(): void {
-    this.dumpzone.nativeElement.innerText = JSON.stringify(this.headers, null, 2);
+    this.json = JSON.stringify(this.headers, null, 2)
+    this.dumpzone.nativeElement.innerText = this.json;
   }
+
 }
