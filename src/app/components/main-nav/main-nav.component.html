@@ -6,8 +6,8 @@
     <mat-nav-list>
 
       <div *ngIf="isHandset$ | async">
-        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">Consolidated</a>
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
+        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">Consolidated</a>
         <mat-divider></mat-divider>
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/ManageList']">Manage List</a>
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Dump']">Dump Database</a>

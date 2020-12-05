@@ -5,7 +5,9 @@ import { PersistService } from 'src/app/services/persist.service';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
+import { combineLatest, forkJoin, Observable, Subscription } from 'rxjs';
 
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-dump-database',
   templateUrl: './dump-database.component.html',
@@ -24,39 +26,11 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadTree();
-    // this.persistService.query('headers', true).subscribe(
-    //   (header: ListHeader) => {
-    //     console.log('header ', header.name);
-    //     this.headers.push(header);
-    //     header.items = [];
-    //     this.persistService.query('items', true).subscribe((item: ListItem) => {
-    //       console.log('item ', item.text);
-    //       if (item.idHeader === header.id) {
-    //         header.items.push(item);
-    //         item.subs = [];
-    //         this.persistService.query('subitems', true).subscribe((sub: SubItem) => {
-    //           console.log('subitem ', sub.text);
-    //           if (sub.idItem === item.id) {
-    //             item.subs.push(sub);
-    //           }
-    //         });
-    //       }
-    //     });
-    //   },
-    //   (err) => { },
-    //   () => {
-    //     /* finaly */
-    //     console.log(JSON.stringify(this.headers, null, 2));
-    //   }
-    // );
   }
 
   ngAfterViewInit(): void {
-    this.dumpzone.nativeElement.innerText = "putain\nde\nchameau";
-    setTimeout(() => console.log(JSON.stringify(this.headers, null, 2), 1000));
+    this.loadTree();
   }
-
 
   // privates
 
@@ -92,8 +66,7 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
       (error) => { },
       (/* complete */) => {
         this.tieAll();
-        console.log('all header loaded');
-        console.log(JSON.stringify(this.headers, null, 2));
+        this.writeTree();
       }
     );
   }
@@ -105,5 +78,10 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
         item.subs = this.subItems.filter(x => x.idItem === item.id);
       });
     });
+
+  }
+
+  private writeTree(): void {
+    this.dumpzone.nativeElement.innerText = JSON.stringify(this.headers, null, 2);
   }
 }
