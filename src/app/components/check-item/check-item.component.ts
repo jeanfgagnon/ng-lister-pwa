@@ -40,15 +40,29 @@ export class CheckItemComponent implements OnInit {
       // persist item
       this.item.checked = event.checked;
       this.persistService.put('items', this.item.id, this.item).subscribe(() => {
-        if (this.checkChange) {
-          this.checkChange.emit(event.checked);
+        this.checkChange.emit(event.checked);
+        if (!event.checked) {
+          this.uncheckSubs();
         }
-       });
+      });
     }
     else {
       // persist subitem
       this.subItems[src - 1].checked = event.checked;
       this.persistService.put('subitems', this.subItems[src - 1].id, this.subItems[src - 1]).subscribe(() => { /* noop */ });
+      if (event.checked) {
+        this.item.checked = true;
+        this.persistService.put('items', this.item.id, this.item).subscribe(() => { /* noop */ });
+      }
     }
+  }
+
+  // privates
+
+  private uncheckSubs(): void {
+    this.subItems.forEach((s: SubItem) => {
+      s.checked = false;
+      this.persistService.put('subitems', s.id, s).subscribe(() => { /* noop */ });
+    });
   }
 }

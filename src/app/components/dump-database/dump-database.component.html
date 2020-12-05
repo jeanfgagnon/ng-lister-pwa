@@ -1,6 +1,6 @@
-<div>
-  <button type="button" mat-icon-button [cdkCopyToClipboard]="json">
-    <mat-icon>copy_all</mat-icon>
-  </button>
+<div class='pad10 ovh'>
+  <pre #dumpzone></pre>
 </div>
-<pre #dumpzone></pre>
+<button mat-mini-fab color="primary" type="button" class="clipboard-fab" matTooltip="Copy to clipboard" [cdkCopyToClipboard]="json">
+  <mat-icon>copy_all</mat-icon>
+</button>

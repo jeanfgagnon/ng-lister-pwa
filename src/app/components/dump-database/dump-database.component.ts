@@ -39,10 +39,10 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
       ]
     );
     tree$.subscribe(
-      ([v1, v2, v3]) => {
-        this.appendObject(this.headers, v1);
-        this.appendObject(this.items, v2);
-        this.appendObject(this.subItems, v3);
+      ([header, item, subItem]) => {
+        this.appendObject(this.headers, header);
+        this.appendObject(this.items, item);
+        this.appendObject(this.subItems, subItem);
       },
       (error) => { },
       (/* complete */) => {
