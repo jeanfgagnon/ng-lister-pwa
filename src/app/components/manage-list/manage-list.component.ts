@@ -55,6 +55,7 @@ export class ManageListComponent implements OnInit {
     if (count > 0) {
       rv = `(${count})`;
     }
+
     return rv;
   }
 

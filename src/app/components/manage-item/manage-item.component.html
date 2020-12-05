@@ -7,21 +7,16 @@
     </b>
   </mat-card-title><br />
 
-  <mat-toolbar class='pos-bottom' fxLayoutAlign="space-evenly center">
-
-    <button mat-icon-button aria-label="Diggiddine" (click)="goBack()">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-
-    <button *ngIf="itemSubject$ | async" mat-icon-button aria-label="Clear item list" (click)="confirmClear()">
-      <mat-icon>delete_sweep</mat-icon>
-    </button>
-
-    <button mat-icon-button aria-label="Delete list" (click)="confirmDelete()">
-      <mat-icon>delete_forever</mat-icon>
-    </button>
-
-  </mat-toolbar>
+  <mat-form-field class='cpc' *ngIf="categories" >
+    <mat-select placeholder="Category" name="category" (selectionChange)="onCategorySelected($event)" [(ngModel)]="header.idCategory">
+      <mat-option [value]="0">
+        <span class='red'>One Shot Deal</span>
+      </mat-option>
+      <mat-option *ngFor="let cat of categories" [value]="cat.id">
+        {{ cat.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
   <div class="list-item" *ngIf="itemSubject$ | async as items; else loading">
     <mat-card-subtitle>Existing items</mat-card-subtitle>
@@ -37,6 +32,22 @@
       No item defined yet
     </div>
   </ng-template>
+
+  <mat-toolbar class='pos-bottom' fxLayoutAlign="space-evenly center">
+
+    <button mat-icon-button aria-label="Diggiddine" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <button *ngIf="itemSubject$ | async" mat-icon-button aria-label="Clear item list" (click)="confirmClear()">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
+
+    <button mat-icon-button aria-label="Delete list" (click)="confirmDelete()">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+
+  </mat-toolbar>
 
 </div>
 <button mat-mini-fab color="primary" type="button" class="add-fab" matTooltip="Add item" (click)="addItem()">

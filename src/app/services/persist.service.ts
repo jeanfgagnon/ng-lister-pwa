@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Subject, ReplaySubject, Observable, Observer } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ListCategory } from '../models/list-category';
 
 import { ListHeader } from '../models/list-header';
 import { ListItem } from '../models/list-item';
 import { SubItem } from '../models/sub-item';
 
-const VERSION = 1;
+const VERSION = 2;
 const STORE_NAME = 'lister-pwa';
 
 @Injectable({
@@ -16,6 +17,7 @@ export class PersistService {
 
   private db: Subject<IDBDatabase> = new ReplaySubject<IDBDatabase>(1);
   private database: any;
+  private verbose = false;
 
   constructor() {
 
@@ -23,7 +25,7 @@ export class PersistService {
       this.db.next(undefined);
       this.db.complete();
     } else {
-      console.log(`localdb - requesting open of '${STORE_NAME}' version ${VERSION}`);
+      this.debugLog(`localdb - requesting open of '${STORE_NAME}' version ${VERSION}`);
 
       const openRequest = indexedDB.open(STORE_NAME, VERSION);
       openRequest.onerror = err => {
@@ -32,11 +34,15 @@ export class PersistService {
         this.db.complete();
       };
 
-      openRequest.onupgradeneeded = function (e: any) {
-        console.log('localdb - upgrade needed!');
+      openRequest.onupgradeneeded = (e: any) => {
+        this.debugLog('localdb - upgrade needed!');
 
-        // create object stores for 'rawLogin' and 'rawVisit'
         const db: IDBDatabase = e.target.result;
+
+        db.version
+        if (!db.objectStoreNames.contains('categories')) {
+          db.createObjectStore('categories', { keyPath: "id" }).createIndex("by_id", "id");
+        }
 
         if (!db.objectStoreNames.contains('headers')) {
           db.createObjectStore('headers', { keyPath: "id" }).createIndex("by_id", "id");
@@ -52,7 +58,7 @@ export class PersistService {
       };
 
       openRequest.onsuccess = (e: any) => {
-        console.log('localdb - open success!', e.target.result);
+        this.debugLog('localdb - open success!', e.target.result);
 
         const db: IDBDatabase = e.target.result;
         this.db.next(db);
@@ -61,14 +67,14 @@ export class PersistService {
   }
 
   public get(storeName: string, key: any): Observable<any> {
-    console.log('localdb.query()');
+    this.debugLog('localdb.query()');
     return new Observable((observer: Observer<any>) => {
       try {
-        console.log('localdb.query() - subscribed!');
+        this.debugLog('localdb.query() - subscribed!');
         this.db.pipe(
           take(1)
         ).subscribe(db => {
-          console.log('localdb.query() got db:', db);
+          this.debugLog('localdb.query() got db:', db);
           if (!db) {
             observer.error('IndexDB not supported!');
             return;
@@ -107,13 +113,13 @@ export class PersistService {
           const store = transaction.objectStore(storeName);
           const req = store.put(value);
           //const req = store.put(value, key);
-          req.onerror = function (e: any) {
-            console.log('store error event:', e);
+          req.onerror = (e: any) => {
+            this.debugLog('store error event:', e);
             observer.error(e.target.error);
             return;
           };
-          req.onsuccess = function (e: any) {
-            console.log('store success:', e);
+          req.onsuccess = (e: any) => {
+            this.debugLog('store success:', e);
             observer.next(e.target.result);
             observer.complete();
           };
@@ -126,14 +132,14 @@ export class PersistService {
 
   // retourne la clef et l'objet pour tout le store itérativement
   public query(storeName: string, valueOnly = false): Observable<any> {
-    console.log('localdb.query()');
+    this.debugLog('localdb.query()');
     return new Observable((observer: Observer<any>) => {
       try {
-        console.log('localdb.query() - subscribed!');
+        this.debugLog('localdb.query() - subscribed!');
         this.db.pipe(
           take(1)
         ).subscribe(db => {
-          console.log('localdb.query() got db:', db);
+          this.debugLog('localdb.query() got db:', db);
           if (!db) {
             observer.error('IndexDB not supported!');
             return;
@@ -168,14 +174,14 @@ export class PersistService {
   }
 
   delete(storeName: string, key: any): Observable<any> {
-    console.log('localdb.delete()');
+    this.debugLog('localdb.delete()');
     return new Observable((observer: Observer<any>) => {
       try {
-        console.log('localdb.delete() - subscribed!');
+        this.debugLog('localdb.delete() - subscribed!');
         this.db.pipe(
           take(1)
         ).subscribe(db => {
-          console.log('localdb.delete() got db:', db);
+          this.debugLog('localdb.delete() got db:', db);
           if (!db) {
             observer.error('IndexDB not supported!');
             return;
@@ -184,11 +190,11 @@ export class PersistService {
           const txn = db.transaction([storeName], 'readwrite');
           const store = txn.objectStore(storeName);
           const req = store.delete(key);
-          req.onerror = function(e: any) {
+          req.onerror = function (e: any) {
             observer.error(e.target.error);
             return;
           };
-          req.onsuccess = function(e: any) {
+          req.onsuccess = function (e: any) {
             observer.next(e.target.result);
             observer.complete();
           };
@@ -222,15 +228,28 @@ export class PersistService {
 
     tx.oncomplete = function () {
       // All requests have succeeded and the transaction has committed.
-      console.log('All requests have succeeded and the transaction has committed.');
+      this.debugLog('All requests have succeeded and the transaction has committed.');
     };
 
-    console.log('on est fermé %s', this.uuidv4());
+    this.debugLog('on est fermé %s', this.uuidv4());
+  }
+
+  public newCategoryInstance(): ListCategory {
+    const rv: ListCategory = {
+      id: this.uuidv4(),
+      name: '',
+      description: '',
+      isDefault: false,
+      headers: []
+    };
+
+    return rv;
   }
 
   public newHeaderInstance(): ListHeader {
     const rv: ListHeader = {
       id: this.uuidv4(),
+      idCategory: '',
       name: 'xxx',
       items: []
     };
@@ -271,6 +290,11 @@ export class PersistService {
     });
   }
 
+  private debugLog(str: string, ...args: any[]): void {
+    if (this.verbose) {
+      console.log(str, args);
+    }
+  }
 }
 
 
@@ -298,7 +322,7 @@ export class LocalDbService {
       this.db.next(undefined);
       this.db.complete();
     } else {
-      console.log(`localdb - requesting open of 'swbuddy' version ${VERSION}`);
+      this.debugLog(`localdb - requesting open of 'swbuddy' version ${VERSION}`);
 
       const openRequest = indexedDB.open('swbuddy', VERSION);
       openRequest.onerror = err => {
@@ -309,7 +333,7 @@ export class LocalDbService {
       };
 
       openRequest.onupgradeneeded = function(e: any) {
-        console.log('localdb - upgrade needed!');
+        this.debugLog('localdb - upgrade needed!');
 
         // create object stores for 'rawLogin' and 'rawVisit'
         const db: IDBDatabase = e.target.result;
@@ -328,7 +352,7 @@ export class LocalDbService {
       };
 
       openRequest.onsuccess = (e: any) => {
-        console.log('localdb - open success!', e.target.result);
+        this.debugLog('localdb - open success!', e.target.result);
 
         const db: IDBDatabase = e.target.result;
         this.db.next(db);
@@ -337,14 +361,14 @@ export class LocalDbService {
   }
 
   get(storeName: string, key: any): Observable<any> {
-    console.log('localdb.query()');
+    this.debugLog('localdb.query()');
     return Observable.create((observer: Observer<any>) => {
       try {
-        console.log('localdb.query() - subscribed!');
+        this.debugLog('localdb.query() - subscribed!');
         this.db.pipe(
           take(1)
         ).subscribe(db => {
-          console.log('localdb.query() got db:', db);
+          this.debugLog('localdb.query() got db:', db);
           if (!db) {
             observer.error('IndexDB not supported!');
             return;
@@ -383,12 +407,12 @@ export class LocalDbService {
           const store = txn.objectStore(storeName);
           const req = store.put(value, key);
           req.onerror = function(e: any) {
-            console.log('store error event:', e);
+            this.debugLog('store error event:', e);
             observer.error(e.target.error);
             return;
           };
           req.onsuccess = function(e: any) {
-            console.log('store success:', e);
+            this.debugLog('store success:', e);
             observer.next(e.target.result);
             observer.complete();
           };
@@ -400,14 +424,14 @@ export class LocalDbService {
   }
 
   delete(storeName: string, key: any): Observable<any> {
-    console.log('localdb.delete()');
+    this.debugLog('localdb.delete()');
     return Observable.create((observer: Observer<any>) => {
       try {
-        console.log('localdb.delete() - subscribed!');
+        this.debugLog('localdb.delete() - subscribed!');
         this.db.pipe(
           take(1)
         ).subscribe(db => {
-          console.log('localdb.delete() got db:', db);
+          this.debugLog('localdb.delete() got db:', db);
           if (!db) {
             observer.error('IndexDB not supported!');
             return;
@@ -433,14 +457,14 @@ export class LocalDbService {
 
 
   query(storeName: string): Observable<any> {
-    console.log('localdb.query()');
+    this.debugLog('localdb.query()');
     return Observable.create((observer: Observer<any>) => {
       try {
-        console.log('localdb.query() - subscribed!');
+        this.debugLog('localdb.query() - subscribed!');
         this.db.pipe(
           take(1)
         ).subscribe(db => {
-          console.log('localdb.query() got db:', db);
+          this.debugLog('localdb.query() got db:', db);
           if (!db) {
             observer.error('IndexDB not supported!');
             return;

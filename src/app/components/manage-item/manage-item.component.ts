@@ -10,6 +10,8 @@ import { ListItem } from 'src/app/models/list-item';
 
 import { PersistService } from 'src/app/services/persist.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { ListCategory } from 'src/app/models/list-category';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-manage-item',
@@ -19,10 +21,10 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class ManageItemComponent implements OnInit {
 
   public title = '';
-  public listId = '';
+  public idHeader = '';
   public header = new ListHeader();
   public listItems: ListItem[] = [];
-
+  public categories: ListCategory[] = [];
   private itemSubject = new Subject<ListItem[]>();
 
   public itemSubject$ = this.itemSubject.asObservable();
@@ -38,8 +40,11 @@ export class ManageItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      this.listId = params['id'];
-      this.persistService.get('headers', this.listId).subscribe((header: ListHeader) => {
+      this.idHeader = params['id'];
+      this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
+        this.categories.push(cat);
+      });
+      this.persistService.get('headers', this.idHeader).subscribe((header: ListHeader) => {
         this.header = header;
         this.title = header.name;
         this.persistService.query('items', true).subscribe((listItem: ListItem) => {
@@ -53,6 +58,11 @@ export class ManageItemComponent implements OnInit {
   }
 
   // event handlers
+
+  public onCategorySelected(matCatEvent: MatSelectChange) {
+    this.header.idCategory = matCatEvent.value;
+    this.persistService.put('headers', this.header.id, this.header).subscribe(() => { /* noop */});
+  }
 
   public confirmClear(): void {
     const dialogData = new ConfirmDialogModel("You want to clear this list?", "Confirm Action");
