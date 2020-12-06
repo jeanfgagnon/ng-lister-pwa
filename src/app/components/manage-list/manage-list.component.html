@@ -1,7 +1,6 @@
 <div fxLayout="column" fxLayoutAlign="stretch stretch">
 
   <div class='pad10' fxFlexFill>
-    <mat-card-header>List Management</mat-card-header><br />
 
     <form *ngIf="formVisible" (submit)="formSubmitted($event)">
 
@@ -14,9 +13,20 @@
         <mat-icon>close</mat-icon>
       </button>
       <br />
-      <mat-divider></mat-divider>
+      <!-- <mat-divider></mat-divider> -->
 
     </form>
+
+    <mat-form-field class='cpc' *ngIf="categories" >
+      <mat-select placeholder="Category" name="category" (selectionChange)="onCategorySelected($event)" [(ngModel)]="selectedCategoryId">
+        <mat-option [value]="0">
+          <span class='red'>One Shot Deal</span>
+        </mat-option>
+        <mat-option *ngFor="let cat of categories" [value]="cat.id">
+          {{ cat.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <!-- <div *ngIf="headers"> -->
       <mat-card-subtitle>Existing lists</mat-card-subtitle>

@@ -246,10 +246,10 @@ export class PersistService {
     return rv;
   }
 
-  public newHeaderInstance(): ListHeader {
+  public newHeaderInstance(idCategory: string): ListHeader {
     const rv: ListHeader = {
       id: this.uuidv4(),
-      idCategory: '',
+      idCategory: idCategory,
       name: 'xxx',
       items: []
     };

@@ -1,11 +1,12 @@
-import { AfterViewInit } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
+
+import { GlobalStateService } from 'src/app/services/global-state.service';
+import { PersistService } from 'src/app/services/persist.service';
+
+import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
-
-import { PersistService } from 'src/app/services/persist.service';
 
 @Component({
   selector: 'app-manage-list',
@@ -18,15 +19,35 @@ export class ManageListComponent implements OnInit {
   public formVisible = false;
   public headers: ListHeader[] = [];
   public allItems: ListItem[] = [];
+  public categories: ListCategory[] = [];
+
+  public selectedCategoryId = '';
 
   constructor(
-    private persistService: PersistService
+    private persistService: PersistService,
+    private globalStateService: GlobalStateService,
   ) { }
 
   ngOnInit(): void {
-    this.persistService.query("headers", true).subscribe((header: ListHeader) => {
-      this.headers.push(header);
-    });
+    this.persistService.query('categories', true).subscribe(
+      (cat: ListCategory) => {
+        this.categories.push(cat);
+        if (cat.isDefault) {
+          if (this.globalStateService.CurrentManagedIdCategory === '') {
+            this.globalStateService.CurrentManagedIdCategory = cat.id;
+          }
+          this.selectedCategoryId = this.globalStateService.CurrentManagedIdCategory;
+        }
+      },
+      (err) => { },
+      (/* completed */) => {
+        this.persistService.query("headers", true).subscribe((header: ListHeader) => {
+          if (header.idCategory === this.selectedCategoryId) {
+            this.headers.push(header);
+          }
+        });
+      }
+    );
 
     this.persistService.query("items", true).subscribe((item: ListItem) => {
       this.allItems.push(item);
@@ -35,9 +56,20 @@ export class ManageListComponent implements OnInit {
 
   // event handlers
 
+  public onCategorySelected(e: MatSelectChange) {
+    this.globalStateService.CurrentManagedIdCategory = e.value;
+    this.selectedCategoryId = this.globalStateService.CurrentManagedIdCategory;
+    this.headers = [];
+    this.persistService.query("headers", true).subscribe((header: ListHeader) => {
+      if (header.idCategory === this.selectedCategoryId) {
+        this.headers.push(header);
+      }
+    });
+  }
+
   public formSubmitted(e: Event): void {
     if (this.listName.trim() !== '') {
-      const h = this.persistService.newHeaderInstance();
+      const h = this.persistService.newHeaderInstance(this.selectedCategoryId);
       h.name = this.listName;
       this.persistService.put('headers', h.id, h).subscribe((key: any) => {
         this.headers.push(h);
@@ -51,7 +83,7 @@ export class ManageListComponent implements OnInit {
 
   public itemCount(idHeader: string): string {
     let rv = '';
-    const count = this.allItems.filter(x=>x.idHeader === idHeader).length;
+    const count = this.allItems.filter(x => x.idHeader === idHeader).length;
     if (count > 0) {
       rv = `(${count})`;
     }
