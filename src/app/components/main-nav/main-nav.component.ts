@@ -41,12 +41,12 @@ export class MainNavComponent implements OnInit {
       (/* complete */) => { console.log(`cat choisie: ${this.globalStateService.CurrentSelectedIdCategory} `) });
   }
 
-
   // event handlers
 
   public onCategoryClick(e: Event, drawer: MatSidenav, cat: ListCategory): void {
     drawer.toggle();
-    this.globalStateService.changeCategory(cat.id);
+    this.router.navigate(["/Liste", cat.id]);
+//    this.globalStateService.changeCategory(cat.id);
     e.preventDefault();
   }
 }

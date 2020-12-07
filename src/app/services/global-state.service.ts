@@ -23,7 +23,9 @@ export class GlobalStateService {
           this._currentSelectedIdCategory = cat.id;
         }
       },
-      (err) => { },
+      (err) => {
+        this.categorySubject.next(undefined);
+       },
       (/* complete */) => {
         this.categorySubject.next(this._currentSelectedIdCategory);
       });

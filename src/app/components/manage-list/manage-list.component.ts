@@ -42,7 +42,7 @@ export class ManageListComponent implements OnInit {
       (err) => { },
       (/* completed */) => {
         this.persistService.query("headers", true).subscribe((header: ListHeader) => {
-          if (header.idCategory === this.selectedCategoryId) {
+          if (header.idCategory === this.selectedCategoryId || header.idCategory === undefined) {
             this.headers.push(header);
           }
         });

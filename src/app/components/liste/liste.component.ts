@@ -28,9 +28,12 @@ export class ListeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    this.globalStateService.category$.subscribe((idCategory: string) => {
-      this.loadDataByCategoryId(idCategory);
+    // this.globalStateService.category$.subscribe((idCategory: string) => {
+    //   this.loadDataByCategoryId(idCategory);
+    // });
+    this.activatedRoute.params.subscribe(params => {
+      console.log('osti de calver de marde sale', params);
+      this.loadDataByCategoryId(params.id);
     });
   }
 
@@ -62,13 +65,13 @@ export class ListeComponent implements OnInit {
       setTimeout(() => { this.tabgroup.selectedIndex = 0 });
     }
 
-    this._sortedHeaders = this.headers.sort((a: ListHeader, b: ListHeader) => {
+    const _sortedHeaders = this.headers.sort((a: ListHeader, b: ListHeader) => {
       if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
       if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
       return 0;
     });
 
-    return this._sortedHeaders;
+    return _sortedHeaders;
   }
 
   // privates
@@ -79,7 +82,7 @@ export class ListeComponent implements OnInit {
     this.loaded = false;
     this.persistService.query("headers", true).subscribe(
       (header: ListHeader) => {
-        if (header.idCategory === id) {
+        if (header.idCategory === id || id === undefined) {
           this.headers.push(header);
           header.items = [];
           this.persistService.query('items', true).subscribe(
@@ -100,7 +103,8 @@ export class ListeComponent implements OnInit {
       (err) => {
         console.log('Error %s', err);
       },
-      () => {
+      (/* complete */) => {
+console.log('on met loaded trou sale de marde degeueu');
         this.loaded = true;
       }
     );
