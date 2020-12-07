@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 
 import { PersistService } from 'src/app/services/persist.service';
 
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
-import { combineLatest, forkJoin, Observable, Subscription, zip } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 import { map } from 'rxjs/operators';
 @Component({
@@ -24,7 +24,8 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
   @ViewChild('dumpzone') dumpzone!: ElementRef;
 
   constructor(
-    private persistService: PersistService
+    private persistService: PersistService,
+    @Inject('Window') private window: Window
   ) { }
 
   ngOnInit(): void {
@@ -50,6 +51,12 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
         this.writeTree();
       }
     );
+  }
+
+  // event handlers
+
+  public onClip(): void {
+    this.window.navigator.vibrate(200);
   }
 
   // privates

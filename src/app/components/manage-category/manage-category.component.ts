@@ -52,10 +52,9 @@ export class ManageCategoryComponent implements OnInit {
     if (this.currentCategory.isDefault) {
       this.removeDefaultAll();
     }
-
-    setTimeout(() => {
+    else {
       this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => { /* noop */ });
-    });
+    }
 
     this.resetForm();
     this.formVisible = false;
@@ -96,10 +95,22 @@ export class ManageCategoryComponent implements OnInit {
     this.actionVerb = "Add";
   }
 
+  // There can only be one category with the default flag
   private removeDefaultAll(): void {
-    this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
-      cat.isDefault = false;
-      this.persistService.put('categories', cat.id, cat).subscribe(() => { /* noop */ });
+    this.categories.forEach((cat: ListCategory) => {
+      if (cat.id !== this.currentCategory.id) {
+        cat.isDefault = false;
+      }
     });
+
+    this.persistService.query('categories', true).subscribe(
+      (cat: ListCategory) => {
+        cat.isDefault = false;
+        this.persistService.put('categories', cat.id, cat).subscribe(() => { /* noop */ });
+      },
+      err => { },
+      ( /* completed */) => {
+        this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => { /* noop */ });
+      });
   }
 }

@@ -4,10 +4,22 @@
     <mat-toolbar>Menu</mat-toolbar>
 
     <mat-nav-list>
+      <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
+      <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">Consolidated</a>
 
       <div *ngIf="isHandset$ | async">
-        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
-        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">Consolidated</a>
+        <mat-accordion class="example-headers-align" multi>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Categories
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <a mat-list-item [ngClass]="{'fb': cat.isDefault}" *ngFor="let cat of categories" href="#" (click)="onCategoryClick($event, drawer, cat)" >{{ cat.name }}</a>
+
+          </mat-expansion-panel>
+        </mat-accordion>
         <mat-divider></mat-divider>
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage']">Manage</a>
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Dump']">Dump Database</a>
@@ -24,12 +36,11 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button
-        (click)="drawer.toggle()"
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span><b>Lister 0.2</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+      <span><b>Lister 0.3a</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>

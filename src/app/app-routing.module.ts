@@ -10,6 +10,7 @@ import { DumpDatabaseComponent } from './components/dump-database/dump-database.
 const routes: Routes = [
   { path: '', redirectTo: 'Liste', pathMatch: 'full' },
   { path: 'Liste', component: ListeComponent },
+  { path: 'Liste/:id', component: ListeComponent },
   { path: 'Manage', component: ManageComponent },
   { path: 'ManageItem/:id', component: ManageItemComponent },
   { path: 'EditItem/:id/:itemid', component: EditItemComponent },

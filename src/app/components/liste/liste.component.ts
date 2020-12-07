@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
+import { ActivatedRoute } from '@angular/router';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
+import { GlobalStateService } from 'src/app/services/global-state.service';
 
 import { PersistService } from 'src/app/services/persist.service';
 
@@ -20,35 +22,16 @@ export class ListeComponent implements OnInit {
   @ViewChild('tabgroup') tabgroup!: MatTabGroup;
 
   constructor(
-    private persistService: PersistService
+    private persistService: PersistService,
+    private globalStateService: GlobalStateService,
+    private activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
-    this.persistService.query("headers", true).subscribe(
-      (header: ListHeader) => {
-        this.headers.push(header);
-        header.items = [];
-        this.persistService.query('items', true).subscribe(
-          (item: ListItem) => {
-            if (item.idHeader === header.id) {
-              header.items.push(item);
-            }
-          },
-          (err) => { },
-          (/* complete */) => {
-            if (header.items.filter(x => x.checked).length > 0) {
-              header.name += "*";
-            }
-          }
-        );
-      },
-      (err) => {
-        console.log('Error %s', err);
-      },
-      () => {
-        this.loaded = true;
-      }
-    );
+
+    this.globalStateService.category$.subscribe((idCategory: string) => {
+      this.loadDataByCategoryId(idCategory);
+    });
   }
 
   // helpers
@@ -74,7 +57,7 @@ export class ListeComponent implements OnInit {
     }
   }
 
-  public get sortedHeaders(): ListHeader[] {
+  public sortedHeaders(): ListHeader[] {
     if (!this.loaded) {
       setTimeout(() => { this.tabgroup.selectedIndex = 0 });
     }
@@ -89,6 +72,39 @@ export class ListeComponent implements OnInit {
   }
 
   // privates
+
+  private loadDataByCategoryId(id: string): void {
+    console.log('loadDataBycaca id = %s', id)
+    this.headers = [];
+    this.loaded = false;
+    this.persistService.query("headers", true).subscribe(
+      (header: ListHeader) => {
+        if (header.idCategory === id) {
+          this.headers.push(header);
+          header.items = [];
+          this.persistService.query('items', true).subscribe(
+            (item: ListItem) => {
+              if (item.idHeader === header.id) {
+                header.items.push(item);
+              }
+            },
+            (err) => { },
+            (/* complete */) => {
+              if (header.items.filter(x => x.checked).length > 0) {
+                header.name += "*";
+              }
+            }
+          );
+        }
+      },
+      (err) => {
+        console.log('Error %s', err);
+      },
+      () => {
+        this.loaded = true;
+      }
+    );
+  }
 
   private quickAdd(idHeader: string): void {
     const splitted = this.quickText.split(/[,;]/);

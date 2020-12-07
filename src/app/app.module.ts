@@ -55,7 +55,9 @@ import { ManageCategoryComponent } from './components/manage-category/manage-cat
     ClipboardModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [],
+  providers: [
+    { provide: 'Window', useValue: window }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

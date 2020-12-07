@@ -33,10 +33,10 @@ export class ManageListComponent implements OnInit {
       (cat: ListCategory) => {
         this.categories.push(cat);
         if (cat.isDefault) {
-          if (this.globalStateService.CurrentManagedIdCategory === '') {
-            this.globalStateService.CurrentManagedIdCategory = cat.id;
+          if (this.globalStateService.CurrentSelectedIdCategory === '') {
+            this.globalStateService.CurrentSelectedIdCategory = cat.id;
           }
-          this.selectedCategoryId = this.globalStateService.CurrentManagedIdCategory;
+          this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
         }
       },
       (err) => { },
@@ -57,8 +57,8 @@ export class ManageListComponent implements OnInit {
   // event handlers
 
   public onCategorySelected(e: MatSelectChange) {
-    this.globalStateService.CurrentManagedIdCategory = e.value;
-    this.selectedCategoryId = this.globalStateService.CurrentManagedIdCategory;
+    this.globalStateService.CurrentSelectedIdCategory = e.value;
+    this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
     this.headers = [];
     this.persistService.query("headers", true).subscribe((header: ListHeader) => {
       if (header.idCategory === this.selectedCategoryId) {

@@ -20,7 +20,6 @@ export class PersistService {
   private verbose = false;
 
   constructor() {
-
     if (!window.indexedDB) {
       this.db.next(undefined);
       this.db.complete();
