@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 import { PersistService } from 'src/app/services/persist.service';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { ListCategory } from 'src/app/models/list-category';
-import { MatSidenav } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-nav',
@@ -17,6 +16,7 @@ import { Router } from '@angular/router';
 export class MainNavComponent implements OnInit {
 
   public categories: ListCategory[] = [];
+  public selectedCategoryName = 'loading';
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -32,21 +32,31 @@ export class MainNavComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    //this.globalStateService.CurrentSelectedIdCategory = 'x';
+    this.loadCategories();
+    this.globalStateService.message$.subscribe((m: string) => {
+      if (m === 'CategoryChanged') {
+        this.loadCategories();
+      }
+      else if (m === 'SelectedCategory' ||  m === 'DefaultCategory') {
+        this.persistService.get('categories', this.globalStateService.CurrentSelectedIdCategory).subscribe((cat: ListCategory) => {
+          this.selectedCategoryName = cat.name;
+        });
+      }
+    });
+  }
+
+  // privates
+
+  private loadCategories(): void {
+    this.categories = [];
     this.persistService.query('categories', true).subscribe(
       (cat: ListCategory) => {
         this.categories.push(cat);
       },
       (err) => { },
-      (/* complete */) => { console.log(`cat choisie: ${this.globalStateService.CurrentSelectedIdCategory} `) });
+      (/* complete */) => { });
   }
 
   // event handlers
 
-  public onCategoryClick(e: Event, drawer: MatSidenav, cat: ListCategory): void {
-    drawer.toggle();
-    this.router.navigate(["/Liste", cat.id]);
-//    this.globalStateService.changeCategory(cat.id);
-    e.preventDefault();
-  }
 }

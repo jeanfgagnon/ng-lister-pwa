@@ -10,9 +10,9 @@ import { PersistService } from './persist.service';
 export class GlobalStateService {
 
   private _currentSelectedIdCategory = '';
-  private categorySubject = new Subject<string>();
+  private messageSubject = new Subject<string>();
 
-  public category$ = this.categorySubject.asObservable();
+  public message$ = this.messageSubject.asObservable();
 
   constructor(
     private persistService: PersistService
@@ -24,10 +24,9 @@ export class GlobalStateService {
         }
       },
       (err) => {
-        this.categorySubject.next(undefined);
-       },
+      },
       (/* complete */) => {
-        this.categorySubject.next(this._currentSelectedIdCategory);
+        this.sendMessage('DefaultCategory');
       });
   }
 
@@ -38,11 +37,12 @@ export class GlobalStateService {
   }
   public set CurrentSelectedIdCategory(value: string) {
     this._currentSelectedIdCategory = value;
+    this.sendMessage('SelectedCategory');
   }
 
   // public interface
 
-  public changeCategory(idCategory: string): void {
-    this.categorySubject.next(idCategory);
+  public sendMessage(message: string): void {
+    this.messageSubject.next(message);
   }
 }

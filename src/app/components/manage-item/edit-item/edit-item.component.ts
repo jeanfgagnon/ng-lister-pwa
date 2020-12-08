@@ -46,14 +46,12 @@ export class EditItemComponent implements OnInit {
         this.verb = 'Add';
       }
       else {
-        console.log('edit-item itemId ', this.itemId);
         this.persistService.get('items', this.itemId).subscribe((item: ListItem) => {
           this.item = item;
           this.loadSubitems(item.id);
         });
       }
       this.persistService.get('headers', this.headerId).subscribe((header: ListHeader) => {
-        console.log('header ', header);
         this.header = header;
       });
     });

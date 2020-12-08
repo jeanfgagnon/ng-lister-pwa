@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
+import { GlobalStateService } from 'src/app/services/global-state.service';
+import { PersistService } from 'src/app/services/persist.service';
 import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
-import { PersistService } from 'src/app/services/persist.service';
 
 @Component({
   selector: 'app-manage-category',
@@ -23,8 +24,9 @@ export class ManageCategoryComponent implements OnInit {
   private currentCategory!: ListCategory;
 
   constructor(
-    private persistService: PersistService
-  ) { }
+    private persistService: PersistService,
+    private globalStateService: GlobalStateService,
+    ) { }
 
   ngOnInit(): void {
 
@@ -53,7 +55,9 @@ export class ManageCategoryComponent implements OnInit {
       this.removeDefaultAll();
     }
     else {
-      this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => { /* noop */ });
+      this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
+        this.globalStateService.sendMessage('CategoryChanged');
+      });
     }
 
     this.resetForm();
@@ -110,7 +114,9 @@ export class ManageCategoryComponent implements OnInit {
       },
       err => { },
       ( /* completed */) => {
-        this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => { /* noop */ });
+        this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
+          this.globalStateService.sendMessage('CategoryChanged');
+         });
       });
   }
 }

@@ -28,12 +28,19 @@ export class ListeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.globalStateService.category$.subscribe((idCategory: string) => {
-    //   this.loadDataByCategoryId(idCategory);
-    // });
+    this.globalStateService.message$.subscribe((m: string) => {
+      if (m === 'DefaultCategory') {
+        this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory);
+      }
+    });
     this.activatedRoute.params.subscribe(params => {
-      console.log('osti de calver de marde sale', params);
-      this.loadDataByCategoryId(params.id);
+      if (params.id) {
+        this.loadDataByCategoryId(params.id);
+        this.globalStateService.CurrentSelectedIdCategory = params.id;
+      }
+      else {
+        this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory);
+      }
     });
   }
 
@@ -77,7 +84,6 @@ export class ListeComponent implements OnInit {
   // privates
 
   private loadDataByCategoryId(id: string): void {
-    console.log('loadDataBycaca id = %s', id)
     this.headers = [];
     this.loaded = false;
     this.persistService.query("headers", true).subscribe(
@@ -101,10 +107,8 @@ export class ListeComponent implements OnInit {
         }
       },
       (err) => {
-        console.log('Error %s', err);
       },
       (/* complete */) => {
-console.log('on met loaded trou sale de marde degeueu');
         this.loaded = true;
       }
     );

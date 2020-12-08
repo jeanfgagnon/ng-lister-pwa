@@ -1,13 +1,12 @@
+import { combineLatest } from 'rxjs';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 
 import { PersistService } from 'src/app/services/persist.service';
 
+import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
-import { combineLatest } from 'rxjs';
-
-import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-dump-database',
   templateUrl: './dump-database.component.html',
@@ -15,6 +14,7 @@ import { map } from 'rxjs/operators';
 })
 export class DumpDatabaseComponent implements OnInit, AfterViewInit {
 
+  private categories: ListCategory[] = [];
   private headers: ListHeader[] = [];
   private items: ListItem[] = [];
   private subItems: SubItem[] = [];
@@ -34,13 +34,15 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const tree$ = combineLatest(
       [
+        this.persistService.query('categories', true),
         this.persistService.query('headers', true),
         this.persistService.query('items', true),
         this.persistService.query('subitems', true)
       ]
     );
     tree$.subscribe(
-      ([header, item, subItem]) => {
+      ([category, header, item, subItem]) => {
+        this.appendObject(this.categories, category);
         this.appendObject(this.headers, header);
         this.appendObject(this.items, item);
         this.appendObject(this.subItems, subItem);
@@ -61,24 +63,26 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
 
   // privates
 
-  private appendObject(srcArray: any[], v: ListHeader | ListItem | SubItem): void {
+  private appendObject(srcArray: any[], v: ListCategory | ListHeader | ListItem | SubItem): void {
     if (srcArray.findIndex(x => x.id === v.id) === -1) {
       srcArray.push(v);
     }
   }
 
   private tieAll(): void {
-    this.headers.forEach((header: ListHeader) => {
-      header.items = this.items.filter(x => x.idHeader === header.id);
-      header.items.forEach((item: ListItem) => {
-        item.subs = this.subItems.filter(x => x.idItem === item.id);
+    this.categories.forEach((category: ListCategory) => {
+      category.headers = this.headers.filter(h => h.idCategory === category.id);
+      this.headers.forEach((header: ListHeader) => {
+        header.items = this.items.filter(x => x.idHeader === header.id);
+        header.items.forEach((item: ListItem) => {
+          item.subs = this.subItems.filter(x => x.idItem === item.id);
+        });
       });
     });
-
   }
 
   private writeTree(): void {
-    this.json = JSON.stringify(this.headers, null, 2)
+    this.json = JSON.stringify(this.categories, null, 2);
     this.dumpzone.nativeElement.innerText = this.json;
   }
 

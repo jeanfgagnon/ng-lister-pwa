@@ -16,11 +16,8 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <a mat-list-item
-              *ngFor="let cat of categories" href="#"
-              (click)="drawer.toggle()"
-              [routerLink]="['/Liste', cat.id]"
-              [ngClass]="{'fb': cat.isDefault}">{{ cat.name }}</a>
+            <a mat-list-item *ngFor="let cat of categories" href="#" (click)="drawer.toggle()"
+              [routerLink]="['/Liste', cat.id]" [ngClass]="{'fb': cat.isDefault}">{{ cat.name }}</a>
 
           </mat-expansion-panel>
         </mat-accordion>
@@ -40,11 +37,19 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      <span><b>Lister 0.3d</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+      <div fxLayout='row' fxFlexFill>
+
+        <div fxFlex="80" fxLayoutAlign="start center">
+          <button type="button" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+          <span><b>Lister 0.3d</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+        </div>
+
+        <div fxFlex="20" fxLayoutAlign="center center" class='cat-name'>
+          {{ selectedCategoryName }}
+        </div>
+      </div>
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>
