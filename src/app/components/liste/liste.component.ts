@@ -33,6 +33,7 @@ export class ListeComponent implements OnInit {
         this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory);
       }
     });
+
     this.activatedRoute.params.subscribe(params => {
       if (params.id) {
         this.loadDataByCategoryId(params.id);
@@ -69,16 +70,17 @@ export class ListeComponent implements OnInit {
 
   public sortedHeaders(): ListHeader[] {
     if (!this.loaded) {
-      setTimeout(() => { this.tabgroup.selectedIndex = 0 });
+      setTimeout(() => { this.tabgroup.selectedIndex = 0 }, 800);
+      console.log('tabazero');
     }
 
-    const _sortedHeaders = this.headers.sort((a: ListHeader, b: ListHeader) => {
+    this._sortedHeaders = this.headers.sort((a: ListHeader, b: ListHeader) => {
       if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
       if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
       return 0;
     });
 
-    return _sortedHeaders;
+    return this._sortedHeaders;
   }
 
   // privates
@@ -86,9 +88,43 @@ export class ListeComponent implements OnInit {
   private loadDataByCategoryId(id: string): void {
     this.headers = [];
     this.loaded = false;
+    const noFlickerHeaders: ListHeader[] = [];
     this.persistService.query("headers", true).subscribe(
       (header: ListHeader) => {
-        if (header.idCategory === id || id === undefined) {
+        if (header.idCategory === id) {
+          noFlickerHeaders.push(header);
+          header.items = [];
+          this.persistService.query('items', true).subscribe(
+            (item: ListItem) => {
+              if (item.idHeader === header.id) {
+                header.items.push(item);
+              }
+            },
+            (err) => { },
+            (/* complete */) => {
+              if (header.items.filter(x => x.checked).length > 0) {
+                header.name += "*";
+              }
+            }
+          );
+        }
+      },
+      (err) => {
+      },
+      (/* complete */) => {
+        this.loaded = true;
+        this.headers = noFlickerHeaders;
+      }
+    );
+  }
+
+  private xxxloadDataByCategoryId(id: string): void {
+    this.headers = [];
+    this.loaded = false;
+
+    this.persistService.query("headers", true).subscribe(
+      (header: ListHeader) => {
+        if (header.idCategory === id) {
           this.headers.push(header);
           header.items = [];
           this.persistService.query('items', true).subscribe(
@@ -109,6 +145,7 @@ export class ListeComponent implements OnInit {
       (err) => {
       },
       (/* complete */) => {
+        setTimeout(() => { this.tabgroup.selectedIndex = 0 });
         this.loaded = true;
       }
     );

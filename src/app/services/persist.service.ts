@@ -280,9 +280,6 @@ export class PersistService {
     return rv;
   }
 
-  public getCategoryNameById(id: string): string {
-    this
-  }
   // privates
 
   private uuidv4(): string {
