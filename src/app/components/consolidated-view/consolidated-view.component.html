@@ -1,0 +1,10 @@
+<div class="pad10">
+
+  <div *ngFor="let category of categories">
+    <h3>{{ category.name }}</h3>
+    <div *ngFor="let header of category.headers">
+      <h4>{{ header.name }}</h4>
+      <app-check-list [header]="header"></app-check-list>
+    </div>
+  </div>
+</div>

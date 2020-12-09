@@ -27,6 +27,7 @@ import { environment } from '../environments/environment';
 import { DumpDatabaseComponent } from './components/dump-database/dump-database.component';
 import { ManageComponent } from './components/manage/manage.component';
 import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
+import { ConsolidatedViewComponent } from './components/consolidated-view/consolidated-view.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ManageCategoryComponent } from './components/manage-category/manage-cat
     CheckItemComponent,
     DumpDatabaseComponent,
     ManageComponent,
-    ManageCategoryComponent
+    ManageCategoryComponent,
+    ConsolidatedViewComponent
   ],
   imports: [
     BrowserModule,

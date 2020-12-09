@@ -41,6 +41,7 @@ export class ListeComponent implements OnInit {
       }
       else {
         this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory);
+        this.globalStateService.sendMessage('SelectedCategory');
       }
     });
   }

@@ -39,8 +39,11 @@ export class MainNavComponent implements OnInit {
       }
       else if (m === 'SelectedCategory' ||  m === 'DefaultCategory') {
         this.persistService.get('categories', this.globalStateService.CurrentSelectedIdCategory).subscribe((cat: ListCategory) => {
-          this.selectedCategoryName = cat.name;
+          this.selectedCategoryName = (cat ? cat.name : 'bug!');
         });
+      }
+      else if (m === 'ConsolidatedView') {
+        this.selectedCategoryName = 'Consolidated';
       }
     });
   }
