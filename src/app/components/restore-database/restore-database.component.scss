@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  animation: animateWidth 3s infinite;
+  position: relative;
+}
+
+.sectionContainer > textarea {
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.error-msg {
+  margin-top: 20px;
+  color: red;
+}
+
+.data-valid {
+  margin-top: 20px;
+}

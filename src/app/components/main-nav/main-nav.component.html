@@ -23,7 +23,7 @@
         </mat-accordion>
         <mat-divider></mat-divider>
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage']">Manage</a>
-        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Dump']">Dump Database</a>
+        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Backup']">Backup Database</a>
       </div>
 
       <div *ngIf="!(isHandset$ | async)">

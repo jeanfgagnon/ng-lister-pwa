@@ -1,0 +1,29 @@
+<div class="pad10">
+  <div class='container'>
+    Please paste database data in area below
+    <textarea id="dbData" (paste)="onDataPasted($event)" rows="5" [(ngModel)]="textData"></textarea>
+  </div>
+
+  <div *ngIf="dbIsValid" class='data-valid'>
+    <span class='fb'>Data is valid.</span><br />
+    Backup date: {{ dbDate | date:'yyyy-MM-dd HH:mm' }}<br />
+    Version: {{ dbVersion }}<br />
+    <br />
+    How do we restore this data?<br />
+    <mat-radio-group (change)="onRadioChange($event)" [(ngModel)]="restoreMode">
+      <mat-radio-button value="R" color="primary">Replace</mat-radio-button>&nbsp;&nbsp;
+      <mat-radio-button value="M" color="primary">Merge</mat-radio-button>
+    </mat-radio-group><br />
+    <br />
+    <button mat-raised-button  color="primary" type="button" (click)="onRestoreClick()">
+      Restore
+    </button>&nbsp;
+    <button mat-raised-button  color="accent" type="button" (click)="onCancelClick()">
+      Cancel
+    </button>
+  </div>
+
+  <div *ngIf="error" class="error-msg">
+    An error occured. Please ensure that your data is complete and coming from this app.
+  </div>
+</div>

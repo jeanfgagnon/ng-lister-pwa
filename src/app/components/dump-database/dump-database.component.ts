@@ -82,7 +82,12 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
   }
 
   private writeTree(): void {
-    this.json = JSON.stringify(this.categories, null, 2);
+    const top = {
+      version: this.persistService.dbVersion,
+      date: new Date(),
+      database: this.categories
+    };
+    this.json = JSON.stringify(top, null, 2);
     this.dumpzone.nativeElement.innerText = this.json;
   }
 

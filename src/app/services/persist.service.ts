@@ -172,7 +172,39 @@ export class PersistService {
     });
   }
 
-  delete(storeName: string, key: any): Observable<any> {
+  public clear(storeName: string): Observable<any> {
+    this.debugLog('localdb.clear() ' + storeName);
+    return new Observable((observer: Observer<any>) => {
+      try {
+        this.debugLog('localdb.clear() - subscribed!');
+        this.db.pipe(
+          take(1)
+        ).subscribe(db => {
+          this.debugLog('localdb.clear() got db:', db);
+          if (!db) {
+            observer.error('IndexDB not supported!');
+            return;
+          }
+
+          const txn = db.transaction([storeName], 'readwrite');
+          const store = txn.objectStore(storeName);
+          const req = store.clear();
+          req.onerror = function (e: any) {
+            observer.error(e.target.error);
+            return;
+          };
+          req.onsuccess = function (e: any) {
+            observer.next(e.target.result);
+            observer.complete();
+          };
+        });
+      } catch (err) {
+        observer.error(err);
+      }
+    });
+  }
+
+  public delete(storeName: string, key: any): Observable<any> {
     this.debugLog('localdb.delete()');
     return new Observable((observer: Observer<any>) => {
       try {
@@ -280,6 +312,10 @@ export class PersistService {
     return rv;
   }
 
+  public get dbVersion(): number {
+    return VERSION;
+  }
+
   // privates
 
   private uuidv4(): string {
@@ -294,6 +330,7 @@ export class PersistService {
       console.log(str, args);
     }
   }
+
 }
 
 

@@ -28,6 +28,14 @@ import { DumpDatabaseComponent } from './components/dump-database/dump-database.
 import { ManageComponent } from './components/manage/manage.component';
 import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
 import { ConsolidatedViewComponent } from './components/consolidated-view/consolidated-view.component';
+import { BackupDatabaseComponent } from './components/backup-database/backup-database.component';
+import { RestoreDatabaseComponent } from './components/restore-database/restore-database.component';
+
+// cette scrap pour que la date pipe fonctionne!!!
+import localeFr from '@angular/common/locales/fr';
+import localeFrExtra from '@angular/common/locales/extra/fr';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
 
 @NgModule({
   declarations: [
@@ -43,7 +51,9 @@ import { ConsolidatedViewComponent } from './components/consolidated-view/consol
     DumpDatabaseComponent,
     ManageComponent,
     ManageCategoryComponent,
-    ConsolidatedViewComponent
+    ConsolidatedViewComponent,
+    BackupDatabaseComponent,
+    RestoreDatabaseComponent
   ],
   imports: [
     BrowserModule,
