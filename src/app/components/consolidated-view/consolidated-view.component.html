@@ -1,4 +1,4 @@
-<div class="pad10">
+<div class="pad10" *ngIf="cleaned">
 
   <div *ngFor="let category of categories">
     <h3>{{ category.name }}</h3>
@@ -7,4 +7,5 @@
       <app-check-list [header]="header"></app-check-list>
     </div>
   </div>
+
 </div>

@@ -14,6 +14,7 @@ import { GlobalStateService } from 'src/app/services/global-state.service';
 })
 export class ConsolidatedViewComponent implements OnInit {
 
+  public cleaned = false;
   public categories: ListCategory[] = [];
   public headers: ListHeader[] = [];
   private items: ListItem[] = [];
@@ -70,6 +71,8 @@ export class ConsolidatedViewComponent implements OnInit {
         this.categories.splice(i, 1);
       }
     } // i
+
+    this.cleaned = true;
   }
 
   private appendObject(srcArray: any[], v: ListCategory | ListHeader): void {

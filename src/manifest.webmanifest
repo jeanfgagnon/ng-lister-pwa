@@ -1,6 +1,6 @@
 {
-  "name": "ng-lister-pwa",
-  "short_name": "ng-lister-pwa",
+  "name": "ng-lister",
+  "short_name": "Lister",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
