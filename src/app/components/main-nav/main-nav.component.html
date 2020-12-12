@@ -4,10 +4,12 @@
     <mat-toolbar>Menu</mat-toolbar>
 
     <mat-nav-list>
-      <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
-      <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Consolidated']">Consolidated</a>
 
       <div *ngIf="isHandset$ | async">
+
+        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
+        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Consolidated']">Consolidated</a>
+
         <mat-accordion class="example-headers-align" multi>
           <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -21,14 +23,21 @@
 
           </mat-expansion-panel>
         </mat-accordion>
+
         <mat-divider></mat-divider>
+
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage']">Manage</a>
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Backup']">Backup Database</a>
+
+        <mat-divider></mat-divider>
+
+        <!-- <button mat-menu-item (click)="changeTheme(drawer)">{{ nextTheme }}</button> -->
+        <a mat-list-item (click)="changeTheme(drawer)">{{ nextTheme }}</a>
       </div>
 
       <div *ngIf="!(isHandset$ | async)">
         <a mat-list-item href="#" [routerLink]="['/Liste']">List</a>
-        <a mat-list-item href="#" [routerLink]="['/Liste']">Consolidated</a>
+        <a mat-list-item href="#" [routerLink]="['/Consolidated']">Consolidated</a>
         <mat-divider></mat-divider>
         <a mat-list-item href="#" [routerLink]="['/Manage']">Manage</a>
       </div>
@@ -43,7 +52,7 @@
           <button type="button" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
-          <span><b>Lister 0.7</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+          <span><b>Lister 0.8d</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
         </div>
 
         <div fxFlex="20" fxLayoutAlign="center center" class='cat-name'>
