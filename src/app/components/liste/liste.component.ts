@@ -70,15 +70,8 @@ export class ListeComponent implements OnInit {
   }
 
   public sortedHeaders(): ListHeader[] {
-    if (!this.loaded) {
-      setTimeout(() => { this.tabgroup.selectedIndex = 0 }, 800);
-      console.log('tabazero');
-    }
-
     this._sortedHeaders = this.headers.sort((a: ListHeader, b: ListHeader) => {
-      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-      return 0;
+      return a.name.localeCompare(b.name);
     });
 
     return this._sortedHeaders;
