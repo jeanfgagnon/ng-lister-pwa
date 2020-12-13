@@ -14,10 +14,10 @@ import { environment } from '../environments/environment';
 import { MyMaterialModule } from './modules/my-material.module';
 
 import { MainNavComponent } from './components/main-nav/main-nav.component';
-import { ListeComponent } from './components/liste/liste.component';
-import { CheckListComponent } from './components/check-list/check-list.component';
-import { CheckItemComponent } from './components/check-item/check-item.component';
-import { ConsolidatedViewComponent } from './components/consolidated-view/consolidated-view.component';
+import { ListeComponent } from './components/list/liste-menu/liste-menu.component';
+import { CheckListComponent } from './components/list/check-list/check-list.component';
+import { CheckItemComponent } from './components/list/check-item/check-item.component';
+import { ConsolidatedViewComponent } from './components/list/consolidated-view/consolidated-view.component';
 
 // Ceci pour permettre que le Date Pipe fonctionne.
 import localeFr from '@angular/common/locales/fr';

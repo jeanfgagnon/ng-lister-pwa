@@ -1,16 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
+
+import { PersistService } from 'src/app/services/persist.service';
+
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 
-import { PersistService } from 'src/app/services/persist.service';
-
 @Component({
-  selector: 'app-liste',
-  templateUrl: './liste.component.html',
-  styleUrls: ['./liste.component.scss']
+  selector: 'app-liste-menu',
+  templateUrl: './liste-menu.component.html',
+  styleUrls: ['./liste-menu.component.scss']
 })
 export class ListeComponent implements OnInit {
 
