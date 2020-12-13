@@ -5,7 +5,6 @@ import { ManageComponent } from 'src/app/components/management/manage/manage.com
 
 const routes: Routes = [
   { path: '', component: ManageComponent },
-
 ];
 
 @NgModule({

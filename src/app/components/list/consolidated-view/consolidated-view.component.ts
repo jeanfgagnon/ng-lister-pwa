@@ -26,6 +26,24 @@ export class ConsolidatedViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.globalStateService.sendMessage('ConsolidatedView');
+    this.loadAllData();
+  }
+
+  // event handlers
+
+  public onRefreshClick(): void {
+    this.loadAllData();
+  }
+
+  // private
+
+  private loadAllData(): void {
+    this.cleaned = false;
+
+    this.categories = [];
+    this.headers = [];
+    this.items = [];
+
     const tree$ = combineLatest(
       [
         this.persistService.query('categories', true),
@@ -56,8 +74,6 @@ export class ConsolidatedViewComponent implements OnInit {
       }
     );
   }
-
-  // private
 
   private removeDeadWood(): void {
     for (let i = this.categories.length - 1; i >= 0; i--) {
