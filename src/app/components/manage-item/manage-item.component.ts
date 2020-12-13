@@ -115,7 +115,6 @@ export class ManageItemComponent implements OnInit {
       this.persistService.put('headers', this.header.id, this.header).subscribe((h: ListHeader) => {
         if (el.innerText.length > 16) {
           el.innerText = el.innerText.substring(0, 16);
-          //this.title = this.header.name;
         }
       });
     }

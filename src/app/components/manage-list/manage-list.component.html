@@ -17,26 +17,25 @@
 
     </form>
 
-    <mat-form-field class='cpc' *ngIf="categories" >
-      <mat-select placeholder="Category" name="category" (selectionChange)="onCategorySelected($event)" [(ngModel)]="selectedCategoryId">
-        <mat-option [value]="0">
-          <span class='red'>One Shot Deal</span>
-        </mat-option>
-        <mat-option *ngFor="let cat of categories" [value]="cat.id">
-          {{ cat.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div>
+      <mat-form-field class='' *ngIf="categories">
+        <mat-select placeholder="Category" name="category" (selectionChange)="onCategorySelected($event)" [(ngModel)]="selectedCategoryId">
+          <mat-option *ngFor="let cat of categories" [value]="cat.id">
+            {{ cat.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
     <!-- <div *ngIf="headers"> -->
-      <mat-card-subtitle>Existing lists</mat-card-subtitle>
-      <div class='scroll-container'>
-        <mat-nav-list>
-          <a mat-list-item *ngFor="let header of sortedHeaders" [routerLink]="['/ManageItem', header.id]">
-            {{ header.name }} {{ itemCount(header.id) }}
-          </a>
-        </mat-nav-list>
-      </div>
+    <mat-card-subtitle>Existing lists</mat-card-subtitle>
+    <div class='scroll-container'>
+      <mat-nav-list>
+        <a mat-list-item *ngFor="let header of sortedHeaders" [routerLink]="['/ManageItem', header.id]">
+          {{ header.name }} {{ itemCount(header.id) }}
+        </a>
+      </mat-nav-list>
+    </div>
     <!-- </div> -->
 
     <button mat-mini-fab color="primary" type="button" (click)="toggleFormVisibility()" class="add-fab"

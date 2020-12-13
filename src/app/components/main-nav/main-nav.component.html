@@ -27,12 +27,9 @@
         <mat-divider></mat-divider>
 
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage']">Manage</a>
-        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Backup']">Backup Database</a>
-
-        <mat-divider></mat-divider>
+        <a mat-list-item (click)="changeTheme(drawer)">{{ nextTheme }}</a>
 
         <!-- <button mat-menu-item (click)="changeTheme(drawer)">{{ nextTheme }}</button> -->
-        <a mat-list-item (click)="changeTheme(drawer)">{{ nextTheme }}</a>
       </div>
 
       <div *ngIf="!(isHandset$ | async)">
