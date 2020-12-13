@@ -8,7 +8,7 @@ import { PersistService } from 'src/app/services/persist.service';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
 import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
-import { ConfirmDialogComponent } from 'src/app/components/Management/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from 'src/app/components/management/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-edit-item',

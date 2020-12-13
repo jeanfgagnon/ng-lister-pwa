@@ -7,14 +7,14 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MyMaterialModule } from './my-material.module';
 import { ConfigRoutingModule } from './config-routing.module';
 
-import { RestoreDatabaseComponent } from 'src/app/components/Management/restore-database/restore-database.component';
-import { ConfirmDialogComponent } from 'src/app/components/Management/confirm-dialog/confirm-dialog.component';
-import { DumpDatabaseComponent } from 'src/app/components/Management/dump-database/dump-database.component';
-import { EditItemComponent } from 'src/app/components/Management/manage-item/edit-item/edit-item.component';
-import { ManageCategoryComponent } from 'src/app/components/Management/manage-category/manage-category.component';
-import { ManageComponent } from 'src/app/components/Management/manage/manage.component';
-import { ManageItemComponent } from 'src/app/components/Management/manage-item/manage-item.component';
-import { ManageListComponent } from 'src/app/components/Management/manage-list/manage-list.component';
+import { RestoreDatabaseComponent } from 'src/app/components/management/restore-database/restore-database.component';
+import { ConfirmDialogComponent } from 'src/app/components/management/confirm-dialog/confirm-dialog.component';
+import { DumpDatabaseComponent } from 'src/app/components/management/dump-database/dump-database.component';
+import { EditItemComponent } from 'src/app/components/management/manage-item/edit-item/edit-item.component';
+import { ManageCategoryComponent } from 'src/app/components/management/manage-category/manage-category.component';
+import { ManageComponent } from 'src/app/components/management/manage/manage.component';
+import { ManageItemComponent } from 'src/app/components/management/manage-item/manage-item.component';
+import { ManageListComponent } from 'src/app/components/management/manage-list/manage-list.component';
 
 @NgModule({
   declarations: [
