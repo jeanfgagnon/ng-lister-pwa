@@ -8,3 +8,10 @@
   outline: none;
   background-color: transparent;
 }
+
+@mixin quick-input-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  .quick-input {
+    color: mat-color($foreground, text);
+  }
+}

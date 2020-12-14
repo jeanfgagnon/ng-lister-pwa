@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MyMaterialModule } from './my-material.module';
 import { ConfigRoutingModule } from './config-routing.module';
@@ -31,6 +32,7 @@ import { ManageListComponent } from 'src/app/components/management/manage-list/m
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    FlexLayoutModule,
     ClipboardModule,
     MyMaterialModule,
     ConfigRoutingModule

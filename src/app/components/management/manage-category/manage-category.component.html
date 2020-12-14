@@ -27,7 +27,6 @@
     <div class='scroll-container'>
       <mat-nav-list>
         <a mat-list-item [ngClass]="{'fb': category.isDefault}" *ngFor="let category of sortedCategories" (click)="onCategoryClick(category)">
-          <!--  [routerLink]="['/ManageItem', header.id]"-->
           {{ category.name }}
         </a>
       </mat-nav-list>

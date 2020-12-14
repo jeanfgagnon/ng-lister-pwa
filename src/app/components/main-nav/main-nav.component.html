@@ -10,8 +10,9 @@
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Consolidated']">Consolidated</a>
 
-        <mat-accordion class="example-headers-align" multi>
-          <mat-expansion-panel>
+        <mat-accordion multi displayMode="default">
+          <!-- class="mat-elevation-z0" -->
+          <mat-expansion-panel [expanded]="true" class="mat-elevation-z0" >
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Categories
@@ -49,7 +50,7 @@
           <button type="button" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
-          <span><b>Lister 0.8j</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+          <span><b>Lister 0.8m</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
         </div>
 
         <div fxFlex="20" fxLayoutAlign="center center" class='cat-name'>

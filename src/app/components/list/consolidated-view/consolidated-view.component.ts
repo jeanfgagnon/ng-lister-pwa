@@ -15,8 +15,10 @@ import { GlobalStateService } from 'src/app/services/global-state.service';
 export class ConsolidatedViewComponent implements OnInit {
 
   public cleaned = false;
+  public expandedState = true;
   public categories: ListCategory[] = [];
   public headers: ListHeader[] = [];
+
   private items: ListItem[] = [];
 
   constructor(

@@ -71,9 +71,11 @@ body {
 
 // Custom themable components
 @import "app/components/main-nav/main-nav.component";
+@import "app/components/list/liste-menu/liste-menu.component";
 
 @mixin custom-components-theme($theme) {
   @include sidenav-theme($theme);
+  @include quick-input-theme($theme);
 }
 
 // Light theme

@@ -11,7 +11,6 @@ const routes: Routes = [
   { path: 'Consolidated', component: ConsolidatedViewComponent },
 
   { path: 'Manage', loadChildren: () => import('./modules/config.module').then(m => m.ConfigModule) },
-  { path: 'Backup', loadChildren: () => import('./modules/config.module').then(m => m.ConfigModule) },
 
   { path: '**', redirectTo: 'Liste' }
 ];

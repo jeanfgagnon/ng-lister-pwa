@@ -1,15 +1,38 @@
-<div class="pad10" *ngIf="cleaned">
+<div *ngIf="cleaned">
 
-  <div *ngFor="let category of categories">
+  <mat-accordion multi="true" displayMode='flat' class="cpc">
+    <mat-expansion-panel *ngFor="let category of categories" [expanded]="expandedState" class="mat-elevation-z0">
+      <mat-expansion-panel-header collapsedHeight="20" expandedHeight="20">
+        <mat-panel-title>
+          {{ category.name }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngFor="let header of category.headers">
+        <h4>{{ header.name }}</h4>
+        <app-check-list [header]="header"></app-check-list>
+      </div>
+
+      <!-- <mat-accordion multi="true" displayMode='flat'>
+        <mat-expansion-panel *ngFor="let header of category.headers" [expanded]="expandedState">
+          <mat-expansion-panel-header collapsedHeight="20" expandedHeight="20">
+            <mat-panel-title>
+              {{ header.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-check-list [header]="header"></app-check-list>
+        </mat-expansion-panel>
+      </mat-accordion> -->
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- <div *ngFor="let category of categories">
     <h3>{{ category.name }}</h3>
     <div *ngFor="let header of category.headers">
       <h4>{{ header.name }}</h4>
       <app-check-list [header]="header"></app-check-list>
     </div>
-  </div>
-  <br />
-  <br />
-  <br />
+  </div> -->
 
   <button mat-mini-fab color="primary" type="button" (click)="onRefreshClick()" class="refresh-fab" matTooltip="Refresh view">
     <mat-icon>refresh</mat-icon>
