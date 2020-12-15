@@ -93,9 +93,7 @@ export class ManageListComponent implements OnInit {
 
   public get sortedHeaders(): ListHeader[] {
     return this.headers.sort((a: ListHeader, b: ListHeader) => {
-      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-      return 0;
+      return a.name.localeCompare(b.name);
     });
   }
 

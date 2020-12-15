@@ -50,7 +50,7 @@ export class ManageItemComponent implements OnInit {
         this.persistService.query('items', true).subscribe((listItem: ListItem) => {
           if (listItem.idHeader === header.id) {
             this.listItems.push(listItem); // pour alléger essayer avec juste cette array
-            this.itemSubject.next(this.listItems);
+            this.itemSubject.next(this.listItems.sort((a: ListItem, b: ListItem) => { return a.text.localeCompare(b.text) }));
           }
         });
       });

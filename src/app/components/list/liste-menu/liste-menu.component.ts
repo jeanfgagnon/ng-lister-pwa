@@ -150,7 +150,8 @@ export class ListeComponent implements OnInit {
     const splitted = this.quickText.split(/[,;]/);
 
     const item = this.persistService.newItemInstance(idHeader);
-    item.text = splitted.shift() as string;
+    item.text = this.capitalize((splitted.shift() as string).trim());
+    item.checked = true;
 
     this.persistService.put('items', item.id, item).subscribe(() => {
       const header = this.headers.find(x => x.id === idHeader);
@@ -158,13 +159,20 @@ export class ListeComponent implements OnInit {
         header.items.push(item);
         for (let i = 0; i < splitted.length; i++) {
           const subItem = this.persistService.newSubitemInstance(item.id);
-          subItem.text = splitted[i];
+          subItem.text = this.capitalize(splitted[i].trim());
           subItem.rank = (i + 1);
           this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
-
+            /* noop */
           });
         }
       }
     });
+  }
+
+  private capitalize(s: string): string {
+    if (s && s.length > 0) {
+      return s[0].toUpperCase() + s.slice(1).toLowerCase();
+    }
+    return s;
   }
 }
