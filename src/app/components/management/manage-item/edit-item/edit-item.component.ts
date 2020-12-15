@@ -17,11 +17,11 @@ import { ConfirmDialogComponent } from 'src/app/components/management/confirm-di
 })
 export class EditItemComponent implements OnInit {
 
-  public headerId = ''; // oter ca
-  public itemId = '';   // idem
+  public allHeaders: ListHeader[] = [];
 
   public header = new ListHeader();
   public item = new ListItem();
+
   public subItems: SubItem[] = [];
   public nbSubItem = 0;
   public addMore = false;
@@ -40,19 +40,22 @@ export class EditItemComponent implements OnInit {
   ngOnInit(): void {
     this.item.text = '';
     this.activatedRoute.params.subscribe(params => {
-      this.headerId = params['id'];
-      this.itemId = params['itemid'];
-      if (this.itemId === '') {
+      const headerId = params['id'];
+      const itemId = params['itemid'];
+      if (itemId === '') {
         this.verb = 'Add';
       }
       else {
-        this.persistService.get('items', this.itemId).subscribe((item: ListItem) => {
+        this.persistService.get('items', itemId).subscribe((item: ListItem) => {
           this.item = item;
           this.loadSubitems(item.id);
         });
       }
-      this.persistService.get('headers', this.headerId).subscribe((header: ListHeader) => {
+      this.persistService.get('headers', headerId).subscribe((header: ListHeader) => {
         this.header = header;
+        this.persistService.query('headers', true).subscribe((other: ListHeader) => {
+          this.allHeaders.push(other);
+        });
       });
     });
   }
@@ -112,6 +115,9 @@ export class EditItemComponent implements OnInit {
     if (this.verb === 'Add') {
       listItem = this.persistService.newItemInstance(this.header.id);
       listItem.text = this.item.text;
+    }
+    else {
+      listItem.idHeader = this.header.id;
     }
 
     this.persistService.put('items', listItem.id, listItem).subscribe((key: any) => {

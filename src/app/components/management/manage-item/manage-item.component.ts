@@ -121,7 +121,7 @@ export class ManageItemComponent implements OnInit {
   }
 
   public addItem(): void {
-    this.route.navigate(['/EditItem', this.header.id, '']);
+    this.route.navigate(['/Manage/EditItem', this.header.id, '']);
   }
 
   public goBack(): void {

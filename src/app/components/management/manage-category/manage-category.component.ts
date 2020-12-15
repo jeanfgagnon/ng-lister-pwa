@@ -5,6 +5,9 @@ import { GlobalStateService } from 'src/app/services/global-state.service';
 import { PersistService } from 'src/app/services/persist.service';
 import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
+import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-manage-category',
@@ -26,6 +29,7 @@ export class ManageCategoryComponent implements OnInit {
   constructor(
     private persistService: PersistService,
     private globalStateService: GlobalStateService,
+    public dialog: MatDialog,
     ) { }
 
   ngOnInit(): void {
@@ -77,10 +81,25 @@ export class ManageCategoryComponent implements OnInit {
     this.categoryIsDefault = category.isDefault;
   }
 
+  public onDeleteCategory(): void {
+    const dialogData = new ConfirmDialogModel("You want to delete this category?", "Confirm Action");
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "300px",
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
+      if (dialogResult) {
+        // rendu ici
+      }
+    });
+  }
+
   // helpers
 
   public toggleFormVisibility() {
     this.formVisible = !this.formVisible;
+    this.categoryName = '';
   }
 
   public get sortedCategories(): ListCategory[] {

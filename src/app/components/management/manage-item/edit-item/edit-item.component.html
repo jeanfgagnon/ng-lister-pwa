@@ -3,6 +3,16 @@
 
   <form (submit)="formSubmitted($event)">
 
+    <mat-form-field *ngIf="verb !== 'Add' && allHeaders.length > 0">
+      <!-- (selectionChange)="onListSelected($event)" -->
+
+      <mat-select placeholder="Current List" name="curlist" [(ngModel)]="header.id">
+        <mat-option *ngFor="let header of allHeaders" [value]="header.id">
+          {{ header.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <div fxLayout='row'>
       <div fxFlex="85">
         <mat-form-field class="cpc">
@@ -21,11 +31,6 @@
       <mat-icon>add_circle</mat-icon>&nbsp;
       <span>Add Sub Item</span>
     </div>
-
-    <!-- <div (click)="onIncrementSubItem(1)" fxLayoutAlign="start center">
-      <mat-icon [color]="canAddSubItem() ? 'primary' : ''">add_circle</mat-icon>&nbsp;
-      <span [ngClass]="canAddSubItem() ? '' : 'disabled'">Add Sub Item</span>
-    </div> -->
 
     <div *ngIf="nbSubItem > 0" class="cpc">
       <br />
