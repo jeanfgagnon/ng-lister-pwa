@@ -71,6 +71,14 @@ export class MainNavComponent implements OnInit {
     }
   }
 
+  // helpers
+
+  public get sortedCategories(): ListCategory[] {
+    return this.categories.sort((a: ListCategory, b: ListCategory) => {
+      return a.name.localeCompare(b.name);
+    });
+  }
+
   // privates
 
   private loadCategories(): void {

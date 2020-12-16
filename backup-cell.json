@@ -1,40 +1,124 @@
 {
   "version": 2,
-  "date": "2020-12-10T02:10:16.848Z",
+  "date": "2020-12-15T23:57:09.053Z",
   "database": [
     {
+      "id": "3fa5fde1-fefe-4245-a23c-13ed5b17b4c8",
+      "name": "Lister",
+      "description": "",
+      "isDefault": false,
+      "headers": [
+        {
+          "id": "d4a0c7ad-fb37-444c-a320-44fd2cdf9eae",
+          "idCategory": "3fa5fde1-fefe-4245-a23c-13ed5b17b4c8",
+          "name": "Todo",
+          "items": [
+            {
+              "id": "374128fd-d289-4b61-9023-adb9298fc647",
+              "idHeader": "d4a0c7ad-fb37-444c-a320-44fd2cdf9eae",
+              "text": "Changer un item de liste",
+              "checked": false,
+              "subs": []
+            },
+            {
+              "id": "47d4f1e6-cd09-4172-aff4-b38d33db6070",
+              "idHeader": "d4a0c7ad-fb37-444c-a320-44fd2cdf9eae",
+              "text": "Fix subscription",
+              "checked": true,
+              "subs": []
+            },
+            {
+              "id": "68813a25-2fce-470a-96b5-2c146ad3ec42",
+              "idHeader": "d4a0c7ad-fb37-444c-a320-44fd2cdf9eae",
+              "text": "Quick add checked",
+              "checked": false,
+              "subs": []
+            },
+            {
+              "id": "767a2cdf-3bbf-49bb-abe1-5dcdaf061aba",
+              "idHeader": "d4a0c7ad-fb37-444c-a320-44fd2cdf9eae",
+              "text": "Détruire une catégorie",
+              "checked": true,
+              "subs": []
+            },
+            {
+              "id": "c5c153c7-26dc-4ce9-9595-5b092a3401d5",
+              "idHeader": "d4a0c7ad-fb37-444c-a320-44fd2cdf9eae",
+              "text": "Quick list",
+              "checked": true,
+              "subs": []
+            },
+            {
+              "id": "dbdd07ef-fefc-4209-a4a3-86c3e2fc79f2",
+              "idHeader": "d4a0c7ad-fb37-444c-a320-44fd2cdf9eae",
+              "text": "Scroller les items",
+              "checked": true,
+              "subs": []
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "6ed44084-62b5-4208-b27f-d26203f72fb9",
-      "name": "Entretien",
+      "name": "Magasins",
       "description": "",
       "isDefault": false,
       "headers": [
         {
           "id": "66663558-2c9b-4463-a822-526375d95512",
           "name": "Nettoyage",
+          "items": [],
+          "idCategory": "6ed44084-62b5-4208-b27f-d26203f72fb9"
+        },
+        {
+          "id": "8bcb993e-9d23-4351-8875-d6198ead6fc8",
+          "idCategory": "6ed44084-62b5-4208-b27f-d26203f72fb9",
+          "name": "Walmarde",
+          "items": [
+            {
+              "id": "11dce100-ce7b-4f7f-8904-22ee647fe029",
+              "idHeader": "8bcb993e-9d23-4351-8875-d6198ead6fc8",
+              "text": "Old roy",
+              "checked": false,
+              "subs": []
+            },
+            {
+              "id": "ac49f4a2-1a46-42d6-8db0-57d4a804e79f",
+              "idHeader": "8bcb993e-9d23-4351-8875-d6198ead6fc8",
+              "text": "Gros tape à boîte",
+              "checked": false,
+              "subs": []
+            },
+            {
+              "id": "e962c5d2-fb46-4f6a-858d-08c72e71b6d3",
+              "idHeader": "8bcb993e-9d23-4351-8875-d6198ead6fc8",
+              "text": "Shower spray",
+              "checked": false,
+              "subs": []
+            }
+          ]
+        },
+        {
+          "id": "bb0042b4-e06d-439e-bd01-0ce882bbbded",
+          "idCategory": "6ed44084-62b5-4208-b27f-d26203f72fb9",
+          "name": "Canadian-Tire",
           "items": [
             {
               "id": "84f2b761-56f4-4223-a2e0-0afbc672634e",
-              "idHeader": "66663558-2c9b-4463-a822-526375d95512",
+              "idHeader": "bb0042b4-e06d-439e-bd01-0ce882bbbded",
               "text": "Invisible glass",
               "checked": true,
               "subs": []
             },
             {
               "id": "c87fdfea-6749-4f3b-acce-b56cface3a0e",
-              "idHeader": "66663558-2c9b-4463-a822-526375d95512",
+              "idHeader": "bb0042b4-e06d-439e-bd01-0ce882bbbded",
               "text": "Stainless cleaner",
               "checked": false,
               "subs": []
-            },
-            {
-              "id": "e962c5d2-fb46-4f6a-858d-08c72e71b6d3",
-              "idHeader": "66663558-2c9b-4463-a822-526375d95512",
-              "text": "Shower spray",
-              "checked": false,
-              "subs": []
             }
-          ],
-          "idCategory": "6ed44084-62b5-4208-b27f-d26203f72fb9"
+          ]
         }
       ]
     },
@@ -45,9 +129,89 @@
       "isDefault": true,
       "headers": [
         {
+          "id": "322dfa62-f43c-4335-a78a-c8d17da3c654",
+          "idCategory": "ffa8eb95-eb5d-488f-bace-208c490fa609",
+          "name": "Laitier",
+          "items": [
+            {
+              "id": "54d3a37b-268f-4657-ab76-7b6ba901eca2",
+              "idHeader": "322dfa62-f43c-4335-a78a-c8d17da3c654",
+              "text": "Lait",
+              "checked": false,
+              "subs": [
+                {
+                  "id": "78fc3f4b-d6fa-495b-8fcb-19c8b92fabf2",
+                  "idItem": "54d3a37b-268f-4657-ab76-7b6ba901eca2",
+                  "text": "2%",
+                  "rank": 1,
+                  "checked": false
+                },
+                {
+                  "id": "85659fb3-4077-4154-8d49-84116cf45bf5",
+                  "idItem": "54d3a37b-268f-4657-ab76-7b6ba901eca2",
+                  "text": "3.25%",
+                  "rank": 2,
+                  "checked": false
+                }
+              ]
+            },
+            {
+              "id": "736b8c3f-049e-447e-afbb-71f3728918c0",
+              "idHeader": "322dfa62-f43c-4335-a78a-c8d17da3c654",
+              "text": "Crème",
+              "checked": false,
+              "subs": [
+                {
+                  "id": "178f8d85-2d97-42d5-8b0f-1976657a9411",
+                  "idItem": "736b8c3f-049e-447e-afbb-71f3728918c0",
+                  "text": " café",
+                  "rank": 1,
+                  "checked": false
+                },
+                {
+                  "id": "de83e32f-e32f-4d25-a877-fb5a5ff4a0f0",
+                  "idItem": "736b8c3f-049e-447e-afbb-71f3728918c0",
+                  "text": " épaisse",
+                  "rank": 2,
+                  "checked": false
+                }
+              ]
+            },
+            {
+              "id": "9fd9e30c-b6d8-44f5-98fe-2a77e4225a4f",
+              "idHeader": "322dfa62-f43c-4335-a78a-c8d17da3c654",
+              "text": "Fromage",
+              "checked": true,
+              "subs": [
+                {
+                  "id": "63a074d9-9318-457d-bd00-4db8736ad1d9",
+                  "idItem": "9fd9e30c-b6d8-44f5-98fe-2a77e4225a4f",
+                  "text": "Mozzarella",
+                  "rank": 2,
+                  "checked": false
+                },
+                {
+                  "id": "b0ac6fe6-02bc-47ad-a1a8-372c6047d45b",
+                  "idItem": "9fd9e30c-b6d8-44f5-98fe-2a77e4225a4f",
+                  "text": "Cheddar",
+                  "rank": 1,
+                  "checked": false
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "7484a5a8-b3ef-48b3-9fa8-2b6b216cfb3e",
           "name": "Légumes",
           "items": [
+            {
+              "id": "34c4d791-6bf1-43aa-a718-b4609b03b1a4",
+              "idHeader": "7484a5a8-b3ef-48b3-9fa8-2b6b216cfb3e",
+              "text": "Laitue",
+              "checked": false,
+              "subs": []
+            },
             {
               "id": "63cb293d-50bf-40a8-b2db-ca5403cc9c9c",
               "idHeader": "7484a5a8-b3ef-48b3-9fa8-2b6b216cfb3e",
@@ -238,10 +402,32 @@
               "subs": []
             },
             {
+              "id": "aa246123-f903-4dd1-b0bd-f6d9744c35b9",
+              "idHeader": "c45a8b37-fab0-443f-8b09-02d005abb0b8",
+              "text": "Bœuf",
+              "checked": false,
+              "subs": [
+                {
+                  "id": "501b1bf5-5cff-454f-a269-b2f268be68ef",
+                  "idItem": "aa246123-f903-4dd1-b0bd-f6d9744c35b9",
+                  "text": "Cube",
+                  "rank": 1,
+                  "checked": false
+                },
+                {
+                  "id": "f1794445-3a99-4c8a-82ca-0cabda8faaca",
+                  "idItem": "aa246123-f903-4dd1-b0bd-f6d9744c35b9",
+                  "text": "Palette",
+                  "rank": 2,
+                  "checked": false
+                }
+              ]
+            },
+            {
               "id": "e356d9bd-128c-4cda-aec2-615b80086981",
               "idHeader": "c45a8b37-fab0-443f-8b09-02d005abb0b8",
               "text": "Pepperoni",
-              "checked": false,
+              "checked": true,
               "subs": [
                 {
                   "id": "6653286f-22fe-433b-856a-0e5ffdd7d5c9",
@@ -296,6 +482,13 @@
               ]
             },
             {
+              "id": "9828f62c-2d09-4014-b304-028b90120767",
+              "idHeader": "d41b2a41-9d29-4a6e-9b9a-644b52238ff3",
+              "text": "Submarine",
+              "checked": true,
+              "subs": []
+            },
+            {
               "id": "a45eaa6a-3990-4ede-87e6-e5834b218fb9",
               "idHeader": "d41b2a41-9d29-4a6e-9b9a-644b52238ff3",
               "text": "Cookies",
@@ -306,7 +499,7 @@
               "id": "c32db6da-5268-4819-a6be-fb1c22378ac6",
               "idHeader": "d41b2a41-9d29-4a6e-9b9a-644b52238ff3",
               "text": "Muffin",
-              "checked": true,
+              "checked": false,
               "subs": []
             }
           ],
@@ -316,6 +509,35 @@
           "id": "f7c599bf-bbb4-42ce-919b-663eb547683f",
           "name": "Épicerie",
           "items": [
+            {
+              "id": "01dd7b2f-5e1b-4611-99b8-d6655f6efccc",
+              "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
+              "text": "Sushi ",
+              "checked": false,
+              "subs": []
+            },
+            {
+              "id": "061a88fe-2ce0-421e-aa14-268adee0a7e4",
+              "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
+              "text": "Bouillons",
+              "checked": false,
+              "subs": [
+                {
+                  "id": "1e5ca150-d74a-48a9-9963-190d77f138d6",
+                  "idItem": "061a88fe-2ce0-421e-aa14-268adee0a7e4",
+                  "text": " boeuf",
+                  "rank": 1,
+                  "checked": false
+                },
+                {
+                  "id": "83562d6b-41fd-4139-b1ee-a0a2d5125783",
+                  "idItem": "061a88fe-2ce0-421e-aa14-268adee0a7e4",
+                  "text": " ",
+                  "rank": 2,
+                  "checked": false
+                }
+              ]
+            },
             {
               "id": "0691c17d-a47d-4e5d-bcd7-1e178d402e16",
               "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
@@ -342,14 +564,14 @@
               "id": "28f2a186-c2d6-41de-841e-c334e7336946",
               "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
               "text": "Thé",
-              "checked": true,
+              "checked": false,
               "subs": [
                 {
                   "id": "11274c0a-41a8-4501-be0d-dd056e20ced5",
                   "idItem": "28f2a186-c2d6-41de-841e-c334e7336946",
                   "text": " glacé",
                   "rank": 1,
-                  "checked": true
+                  "checked": false
                 },
                 {
                   "id": "49f5ad84-081f-4267-ab84-9bf9484e0694",
@@ -361,22 +583,37 @@
               ]
             },
             {
-              "id": "54d3a37b-268f-4657-ab76-7b6ba901eca2",
+              "id": "34166fc3-8600-4072-bcb6-10aee0e17e7e",
               "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
-              "text": "Lait",
+              "text": "Can",
               "checked": false,
               "subs": [
                 {
-                  "id": "78fc3f4b-d6fa-495b-8fcb-19c8b92fabf2",
-                  "idItem": "54d3a37b-268f-4657-ab76-7b6ba901eca2",
-                  "text": "3.25%",
+                  "id": "efc26ddb-dea0-4db6-a5a0-7bd5630282d5",
+                  "idItem": "34166fc3-8600-4072-bcb6-10aee0e17e7e",
+                  "text": "toto",
+                  "rank": 1,
+                  "checked": false
+                }
+              ]
+            },
+            {
+              "id": "3cebc3db-80fc-4365-84cf-dfe1d7e39da6",
+              "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
+              "text": "Papier",
+              "checked": false,
+              "subs": [
+                {
+                  "id": "436ca5e0-6a67-4501-9d0c-f0606fc8e3d8",
+                  "idItem": "3cebc3db-80fc-4365-84cf-dfe1d7e39da6",
+                  "text": " parchemin",
                   "rank": 2,
                   "checked": false
                 },
                 {
-                  "id": "85659fb3-4077-4154-8d49-84116cf45bf5",
-                  "idItem": "54d3a37b-268f-4657-ab76-7b6ba901eca2",
-                  "text": "2%",
+                  "id": "ef0461ae-fe03-4f01-b295-7bb8dadb0739",
+                  "idItem": "3cebc3db-80fc-4365-84cf-dfe1d7e39da6",
+                  "text": "Alu",
                   "rank": 1,
                   "checked": false
                 }
@@ -439,28 +676,6 @@
               "text": "Sauce tomate",
               "checked": false,
               "subs": []
-            },
-            {
-              "id": "736b8c3f-049e-447e-afbb-71f3728918c0",
-              "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
-              "text": "Crème",
-              "checked": false,
-              "subs": [
-                {
-                  "id": "178f8d85-2d97-42d5-8b0f-1976657a9411",
-                  "idItem": "736b8c3f-049e-447e-afbb-71f3728918c0",
-                  "text": " épaisse",
-                  "rank": 2,
-                  "checked": false
-                },
-                {
-                  "id": "de83e32f-e32f-4d25-a877-fb5a5ff4a0f0",
-                  "idItem": "736b8c3f-049e-447e-afbb-71f3728918c0",
-                  "text": " café",
-                  "rank": 1,
-                  "checked": false
-                }
-              ]
             },
             {
               "id": "84636f11-794e-4600-a75c-71478b010b27",
@@ -536,6 +751,13 @@
               ]
             },
             {
+              "id": "e41440b3-fc9a-4fb6-a77a-b13a1e085e9a",
+              "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
+              "text": "Orge",
+              "checked": false,
+              "subs": []
+            },
+            {
               "id": "e4a57e7d-1680-4579-8f0f-423ab150d8c0",
               "idHeader": "f7c599bf-bbb4-42ce-919b-663eb547683f",
               "text": "Dog food",
@@ -551,7 +773,7 @@
                 {
                   "id": "b08a18ba-beb3-44cb-aeb9-e2b1021f34a2",
                   "idItem": "e4a57e7d-1680-4579-8f0f-423ab150d8c0",
-                  "text": "gâterie",
+                  "text": "Gâterie",
                   "rank": 2,
                   "checked": false
                 }
@@ -575,21 +797,50 @@
               "id": "309f38f4-f5ec-4e01-84ed-ad433544264f",
               "idHeader": "fd09990c-25b1-4e82-a213-d59e4aeec056",
               "text": "Gin",
+              "checked": false,
+              "subs": []
+            },
+            {
+              "id": "7a5902b1-e31d-4384-a497-01c0a021ca10",
+              "idHeader": "fd09990c-25b1-4e82-a213-d59e4aeec056",
+              "text": "Saké",
               "checked": true,
               "subs": []
+            },
+            {
+              "id": "a0551a8e-f2b5-4d2c-85bb-9f2cc19aa028",
+              "idHeader": "fd09990c-25b1-4e82-a213-d59e4aeec056",
+              "text": "Vino",
+              "checked": false,
+              "subs": [
+                {
+                  "id": "261c0aaf-5e90-4088-bec1-22be9ce0c6e1",
+                  "idItem": "a0551a8e-f2b5-4d2c-85bb-9f2cc19aa028",
+                  "text": "Bulles",
+                  "rank": 2,
+                  "checked": false
+                },
+                {
+                  "id": "fe774eee-2f71-4c5f-9f85-d3d75aea304c",
+                  "idItem": "a0551a8e-f2b5-4d2c-85bb-9f2cc19aa028",
+                  "text": "Blanco",
+                  "rank": 1,
+                  "checked": false
+                }
+              ]
             },
             {
               "id": "a39a60e4-ee3f-4ad9-929f-74cb648f14d7",
               "idHeader": "fd09990c-25b1-4e82-a213-d59e4aeec056",
               "text": "Pastis",
-              "checked": true,
+              "checked": false,
               "subs": [
                 {
                   "id": "b4a51013-5d74-49a1-afc1-f61666df6ca8",
                   "idItem": "a39a60e4-ee3f-4ad9-929f-74cb648f14d7",
                   "text": "berger",
                   "rank": 1,
-                  "checked": true
+                  "checked": false
                 }
               ]
             }
@@ -599,5 +850,4 @@
       ]
     }
   ]
-
 }

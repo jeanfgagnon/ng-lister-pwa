@@ -21,7 +21,7 @@
         </mat-form-field>
       </div>
       <div fxFlex="15">
-        <button mat-icon-button type="button" (click)="onDeleteItem()">
+        <button mat-icon-button type="button" (click)="onDeleteItem()" *ngIf="verb !== 'Add'">
           <mat-icon>delete</mat-icon>
         </button>
       </div>

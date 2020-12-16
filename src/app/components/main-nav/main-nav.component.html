@@ -19,7 +19,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <a mat-list-item *ngFor="let cat of categories" href="#" (click)="drawer.toggle()"
+            <a mat-list-item *ngFor="let cat of sortedCategories" href="#" (click)="drawer.toggle()"
               [routerLink]="['/Liste', cat.id]" [ngClass]="{'fb': cat.isDefault}">{{ cat.name }}</a>
 
           </mat-expansion-panel>
@@ -50,7 +50,7 @@
           <button type="button" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
-          <span><b>Lister 0.8n</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+          <span><b>Lister 0.9.1</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
         </div>
 
         <div fxFlex="20" fxLayoutAlign="center center" class='cat-name'>

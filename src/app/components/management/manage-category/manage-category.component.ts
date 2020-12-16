@@ -8,6 +8,8 @@ import { ListHeader } from 'src/app/models/list-header';
 import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ListItem } from 'src/app/models/list-item';
+import { SubItem } from 'src/app/models/sub-item';
 
 @Component({
   selector: 'app-manage-category',
@@ -30,13 +32,11 @@ export class ManageCategoryComponent implements OnInit {
     private persistService: PersistService,
     private globalStateService: GlobalStateService,
     public dialog: MatDialog,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
 
-    this.persistService.query('categories', true).subscribe((category: ListCategory) => {
-      this.categories.push(category);
-    });
+    this.loadCategories();
 
     // ramasse tout les headers plus quick
     this.persistService.query('headers', true).subscribe((header: ListHeader) => {
@@ -91,6 +91,38 @@ export class ManageCategoryComponent implements OnInit {
     dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
       if (dialogResult) {
         // rendu ici
+        this.persistService.delete('categories', this.currentCategory.id).subscribe((cat: ListCategory) => {
+          this.globalStateService.sendMessage('CategoryChanged');
+          this.persistService.query('headers', true).subscribe((header: ListHeader) => {
+            if (header.idCategory === this.currentCategory.id) {
+              this.persistService.query('items', true).subscribe(
+                (item: ListItem) => {
+
+                  if (item.idHeader === header.id) {
+                    this.persistService.query('subitems', true).subscribe(
+                      (sub: SubItem) => {
+                        if (sub.idItem === item.id) {
+                          this.persistService.delete('subitems', sub.id).subscribe(() => { /* noop */ });
+                        }
+                      },
+                      (err) => console.log(err),
+                      (/* subitems completed */) => {
+                        this.persistService.delete('items', item.id).subscribe(() => { /* noop */ });
+                      }
+                    );
+                  }
+
+                },
+                (err) => console.log(err),
+                (/* items completed */) => {
+                  this.persistService.delete('headers', header.id).subscribe(() => { /* noop */ });
+                }
+              );
+            }
+          });
+        });
+        this.loadCategories();
+        this.toggleFormVisibility();
       }
     });
   }
@@ -135,7 +167,15 @@ export class ManageCategoryComponent implements OnInit {
       ( /* completed */) => {
         this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
           this.globalStateService.sendMessage('CategoryChanged');
-         });
+        });
       });
   }
+
+  private loadCategories() {
+    this.categories = [];
+    this.persistService.query('categories', true).subscribe((category: ListCategory) => {
+      this.categories.push(category);
+    });
+  }
+
 }

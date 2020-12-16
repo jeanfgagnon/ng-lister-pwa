@@ -74,10 +74,10 @@ export class EditItemComponent implements OnInit {
         this.persistService.delete('items', this.item.id).subscribe(() => {
           for (let i = 0; i < this.subItems.length; i++) {
             this.persistService.delete('subitems', this.subItems[i].id).subscribe(() => {
-              this.location.back();
             });
           }
         });
+        this.location.back();
       }
     });
   }

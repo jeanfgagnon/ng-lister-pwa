@@ -20,7 +20,7 @@
     <div>
       <mat-form-field class='' *ngIf="categories">
         <mat-select placeholder="Category" name="category" (selectionChange)="onCategorySelected($event)" [(ngModel)]="selectedCategoryId">
-          <mat-option *ngFor="let cat of categories" [value]="cat.id">
+          <mat-option *ngFor="let cat of sortedCategories" [value]="cat.id">
             {{ cat.name }}
           </mat-option>
         </mat-select>

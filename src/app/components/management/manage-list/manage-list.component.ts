@@ -29,6 +29,15 @@ export class ManageListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.globalStateService.message$.subscribe((m: string) => {
+      if (m === 'CategoryChanged') {
+        this.categories = [];
+        this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
+          this.categories.push(cat);
+        });
+      }
+    });
+
     this.persistService.query('categories', true).subscribe(
       (cat: ListCategory) => {
         this.categories.push(cat);
@@ -93,6 +102,12 @@ export class ManageListComponent implements OnInit {
 
   public get sortedHeaders(): ListHeader[] {
     return this.headers.sort((a: ListHeader, b: ListHeader) => {
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  public get sortedCategories(): ListCategory[] {
+    return this.categories.sort((a: ListCategory, b: ListCategory) => {
       return a.name.localeCompare(b.name);
     });
   }
