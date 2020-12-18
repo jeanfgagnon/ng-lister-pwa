@@ -19,18 +19,9 @@
   overflow-y: auto;
 }
 
-container {
+.scroll-container {
+  position: relative;
   display: flex;
   flex-direction: column;
-}
-
-header,
-footer {
-  flex: none;
-}
-
-main {
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  flex: auto;
 }

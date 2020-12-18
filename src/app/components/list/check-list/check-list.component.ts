@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 import { PersistService } from 'src/app/services/persist.service';
 import { ListItem } from 'src/app/models/list-item';
@@ -9,7 +9,7 @@ import { ListHeader } from 'src/app/models/list-header';
   templateUrl: './check-list.component.html',
   styleUrls: ['./check-list.component.scss']
 })
-export class CheckListComponent implements OnInit {
+export class CheckListComponent implements OnInit, AfterViewInit {
 
   public items: ListItem[] = [];
 
@@ -17,17 +17,17 @@ export class CheckListComponent implements OnInit {
   @Input() header!: ListHeader;
   @Output() itemClicked = new EventEmitter<string>();
 
+  @ViewChild('scrollzone') scrollzone!: ElementRef;
+
   constructor(
     private persistService: PersistService,
   ) { }
 
   ngOnInit(): void {
-    // si on passe le header on scrap
-    // this.persistService.query('items', true).subscribe((item: ListItem) => {
-    //   if (item.idHeader === this.header.id) {
-    //     this.items.push(item);
-    //   }
-    // });
+  }
+
+  ngAfterViewInit(): void {
+    this.setScrollerHeight();
   }
 
   // helpers
@@ -45,4 +45,12 @@ export class CheckListComponent implements OnInit {
   public onCheckChange(): void {
     this.itemClicked.emit(this.header.id);
   }
+
+  // privates
+
+  private setScrollerHeight(): void {
+    const top = this.scrollzone.nativeElement.getBoundingClientRect().top;
+    this.scrollzone.nativeElement.style.height = `${window.innerHeight - (top + 20)}px`;
+  }
+
 }

@@ -29,7 +29,7 @@
 
     <!-- <div *ngIf="headers"> -->
     <mat-card-subtitle>Existing lists</mat-card-subtitle>
-    <div class='scroll-container'>
+    <div #scrollzone class='scroll-container'>
       <mat-nav-list>
         <a mat-list-item *ngFor="let header of sortedHeaders" [routerLink]="['/Manage/ManageItem', header.id]">
           {{ header.name }} {{ itemCount(header.id) }}

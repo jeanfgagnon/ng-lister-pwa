@@ -6,3 +6,10 @@
   padding-left: 15px !important;
   padding-top: 15px !important;
 }
+
+.scroll-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}

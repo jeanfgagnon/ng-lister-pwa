@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 
 import { GlobalStateService } from 'src/app/services/global-state.service';
@@ -13,7 +13,7 @@ import { ListItem } from 'src/app/models/list-item';
   templateUrl: './manage-list.component.html',
   styleUrls: ['./manage-list.component.scss']
 })
-export class ManageListComponent implements OnInit {
+export class ManageListComponent implements OnInit, AfterViewInit {
 
   public listName = '';
   public formVisible = false;
@@ -22,6 +22,8 @@ export class ManageListComponent implements OnInit {
   public categories: ListCategory[] = [];
 
   public selectedCategoryId = '';
+
+  @ViewChild('scrollzone') scrollzone!: ElementRef;
 
   constructor(
     private persistService: PersistService,
@@ -61,6 +63,10 @@ export class ManageListComponent implements OnInit {
     this.persistService.query("items", true).subscribe((item: ListItem) => {
       this.allItems.push(item);
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.setScrollerHeight();
   }
 
   // event handlers
@@ -118,4 +124,8 @@ export class ManageListComponent implements OnInit {
 
   // privates
 
+  private setScrollerHeight(): void {
+    const top = this.scrollzone.nativeElement.getBoundingClientRect().top;
+    this.scrollzone.nativeElement.style.height = `${window.innerHeight - (top + 20)}px`;
+  }
 }

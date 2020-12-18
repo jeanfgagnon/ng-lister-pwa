@@ -18,21 +18,20 @@
 
   </div>
 
-  <div class="list-item" *ngIf="itemSubject$ | async as items; else loading">
+  <div class="list-item" *ngIf="items && items.length > 0">
     <mat-card-subtitle>Existing items</mat-card-subtitle>
 
-    <mat-nav-list>
-      <a mat-list-item *ngFor="let item of items" [routerLink]="['/Manage/EditItem', header.id, item.id]">{{ item.text
-        }}</a>
-    </mat-nav-list>
-
+    <div #scrollzone class='scroll-container'>
+      <mat-nav-list>
+        <a mat-list-item *ngFor="let item of items" [routerLink]="['/Manage/EditItem', header.id, item.id]">{{ item.text
+          }}</a>
+      </mat-nav-list>
+    </div>
   </div>
 
-  <ng-template #loading>
-    <div class="no-item">
-      No item defined yet
-    </div>
-  </ng-template>
+  <div *ngIf="!items || items.length == 0" class="no-item">
+    No item defined yet
+  </div>
 
 </div>
 
@@ -42,7 +41,7 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
 
-  <button *ngIf="itemSubject$ | async" mat-icon-button aria-label="Clear item list" (click)="confirmClear()">
+  <button *ngIf="items && items.length > 0" mat-icon-button aria-label="Clear item list" (click)="confirmClear()">
     <mat-icon>delete_sweep</mat-icon>
   </button>
 

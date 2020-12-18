@@ -10,8 +10,8 @@
 }
 
 .scroll-container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  max-height: 78vh;
-  overflow: auto;
+  overflow-y: scroll;
 }

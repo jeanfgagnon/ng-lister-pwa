@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
 
 import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ListHeader } from 'src/app/models/list-header';
@@ -23,11 +22,17 @@ export class ManageItemComponent implements OnInit {
   public title = '';
   public idHeader = '';
   public header = new ListHeader();
-  public listItems: ListItem[] = [];
+  public items: ListItem[] = [];
   public categories: ListCategory[] = [];
-  private itemSubject = new Subject<ListItem[]>();
 
-  public itemSubject$ = this.itemSubject.asObservable();
+  private scrollzone!: ElementRef;
+
+  @ViewChild('scrollzone') set elem(e: ElementRef) {
+    if (e) {
+      this.scrollzone = e;
+      this.setScrollerHeight(e);
+    }
+  }
 
   constructor(
     private route: Router,
@@ -47,12 +52,20 @@ export class ManageItemComponent implements OnInit {
       this.persistService.get('headers', this.idHeader).subscribe((header: ListHeader) => {
         this.header = header;
         this.title = header.name;
-        this.persistService.query('items', true).subscribe((listItem: ListItem) => {
-          if (listItem.idHeader === header.id) {
-            this.listItems.push(listItem); // pour alléger essayer avec juste cette array
-            this.itemSubject.next(this.listItems.sort((a: ListItem, b: ListItem) => { return a.text.localeCompare(b.text) }));
+        const localItems: ListItem[] = [];
+        this.persistService.query('items', true).subscribe(
+          (item: ListItem) => {
+            if (item.idHeader === header.id) {
+              localItems.push(item);
+            }
+          },
+          (err) => console.log(err),
+          (/* completed */) => {
+            this.items = localItems.sort((a: ListItem, b: ListItem) => {
+              return a.text.localeCompare(b.text);
+            });
           }
-        });
+        );
       });
     });
   }
@@ -61,7 +74,7 @@ export class ManageItemComponent implements OnInit {
 
   public onCategorySelected(matCatEvent: MatSelectChange) {
     this.header.idCategory = matCatEvent.value;
-    this.persistService.put('headers', this.header.id, this.header).subscribe(() => { /* noop */});
+    this.persistService.put('headers', this.header.id, this.header).subscribe(() => { /* noop */ });
   }
 
   public confirmClear(): void {
@@ -133,14 +146,18 @@ export class ManageItemComponent implements OnInit {
   // privates
 
   private clearList(): void {
-    for (let i = 0; i < this.listItems.length; i++) {
-      this.persistService.delete('items', this.listItems[i].id).subscribe(() => {
+    for (let i = 0; i < this.items.length; i++) {
+      this.persistService.delete('items', this.items[i].id).subscribe(() => {
         // noop
       });
     }
 
-    this.listItems = [];
-    this.itemSubject.next(undefined);
+    this.items = [];
+  }
+
+  private setScrollerHeight(el: ElementRef): void {
+    const top = el.nativeElement.getBoundingClientRect().top;
+    el.nativeElement.style.height = `${window.innerHeight - (top + 20 + 50)}px`;
   }
 
 }

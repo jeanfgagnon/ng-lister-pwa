@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { GlobalStateService } from 'src/app/services/global-state.service';
   templateUrl: './liste-menu.component.html',
   styleUrls: ['./liste-menu.component.scss']
 })
-export class ListeComponent implements OnInit {
+export class ListeComponent implements OnInit{
 
   public headers: ListHeader[] = [];
   public _sortedHeaders: ListHeader[] = [];
@@ -175,4 +175,5 @@ export class ListeComponent implements OnInit {
     }
     return s;
   }
+
 }
