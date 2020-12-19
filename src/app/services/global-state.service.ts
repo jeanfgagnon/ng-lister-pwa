@@ -18,17 +18,11 @@ export class GlobalStateService {
   constructor(
     private persistService: PersistService
   ) {
-    this.persistService.query('categories', true).subscribe(
-      (cat: ListCategory) => {
-        if (cat.isDefault || this._currentSelectedIdCategory === '') {
-          this._currentSelectedIdCategory = cat.id;
-        }
-      },
-      (err) => {
-      },
-      (/* complete */) => {
-        this.sendMessage('DefaultCategory');
-      });
+    this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
+      if (cat.isDefault || this._currentSelectedIdCategory === '') {
+        this._currentSelectedIdCategory = cat.id;
+      }
+    });
   }
 
   // properties

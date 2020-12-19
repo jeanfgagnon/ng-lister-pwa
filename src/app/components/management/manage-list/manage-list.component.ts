@@ -45,12 +45,12 @@ export class ManageListComponent implements OnInit, AfterViewInit {
     this.persistService.query('categories', true).subscribe(
       (cat: ListCategory) => {
         this.categories.push(cat);
-        if (cat.isDefault) {
-          if (this.globalStateService.CurrentSelectedIdCategory === '') {
-            this.globalStateService.CurrentSelectedIdCategory = cat.id;
-          }
-          this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
-        }
+        // if (cat.isDefault) {
+        //   if (this.globalStateService.CurrentSelectedIdCategory === '') {
+        //     this.globalStateService.CurrentSelectedIdCategory = cat.id;
+        //   }
+        //   this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
+        // }
       },
       (err) => { },
       (/* completed */) => {

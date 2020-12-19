@@ -8,13 +8,14 @@ import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { Tools } from 'src/app/common/Tools';
+import { ListCategory } from 'src/app/models/list-category';
 
 @Component({
   selector: 'app-liste-menu',
   templateUrl: './liste-menu.component.html',
   styleUrls: ['./liste-menu.component.scss']
 })
-export class ListeComponent implements OnInit{
+export class ListeComponent implements OnInit {
 
   public headers: ListHeader[] = [];
   public _sortedHeaders: ListHeader[] = [];
@@ -42,8 +43,13 @@ export class ListeComponent implements OnInit{
         this.globalStateService.CurrentSelectedIdCategory = params.id;
       }
       else {
-        this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory);
-        this.globalStateService.sendMessage('SelectedCategory');
+        if (this.globalStateService.CurrentSelectedIdCategory) {
+          this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory);
+          this.globalStateService.sendMessage('SelectedCategory');
+        }
+        else {
+          this.findDefaultCategory();
+        }
       }
     });
   }
@@ -170,6 +176,14 @@ export class ListeComponent implements OnInit{
     });
   }
 
-
+  // If luser is starting by Liste
+  private findDefaultCategory(): void {
+    this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
+      if (cat.isDefault) {
+        this.globalStateService.CurrentSelectedIdCategory = cat.id;
+        this.loadDataByCategoryId(cat.id);
+      }
+    });
+  }
 
 }

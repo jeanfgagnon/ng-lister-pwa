@@ -5,7 +5,7 @@ import { ListeComponent } from './components/list/liste-menu/liste-menu.componen
 import { ConsolidatedViewComponent } from './components/list/consolidated-view/consolidated-view.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'Liste', pathMatch: 'full' },
+  { path: '', redirectTo: 'Consolidated', pathMatch: 'full' },
   { path: 'Liste', component: ListeComponent },
   { path: 'Liste/:id', component: ListeComponent },
   { path: 'Consolidated', component: ConsolidatedViewComponent },
