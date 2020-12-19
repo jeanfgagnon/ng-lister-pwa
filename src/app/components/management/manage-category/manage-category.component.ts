@@ -10,6 +10,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { MatDialog } from '@angular/material/dialog';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
+import { Tools } from 'src/app/common/Tools';
 
 @Component({
   selector: 'app-manage-category',
@@ -52,7 +53,7 @@ export class ManageCategoryComponent implements OnInit {
       this.categories.push(this.currentCategory);
     }
 
-    this.currentCategory.name = this.categoryName;
+    this.currentCategory.name = Tools.capitalize(this.categoryName);
     this.currentCategory.isDefault = this.categoryIsDefault;
 
     if (this.currentCategory.isDefault) {

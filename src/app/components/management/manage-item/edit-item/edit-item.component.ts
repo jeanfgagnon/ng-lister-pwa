@@ -9,6 +9,7 @@ import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
 import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ConfirmDialogComponent } from 'src/app/components/management/confirm-dialog/confirm-dialog.component';
+import { Tools } from 'src/app/common/Tools';
 
 @Component({
   selector: 'app-edit-item',
@@ -120,6 +121,7 @@ export class EditItemComponent implements OnInit {
       listItem.idHeader = this.header.id;
     }
 
+    listItem.text = Tools.capitalize(listItem.text);
     this.persistService.put('items', listItem.id, listItem).subscribe((key: any) => {
       this.saveSubitems(listItem.id);
       if (this.addMore) {
@@ -163,7 +165,7 @@ export class EditItemComponent implements OnInit {
       if (this.subItems.length > 0) {
         subItem = this.subItems[0];
       }
-      subItem.text = this.subItemText1;
+      subItem.text = Tools.capitalize(this.subItemText1);
       subItem.rank = 1;
       this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
         if (this.subItemText2) {
@@ -171,7 +173,7 @@ export class EditItemComponent implements OnInit {
           if (this.subItems.length > 1) {
             subItem = this.subItems[1];
           }
-          subItem.text = this.subItemText2;
+          subItem.text = Tools.capitalize(this.subItemText2);
           subItem.rank = 2;
           this.persistService.put('subitems', subItem.id, subItem).subscribe(() => { /* noop */ });
         }

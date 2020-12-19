@@ -6,7 +6,7 @@
       {{ header.name }}
     </ng-template>
 
-    <app-check-list [header]="header" (itemClicked)="onItemClicked($event)"></app-check-list>
+    <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
 
     <mat-toolbar class='pos-bottom quick-div' fxLayoutAlign="space-evenly center">
 

@@ -9,6 +9,7 @@ import { PersistService } from './persist.service';
 })
 export class GlobalStateService {
 
+  private _isManageListScrollSetted = false;
   private _currentSelectedIdCategory = '';
   private messageSubject = new Subject<string>();
 
@@ -38,6 +39,14 @@ export class GlobalStateService {
   public set CurrentSelectedIdCategory(value: string) {
     this._currentSelectedIdCategory = value;
     this.sendMessage('SelectedCategory');
+  }
+
+
+  public get IsManageListScrollSetted(): boolean {
+    return this._isManageListScrollSetted;
+  }
+  public set IsManageListScrollSetted(value: boolean) {
+    this._isManageListScrollSetted = value;
   }
 
   // public interface

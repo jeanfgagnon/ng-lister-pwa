@@ -7,6 +7,7 @@ import { PersistService } from 'src/app/services/persist.service';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { GlobalStateService } from 'src/app/services/global-state.service';
+import { Tools } from 'src/app/common/Tools';
 
 @Component({
   selector: 'app-liste-menu',
@@ -150,7 +151,7 @@ export class ListeComponent implements OnInit{
     const splitted = this.quickText.split(/[,;]/);
 
     const item = this.persistService.newItemInstance(idHeader);
-    item.text = this.capitalize((splitted.shift() as string).trim());
+    item.text = Tools.capitalize((splitted.shift() as string).trim());
     item.checked = true;
 
     this.persistService.put('items', item.id, item).subscribe(() => {
@@ -159,7 +160,7 @@ export class ListeComponent implements OnInit{
         header.items.push(item);
         for (let i = 0; i < splitted.length; i++) {
           const subItem = this.persistService.newSubitemInstance(item.id);
-          subItem.text = this.capitalize(splitted[i].trim());
+          subItem.text = Tools.capitalize(splitted[i].trim());
           subItem.rank = (i + 1);
           this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
             /* noop */
@@ -169,11 +170,6 @@ export class ListeComponent implements OnInit{
     });
   }
 
-  private capitalize(s: string): string {
-    if (s && s.length > 0) {
-      return s[0].toUpperCase() + s.slice(1).toLowerCase();
-    }
-    return s;
-  }
+
 
 }

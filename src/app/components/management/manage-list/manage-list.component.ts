@@ -7,6 +7,7 @@ import { PersistService } from 'src/app/services/persist.service';
 import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
+import { Tools } from 'src/app/common/Tools';
 
 @Component({
   selector: 'app-manage-list',
@@ -23,6 +24,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
 
   public selectedCategoryId = '';
 
+  private scrollSetted = false;
   @ViewChild('scrollzone') scrollzone!: ElementRef;
 
   constructor(
@@ -85,11 +87,12 @@ export class ManageListComponent implements OnInit, AfterViewInit {
   public formSubmitted(e: Event): void {
     if (this.listName.trim() !== '') {
       const h = this.persistService.newHeaderInstance(this.selectedCategoryId);
-      h.name = this.listName;
+      h.name = Tools.capitalize(this.listName);
       this.persistService.put('headers', h.id, h).subscribe((key: any) => {
         this.headers.push(h);
         this.listName = '';
         this.formVisible = false;
+        setTimeout(() => this.recalcScroll(), 0);
       });
     }
   }
@@ -120,12 +123,22 @@ export class ManageListComponent implements OnInit, AfterViewInit {
 
   public toggleFormVisibility() {
     this.formVisible = !this.formVisible;
+    setTimeout(() => this.recalcScroll(), 0);
   }
 
-  // privates
+  // privates1
+
+  private recalcScroll(): void {
+    this.globalStateService.IsManageListScrollSetted = false;
+    this.setScrollerHeight();
+  }
 
   private setScrollerHeight(): void {
-    const top = this.scrollzone.nativeElement.getBoundingClientRect().top;
-    this.scrollzone.nativeElement.style.height = `${window.innerHeight - (top + 20)}px`;
+    if (!this.globalStateService.IsManageListScrollSetted) {
+      const top = this.scrollzone.nativeElement.getBoundingClientRect().top;
+      this.scrollzone.nativeElement.style.height = `${window.innerHeight - (top + 20)}px`;
+      console.log('setScroll dans manage-list');
+      this.globalStateService.IsManageListScrollSetted = true;
+    }
   }
 }

@@ -9,25 +9,27 @@ import { ListHeader } from 'src/app/models/list-header';
   templateUrl: './check-list.component.html',
   styleUrls: ['./check-list.component.scss']
 })
-export class CheckListComponent implements OnInit, AfterViewInit {
+export class CheckListComponent implements OnInit {
 
   public items: ListItem[] = [];
 
-  // faut passer le header il a deja ses items attaches
+  @Input() fromConsol = false;
   @Input() header!: ListHeader;
   @Output() itemClicked = new EventEmitter<string>();
 
-  @ViewChild('scrollzone') scrollzone!: ElementRef;
+  private scrollzone!: ElementRef;
+  @ViewChild('scrollzone') set elem(e: ElementRef) {
+    if (e) {
+      this.scrollzone = e;
+      this.setScrollerHeight(e);
+    }
+  }
 
   constructor(
     private persistService: PersistService,
   ) { }
 
   ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-    this.setScrollerHeight();
   }
 
   // helpers
@@ -48,9 +50,12 @@ export class CheckListComponent implements OnInit, AfterViewInit {
 
   // privates
 
-  private setScrollerHeight(): void {
-    const top = this.scrollzone.nativeElement.getBoundingClientRect().top;
-    this.scrollzone.nativeElement.style.height = `${window.innerHeight - (top + 20)}px`;
+  private setScrollerHeight(el: ElementRef): void {
+    if (!this.fromConsol) {
+      // no scrolling in consolidated view
+      const top = el.nativeElement.getBoundingClientRect().top;
+      el.nativeElement.style.height = `${window.innerHeight - (top + 20)}px`;
+    }
   }
 
 }

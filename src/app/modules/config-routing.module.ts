@@ -8,7 +8,7 @@ import { ManageItemComponent } from '../components/management/manage-item/manage
 const routes: Routes = [
   { path: '', component: ManageComponent },
   { path: 'ManageItem/:id', component: ManageItemComponent },
-  { path: 'EditItem/:id/:itemid', component: EditItemComponent },
+  { path: 'EditItem/:id/:itemid', component: EditItemComponent }
 ];
 
 @NgModule({

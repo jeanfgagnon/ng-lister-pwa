@@ -11,6 +11,7 @@ import { PersistService } from 'src/app/services/persist.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { ListCategory } from 'src/app/models/list-category';
 import { MatSelectChange } from '@angular/material/select';
+import { Tools } from 'src/app/common/Tools';
 
 @Component({
   selector: 'app-manage-item',
@@ -38,8 +39,8 @@ export class ManageItemComponent implements OnInit {
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private persistService: PersistService,
-    public dialog: MatDialog,
-    private location: Location
+    private location: Location,
+    public dialog: MatDialog
   ) {
   }
 
@@ -102,7 +103,7 @@ export class ManageItemComponent implements OnInit {
       if (dialogResult) {
         this.clearList();
         this.persistService.delete('headers', this.header.id).subscribe(() => {
-          this.route.navigateByUrl('/ManageList');
+          this.location.back();
         });
       }
     });
@@ -125,6 +126,7 @@ export class ManageItemComponent implements OnInit {
       if (this.header.name.length > 16) {
         this.header.name = el.innerText.substring(0, 16);
       }
+      this.header.name = Tools.capitalize(this.header.name);
       this.persistService.put('headers', this.header.id, this.header).subscribe((h: ListHeader) => {
         if (el.innerText.length > 16) {
           el.innerText = el.innerText.substring(0, 16);
