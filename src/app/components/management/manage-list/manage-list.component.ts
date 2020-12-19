@@ -46,10 +46,17 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       (cat: ListCategory) => {
         this.categories.push(cat);
         if (cat.isDefault) {
+
+          // douteux. pas besoin de faire ce machin je crois
           if (this.globalStateService.CurrentSelectedIdCategory === '') {
             this.globalStateService.CurrentSelectedIdCategory = cat.id;
           }
+
+
           this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
+
+          // ni ici.  Le manage module doit envoier son message pour changer le mode. Rendu ici.
+          this.globalStateService.sendMessage('SelectedCategory');
         }
       },
       (err) => { },

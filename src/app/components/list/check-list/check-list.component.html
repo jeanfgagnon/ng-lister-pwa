@@ -1,4 +1,4 @@
-<div class='scroll-container' #scrollzone>
+<div class='scroll-container pad10' #scrollzone1>
   <div *ngFor="let item of sortedItems" class='pad10 my-pad'>
     <app-check-item [item]="item" (checkChange)="onCheckChange()"></app-check-item>
   </div>

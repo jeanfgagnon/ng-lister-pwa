@@ -22,7 +22,7 @@ export class ListeComponent implements OnInit {
   public loaded = false;
   public quickText = '';
 
-  @ViewChild('tabgroup') tabgroup!: MatTabGroup;
+  //@ViewChild('tabgroup') tabgroup!: MatTabGroup;
 
   constructor(
     private persistService: PersistService,
