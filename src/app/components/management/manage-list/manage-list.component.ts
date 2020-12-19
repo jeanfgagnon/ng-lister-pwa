@@ -45,12 +45,12 @@ export class ManageListComponent implements OnInit, AfterViewInit {
     this.persistService.query('categories', true).subscribe(
       (cat: ListCategory) => {
         this.categories.push(cat);
-        // if (cat.isDefault) {
-        //   if (this.globalStateService.CurrentSelectedIdCategory === '') {
-        //     this.globalStateService.CurrentSelectedIdCategory = cat.id;
-        //   }
-        //   this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
-        // }
+        if (cat.isDefault) {
+          if (this.globalStateService.CurrentSelectedIdCategory === '') {
+            this.globalStateService.CurrentSelectedIdCategory = cat.id;
+          }
+          this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
+        }
       },
       (err) => { },
       (/* completed */) => {
@@ -126,7 +126,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
     setTimeout(() => this.recalcScroll(), 0);
   }
 
-  // privates1
+  // privates
 
   private recalcScroll(): void {
     this.globalStateService.IsManageListScrollSetted = false;
@@ -134,10 +134,9 @@ export class ManageListComponent implements OnInit, AfterViewInit {
   }
 
   private setScrollerHeight(): void {
-    if (!this.globalStateService.IsManageListScrollSetted) {
+    if (!this.globalStateService.IsManageListScrollSetted) { // PTF? this is far from clean ;-(
       const top = this.scrollzone.nativeElement.getBoundingClientRect().top;
       this.scrollzone.nativeElement.style.height = `${window.innerHeight - (top + 20)}px`;
-      console.log('setScroll dans manage-list');
       this.globalStateService.IsManageListScrollSetted = true;
     }
   }

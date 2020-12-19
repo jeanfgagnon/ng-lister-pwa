@@ -120,39 +120,6 @@ export class ListeComponent implements OnInit {
     );
   }
 
-  private xxxloadDataByCategoryId(id: string): void {
-    this.headers = [];
-    this.loaded = false;
-
-    this.persistService.query("headers", true).subscribe(
-      (header: ListHeader) => {
-        if (header.idCategory === id) {
-          this.headers.push(header);
-          header.items = [];
-          this.persistService.query('items', true).subscribe(
-            (item: ListItem) => {
-              if (item.idHeader === header.id) {
-                header.items.push(item);
-              }
-            },
-            (err) => { },
-            (/* complete */) => {
-              if (header.items.filter(x => x.checked).length > 0) {
-                header.name += "*";
-              }
-            }
-          );
-        }
-      },
-      (err) => {
-      },
-      (/* complete */) => {
-        setTimeout(() => { this.tabgroup.selectedIndex = 0 });
-        this.loaded = true;
-      }
-    );
-  }
-
   private quickAdd(idHeader: string): void {
     const splitted = this.quickText.split(/[,;]/);
 
