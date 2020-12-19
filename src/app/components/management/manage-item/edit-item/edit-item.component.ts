@@ -165,7 +165,7 @@ export class EditItemComponent implements OnInit {
       if (this.subItems.length > 0) {
         subItem = this.subItems[0];
       }
-      subItem.text = Tools.capitalize(this.subItemText1);
+      subItem.text = Tools.capitalize(this.subItemText1.trim());
       subItem.rank = 1;
       this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
         if (this.subItemText2) {
@@ -173,7 +173,7 @@ export class EditItemComponent implements OnInit {
           if (this.subItems.length > 1) {
             subItem = this.subItems[1];
           }
-          subItem.text = Tools.capitalize(this.subItemText2);
+          subItem.text = Tools.capitalize(this.subItemText2.trim());
           subItem.rank = 2;
           this.persistService.put('subitems', subItem.id, subItem).subscribe(() => { /* noop */ });
         }

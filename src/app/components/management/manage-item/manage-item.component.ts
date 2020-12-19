@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ListHeader } from 'src/app/models/list-header';
@@ -12,6 +13,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { ListCategory } from 'src/app/models/list-category';
 import { MatSelectChange } from '@angular/material/select';
 import { Tools } from 'src/app/common/Tools';
+import { SubItem } from 'src/app/models/sub-item';
 
 @Component({
   selector: 'app-manage-item',
@@ -40,8 +42,9 @@ export class ManageItemComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private persistService: PersistService,
     private location: Location,
-    public dialog: MatDialog
-  ) {
+    public dialog: MatDialog,
+    private sanitizer: DomSanitizer
+    ) {
   }
 
   ngOnInit(): void {
@@ -58,6 +61,12 @@ export class ManageItemComponent implements OnInit {
           (item: ListItem) => {
             if (item.idHeader === header.id) {
               localItems.push(item);
+              item.subs = [];
+              this.persistService.query('subitems',true).subscribe((subItem: SubItem) => {
+                if (subItem.idItem === item.id) {
+                  item.subs.push(subItem);
+                }
+              });
             }
           },
           (err) => console.log(err),
@@ -144,6 +153,16 @@ export class ManageItemComponent implements OnInit {
   }
 
   // helpers
+
+  public getLinkText(item: ListItem): SafeHtml {
+    let rv = item.text;
+    let subtext = item.subs.map(subitem => {return subitem.text}).join(', ');
+
+    if (subtext.length) {
+      subtext = '[' + subtext + ']';
+    }
+    return this.sanitizer.bypassSecurityTrustHtml( rv + " <span style='  color:#c0c0c0;font-size: 8pt;'>" + subtext + "</span>");
+  }
 
   // privates
 
