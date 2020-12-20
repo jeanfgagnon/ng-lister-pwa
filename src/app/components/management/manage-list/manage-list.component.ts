@@ -33,6 +33,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    this.globalStateService.sendMessage('ManageLists');
     this.globalStateService.message$.subscribe((m: string) => {
       if (m === 'CategoryChanged') {
         this.categories = [];
@@ -48,15 +49,12 @@ export class ManageListComponent implements OnInit, AfterViewInit {
         if (cat.isDefault) {
 
           // douteux. pas besoin de faire ce machin je crois
-          if (this.globalStateService.CurrentSelectedIdCategory === '') {
-            this.globalStateService.CurrentSelectedIdCategory = cat.id;
-          }
-
+          // console.log('douteux curr cat id ==> %s', this.globalStateService.CurrentSelectedIdCategory);
+          // if (this.globalStateService.CurrentSelectedIdCategory === '') {
+          //   this.globalStateService.CurrentSelectedIdCategory = cat.id;
+          // }
 
           this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
-
-          // ni ici.  Le manage module doit envoier son message pour changer le mode. Rendu ici.
-          this.globalStateService.sendMessage('SelectedCategory');
         }
       },
       (err) => { },

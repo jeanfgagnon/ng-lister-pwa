@@ -17,10 +17,10 @@ export class CheckListComponent implements OnInit {
   @Input() header!: ListHeader;
   @Output() itemClicked = new EventEmitter<string>();
 
-  private scrollzone!: ElementRef;
+  // private scrollzone!: ElementRef;
   @ViewChild('scrollzone1') set elem(e: ElementRef) {
     if (e) {
-      this.scrollzone = e;
+      // this.scrollzone = e;
       this.setScrollerHeight(e);
     }
   }
@@ -54,7 +54,7 @@ export class CheckListComponent implements OnInit {
     if (!this.fromConsol) {
       // no scrolling in consolidated view
       const br = el.nativeElement.getBoundingClientRect();
-      // todo: 170 heu?
+      // 170: top bar 56, tab 48, toolbar 56, 10px free
       el.nativeElement.style.height = `${window.innerHeight - (br.top + 170)}px`;
     }
   }

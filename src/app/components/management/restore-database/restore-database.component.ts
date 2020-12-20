@@ -31,6 +31,7 @@ export class RestoreDatabaseComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.globalStateService.sendMessage('ManageRestore');
   }
 
   // event handlers

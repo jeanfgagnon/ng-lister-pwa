@@ -43,6 +43,8 @@ export class ManageCategoryComponent implements OnInit {
     this.persistService.query('headers', true).subscribe((header: ListHeader) => {
       this.headers.push(header);
     });
+
+    this.globalStateService.sendMessage('ManageCategories');
   }
 
   // event handlers
@@ -91,7 +93,6 @@ export class ManageCategoryComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
       if (dialogResult) {
-        // rendu ici
         this.persistService.delete('categories', this.currentCategory.id).subscribe((cat: ListCategory) => {
           this.globalStateService.sendMessage('CategoryChanged');
           this.persistService.query('headers', true).subscribe((header: ListHeader) => {

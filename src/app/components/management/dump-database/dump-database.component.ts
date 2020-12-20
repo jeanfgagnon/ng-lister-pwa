@@ -7,6 +7,7 @@ import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
+import { GlobalStateService } from 'src/app/services/global-state.service';
 @Component({
   selector: 'app-dump-database',
   templateUrl: './dump-database.component.html',
@@ -25,10 +26,12 @@ export class DumpDatabaseComponent implements OnInit, AfterViewInit {
 
   constructor(
     private persistService: PersistService,
+    private globalStateService: GlobalStateService,
     @Inject('Window') private window: Window
   ) { }
 
   ngOnInit(): void {
+    this.globalStateService.sendMessage('ManageBackup');
   }
 
   ngAfterViewInit(): void {

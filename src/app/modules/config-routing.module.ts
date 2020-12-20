@@ -1,14 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ManageComponent } from 'src/app/components/management/manage/manage.component';
+import { DumpDatabaseComponent } from '../components/management/dump-database/dump-database.component';
+import { ManageCategoryComponent } from '../components/management/manage-category/manage-category.component';
 import { EditItemComponent } from '../components/management/manage-item/edit-item/edit-item.component';
 import { ManageItemComponent } from '../components/management/manage-item/manage-item.component';
+import { ManageListComponent } from '../components/management/manage-list/manage-list.component';
+import { RestoreDatabaseComponent } from '../components/management/restore-database/restore-database.component';
 
 const routes: Routes = [
-  { path: '', component: ManageComponent },
+  { path: 'ManageLists', component: ManageListComponent },
+  { path: 'ManageCategories', component: ManageCategoryComponent },
   { path: 'ManageItem/:id', component: ManageItemComponent },
-  { path: 'EditItem/:id/:itemid', component: EditItemComponent }
+  { path: 'EditItem/:id/:itemid', component: EditItemComponent },
+  { path: 'BackupDatabase', component: DumpDatabaseComponent },
+  { path: 'RestoreDatabase', component: RestoreDatabaseComponent },
 ];
 
 @NgModule({

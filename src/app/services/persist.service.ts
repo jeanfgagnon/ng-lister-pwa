@@ -9,7 +9,6 @@ import { SubItem } from '../models/sub-item';
 
 const VERSION = 2;
 const STORE_NAME = 'lister-pwa';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -234,35 +233,6 @@ export class PersistService {
         observer.error(err);
       }
     });
-  }
-
-  // private AAconstructor() {
-  //   this.request = window.indexedDB.open(this.storeName);
-  //   this.request.onupgradeneeded = () => {
-  //     const db = this.request.result;
-
-  //     const store = db.createObjectStore("headers", { keyPath: "id" });
-  //     const headerIndex = store.createIndex("by_id", "id", { unique: true });
-  //   };
-
-  //   this.request.onsuccess = () => {
-  //     this.database = this.request.result;
-  //   }
-
-  //   //this.database = this.request.result;
-  // }
-
-  public saveHeader(h: ListHeader) {
-    const tx = this.database.transaction("headers", "readwrite");
-    const store = tx.objectStore("headers");
-    store.put(h);
-
-    tx.oncomplete = function () {
-      // All requests have succeeded and the transaction has committed.
-      this.debugLog('All requests have succeeded and the transaction has committed.');
-    };
-
-    this.debugLog('on est fermé %s', this.uuidv4());
   }
 
   public newCategoryInstance(): ListCategory {

@@ -12,7 +12,7 @@ const routes: Routes = [
 
   { path: 'Manage', loadChildren: () => import('./modules/config.module').then(m => m.ConfigModule) },
 
-  { path: '**', redirectTo: 'Liste' }
+  { path: '**', redirectTo: 'Consolidated' }
 ];
 
 @NgModule({

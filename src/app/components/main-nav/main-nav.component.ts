@@ -56,6 +56,18 @@ export class MainNavComponent implements OnInit {
       else if (m === 'ConsolidatedView') {
         this.selectedCategoryName = 'Consolidated';
       }
+      else if (m === 'ManageLists') {
+        this.selectedCategoryName = 'Manage Lists';
+      }
+      else if (m === 'ManageCategories') {
+        this.selectedCategoryName = 'Manage Categories';
+      }
+      else if (m === 'ManageBackup') {
+        this.selectedCategoryName = 'Backup Database';
+      }
+      else if (m === 'ManageRestore') {
+        this.selectedCategoryName = 'Restore Database';
+      }
     });
   }
 

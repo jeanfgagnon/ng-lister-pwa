@@ -13,7 +13,6 @@ import { ConfirmDialogComponent } from 'src/app/components/management/confirm-di
 import { DumpDatabaseComponent } from 'src/app/components/management/dump-database/dump-database.component';
 import { EditItemComponent } from 'src/app/components/management/manage-item/edit-item/edit-item.component';
 import { ManageCategoryComponent } from 'src/app/components/management/manage-category/manage-category.component';
-import { ManageComponent } from 'src/app/components/management/manage/manage.component';
 import { ManageItemComponent } from 'src/app/components/management/manage-item/manage-item.component';
 import { ManageListComponent } from 'src/app/components/management/manage-list/manage-list.component';
 
@@ -24,7 +23,6 @@ import { ManageListComponent } from 'src/app/components/management/manage-list/m
     DumpDatabaseComponent,
     EditItemComponent,
     ManageCategoryComponent,
-    ManageComponent,
     ManageItemComponent,
     ManageListComponent,
   ],

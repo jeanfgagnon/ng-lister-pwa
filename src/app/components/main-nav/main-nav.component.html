@@ -12,7 +12,7 @@
 
         <mat-accordion multi displayMode="default">
           <!-- class="mat-elevation-z0" -->
-          <mat-expansion-panel [expanded]="true" class="mat-elevation-z0" >
+          <mat-expansion-panel [expanded]="true" class="mat-elevation-z0">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Categories
@@ -27,8 +27,23 @@
 
         <mat-divider></mat-divider>
 
-        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage']">Manage</a>
-        <a mat-list-item (click)="changeTheme(drawer)">{{ nextTheme }}</a>
+        <mat-accordion multi displayMode="default">
+          <mat-expansion-panel [expanded]="false" class="mat-elevation-z0">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Settings
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/ManageCategories']">Categories</a>
+            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/ManageLists']">Lists</a>
+            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/BackupDatabase']">Backup</a>
+            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/RestoreDatabase']">Restore</a>
+            <a mat-list-item (click)="changeTheme(drawer)">{{ nextTheme }}</a>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+
 
         <!-- <button mat-menu-item (click)="changeTheme(drawer)">{{ nextTheme }}</button> -->
       </div>
@@ -46,14 +61,14 @@
     <mat-toolbar color="primary">
       <div fxLayout='row' fxFlexFill>
 
-        <div fxFlex="80" fxLayoutAlign="start center">
+        <div fxFlex="70" fxLayoutAlign="start center">
           <button type="button" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
-          <span><b>Lister 0.4d</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+          <span><b>Lister 0.5a</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
         </div>
 
-        <div fxFlex="20" fxLayoutAlign="center center" class='cat-name'>
+        <div fxFlex="30" fxLayoutAlign="center center" class='cat-name'>
           {{ selectedCategoryName }}
         </div>
       </div>
