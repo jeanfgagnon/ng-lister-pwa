@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, ReplaySubject, Observable, Observer } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { IIDText } from '../models/interface-id-text';
 import { ListCategory } from '../models/list-category';
 
 import { ListHeader } from '../models/list-header';
@@ -9,6 +10,7 @@ import { SubItem } from '../models/sub-item';
 
 const VERSION = 2;
 const STORE_NAME = 'lister-pwa';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -235,10 +237,54 @@ export class PersistService {
     });
   }
 
+  public exists<T extends IIDText>(storeName: string, matcher: (truc: T) => boolean): Observable<boolean> {
+    this.debugLog('localedb.exists()');
+    return new Observable((observer: Observer<boolean>) => {
+      try {
+        this.db.pipe(
+          take(1)
+        ).subscribe(db => {
+          this.debugLog('localdb.query() got db:', db);
+          if (!db) {
+            observer.error('IndexDB not supported!');
+            return;
+          }
+
+          const transaction = db.transaction([storeName], 'readonly');
+          const store = transaction.objectStore(storeName);
+
+          const req = store.openCursor();
+
+          req.onerror = function (e: any) {
+            observer.error(e.target.error);
+            return;
+          };
+
+          req.onsuccess = function (e: any) {
+            const cursor = e.target.result;
+            if (cursor) {
+              const record = cursor.value as T;
+              if (matcher(record)) {
+                observer.next(true);
+                observer.complete();
+              }
+              cursor.continue();
+            } else {
+              observer.next(false);
+              observer.complete();
+            }
+          };
+        });
+      } catch (err) {
+        observer.error(err);
+      }
+    });
+  }
+
   public newCategoryInstance(): ListCategory {
     const rv: ListCategory = {
       id: this.uuidv4(),
-      name: '',
+      text: '',
       description: '',
       isDefault: false,
       headers: []
@@ -251,7 +297,7 @@ export class PersistService {
     const rv: ListHeader = {
       id: this.uuidv4(),
       idCategory: idCategory,
-      name: 'xxx',
+      text: 'xxx',
       items: []
     };
 

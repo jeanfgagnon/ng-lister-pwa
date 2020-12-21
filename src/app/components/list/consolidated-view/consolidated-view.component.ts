@@ -64,12 +64,12 @@ export class ConsolidatedViewComponent implements OnInit {
         this.tieAll();
         this.removeDeadWood();
         this.categories = this.categories.sort((a: ListCategory, b: ListCategory) => {
-          return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+          return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
         });
 
         this.categories.forEach((category: ListCategory) => {
           category.headers = category.headers.sort((a: ListHeader, b: ListHeader) => {
-            return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
           });
 
         })

@@ -26,6 +26,7 @@ export class ManageCategoryComponent implements OnInit {
   public categoryIsDefault = false;
   public formVisible = false;
   public actionVerb = "Add";
+  public errorMessage = '';
 
   private currentCategory!: ListCategory;
 
@@ -50,25 +51,38 @@ export class ManageCategoryComponent implements OnInit {
   // event handlers
 
   public formSubmitted(e: Event): void {
-    if (this.actionVerb === "Add") {
-      this.currentCategory = this.persistService.newCategoryInstance();
-      this.categories.push(this.currentCategory);
-    }
+    const stdCatName = Tools.capitalize(this.categoryName);
+    this.persistService.exists<ListCategory>('categories', (cat: ListCategory) => {
+        return (cat.text === stdCatName);
+      }).subscribe((exists: boolean) => {
 
-    this.currentCategory.name = Tools.capitalize(this.categoryName);
-    this.currentCategory.isDefault = this.categoryIsDefault;
+      if (!exists) {
+        if (this.actionVerb === "Add") {
+          this.currentCategory = this.persistService.newCategoryInstance();
+          this.categories.push(this.currentCategory);
+        }
 
-    if (this.currentCategory.isDefault) {
-      this.removeDefaultAll();
-    }
-    else {
-      this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
-        this.globalStateService.sendMessage('CategoryChanged');
-      });
-    }
+        this.currentCategory.text = stdCatName;
+        this.currentCategory.isDefault = this.categoryIsDefault;
 
-    this.resetForm();
-    this.formVisible = false;
+        if (this.currentCategory.isDefault) {
+          this.removeDefaultAll();
+        }
+        else {
+          this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
+            this.globalStateService.sendMessage('CategoryChanged');
+          });
+        }
+
+        this.resetForm();
+        this.formVisible = false;
+      }
+      else {
+        this.errorMessage = "This category exists!";
+        setTimeout(() => { this.errorMessage = ''; }, 5000);
+      }
+    });
+
   }
 
   public onCheckboxChange(event: MatCheckboxChange): void {
@@ -80,7 +94,7 @@ export class ManageCategoryComponent implements OnInit {
     this.formVisible = true;
 
     this.currentCategory = category;
-    this.categoryName = category.name;
+    this.categoryName = category.text;
     this.categoryIsDefault = category.isDefault;
   }
 
@@ -138,8 +152,8 @@ export class ManageCategoryComponent implements OnInit {
 
   public get sortedCategories(): ListCategory[] {
     return this.categories.sort((a: ListCategory, b: ListCategory) => {
-      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+      if (a.text.toLowerCase() < b.text.toLowerCase()) return -1;
+      if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
       return 0;
     });
   }

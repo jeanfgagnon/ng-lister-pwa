@@ -21,6 +21,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
   public headers: ListHeader[] = [];
   public allItems: ListItem[] = [];
   public categories: ListCategory[] = [];
+  public errorMessage = '';
 
   public selectedCategoryId = '';
 
@@ -91,13 +92,26 @@ export class ManageListComponent implements OnInit, AfterViewInit {
 
   public formSubmitted(e: Event): void {
     if (this.listName.trim() !== '') {
-      const h = this.persistService.newHeaderInstance(this.selectedCategoryId);
-      h.name = Tools.capitalize(this.listName);
-      this.persistService.put('headers', h.id, h).subscribe((key: any) => {
-        this.headers.push(h);
-        this.listName = '';
-        this.formVisible = false;
-        setTimeout(() => this.recalcScroll(), 0);
+      const stdListText = Tools.capitalize(this.listName.trim());
+      this.persistService.exists<ListHeader>('headers', (h: ListHeader) => {
+        return (h.idCategory === this.selectedCategoryId && h.text === stdListText);
+      }).subscribe((exists: boolean) => {
+
+        if (!exists) {
+          const header = this.persistService.newHeaderInstance(this.selectedCategoryId);
+          header.text = Tools.capitalize(this.listName);
+          this.persistService.put('headers', header.id, header).subscribe((key: any) => {
+            this.headers.push(header);
+            this.listName = '';
+            this.formVisible = false;
+            setTimeout(() => this.recalcScroll(), 0);
+          });
+        }
+        else {
+          const selectedCategory = this.categories.find(x=>x.id  === this.selectedCategoryId);
+          this.errorMessage = `This list exists in ${selectedCategory?.text}!`;
+          setTimeout(() => { this.errorMessage = ''; }, 5000);
+        }
       });
     }
   }
@@ -116,13 +130,13 @@ export class ManageListComponent implements OnInit, AfterViewInit {
 
   public get sortedHeaders(): ListHeader[] {
     return this.headers.sort((a: ListHeader, b: ListHeader) => {
-      return a.name.localeCompare(b.name);
+      return a.text.localeCompare(b.text);
     });
   }
 
   public get sortedCategories(): ListCategory[] {
     return this.categories.sort((a: ListCategory, b: ListCategory) => {
-      return a.name.localeCompare(b.name);
+      return a.text.localeCompare(b.text);
     });
   }
 

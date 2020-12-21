@@ -50,7 +50,7 @@ export class MainNavComponent implements OnInit {
       }
       else if (m === 'SelectedCategory' ||  m === 'DefaultCategory') {
         this.persistService.get('categories', this.globalStateService.CurrentSelectedIdCategory).subscribe((cat: ListCategory) => {
-          this.selectedCategoryName = (cat ? cat.name : 'bug!');
+          this.selectedCategoryName = (cat ? cat.text : 'bug!');
         });
       }
       else if (m === 'ConsolidatedView') {
@@ -87,7 +87,7 @@ export class MainNavComponent implements OnInit {
 
   public get sortedCategories(): ListCategory[] {
     return this.categories.sort((a: ListCategory, b: ListCategory) => {
-      return a.name.localeCompare(b.name);
+      return a.text.localeCompare(b.text);
     });
   }
 

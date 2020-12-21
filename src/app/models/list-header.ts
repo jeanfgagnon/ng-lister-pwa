@@ -1,15 +1,16 @@
+import { IIDText } from './interface-id-text';
 import { ListItem } from './list-item';
 
-export class ListHeader {
+export class ListHeader implements IIDText  {
   id: string;
   idCategory: string;
-  name: string;
+  text: string;
   items: ListItem[];
 
   constructor(id = '', idCategory = '', name = '') {
     this.id = id;
     this.idCategory = idCategory;
-    this.name = name;
+    this.text = name;
     this.items = [];
   }
 }

@@ -11,7 +11,7 @@
       <mat-select placeholder="Category" name="category" (selectionChange)="onCategorySelected($event)"
         [(ngModel)]="header.idCategory">
         <mat-option *ngFor="let cat of categories" [value]="cat.id">
-          {{ cat.name }}
+          {{ cat.text }}
         </mat-option>
       </mat-select>
     </mat-form-field>

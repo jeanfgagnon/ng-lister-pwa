@@ -54,7 +54,6 @@ export class ListeComponent implements OnInit {
     });
   }
 
-  // helpers
 
   // event handlers
 
@@ -62,10 +61,10 @@ export class ListeComponent implements OnInit {
     const h = this.headers.find(h => h.id === idHeader);
     if (h) {
       if (h.items.filter(x => x.checked).length === 0) {
-        h.name = h.name.replace(/\*/, '');
+        h.text = h.text.replace(/\*/, '');
       }
-      else if (h.name.indexOf('*') === -1) {
-        h.name += '*';
+      else if (h.text.indexOf('*') === -1) {
+        h.text += '*';
       }
     }
   }
@@ -79,11 +78,13 @@ export class ListeComponent implements OnInit {
 
   public sortedHeaders(): ListHeader[] {
     this._sortedHeaders = this.headers.sort((a: ListHeader, b: ListHeader) => {
-      return a.name.localeCompare(b.name);
+      return a.text.localeCompare(b.text);
     });
 
     return this._sortedHeaders;
   }
+
+  // helpers
 
   // privates
 
@@ -105,7 +106,7 @@ export class ListeComponent implements OnInit {
             (err) => { },
             (/* complete */) => {
               if (header.items.filter(x => x.checked).length > 0) {
-                header.name += "*";
+                header.text += "*";
               }
             }
           );

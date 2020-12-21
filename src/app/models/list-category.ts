@@ -1,15 +1,16 @@
+import { IIDText } from './interface-id-text';
 import { ListHeader } from './list-header';
 
-export class ListCategory {
+export class ListCategory implements IIDText {
   id: string;
-  name: string;
+  text: string;
   description: string;
   isDefault: boolean;
   headers: ListHeader[];
 
-  public constructor(id = '', name = '', description = '', isDefault = false, headers = []) {
+  public constructor(id = '', text = '', description = '', isDefault = false, headers = []) {
     this.id = id;
-    this.name = name;
+    this.text = text;
     this.description = description;
     this.isDefault = isDefault;
     this.headers = headers;

@@ -55,7 +55,7 @@ export class ManageItemComponent implements OnInit {
       });
       this.persistService.get('headers', this.idHeader).subscribe((header: ListHeader) => {
         this.header = header;
-        this.title = header.name;
+        this.title = header.text;
         const localItems: ListItem[] = [];
         this.persistService.query('items', true).subscribe(
           (item: ListItem) => {
@@ -131,11 +131,11 @@ export class ManageItemComponent implements OnInit {
   public onNameChanged(e: Event): void {
     const el = e.target as HTMLElement;
     if (this.header.id !== undefined) {
-      this.header.name = el.innerText;
-      if (this.header.name.length > 16) {
-        this.header.name = el.innerText.substring(0, 16);
+      this.header.text = el.innerText;
+      if (this.header.text.length > 16) {
+        this.header.text = el.innerText.substring(0, 16);
       }
-      this.header.name = Tools.capitalize(this.header.name);
+      this.header.text = Tools.capitalize(this.header.text);
       this.persistService.put('headers', this.header.id, this.header).subscribe((h: ListHeader) => {
         if (el.innerText.length > 16) {
           el.innerText = el.innerText.substring(0, 16);

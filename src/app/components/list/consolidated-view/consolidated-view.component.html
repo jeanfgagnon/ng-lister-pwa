@@ -5,12 +5,12 @@
 
       <mat-expansion-panel-header collapsedHeight="20" expandedHeight="20">
         <mat-panel-title>
-          {{ category.name }}
+          {{ category.text }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
       <div *ngFor="let header of category.headers">
-        <h4>{{ header.name }}</h4>
+        <h4>{{ header.text }}</h4>
         <app-check-list [header]="header" [fromConsol]="true"></app-check-list>
       </div>
 

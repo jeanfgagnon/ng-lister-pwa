@@ -1,4 +1,6 @@
-export class SubItem {
+import { IIDText } from "./interface-id-text";
+
+export class SubItem implements IIDText  {
   id: string;
   idItem: string;
   text: string;

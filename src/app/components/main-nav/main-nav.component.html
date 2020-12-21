@@ -20,7 +20,7 @@
             </mat-expansion-panel-header>
 
             <a mat-list-item *ngFor="let cat of sortedCategories" href="#" (click)="drawer.toggle()"
-              [routerLink]="['/Liste', cat.id]" [ngClass]="{'fb': cat.isDefault}">{{ cat.name }}</a>
+              [routerLink]="['/Liste', cat.id]" [ngClass]="{'fb': cat.isDefault}">{{ cat.text }}</a>
 
           </mat-expansion-panel>
         </mat-accordion>

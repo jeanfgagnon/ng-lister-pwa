@@ -28,6 +28,7 @@ export class EditItemComponent implements OnInit {
   public addMore = false;
   public subItemText1 = '';
   public subItemText2 = '';
+  public errorMessage = '';
 
   public verb = 'Edit';
 
@@ -110,27 +111,41 @@ export class EditItemComponent implements OnInit {
   }
 
   public formSubmitted(e: Event) {
+    if (this.item.text.trim() != '') {
 
-    let listItem = this.item;
+      let listItem!: ListItem;
+      const normalizedText = Tools.capitalize(this.item.text);
 
-    if (this.verb === 'Add') {
-      listItem = this.persistService.newItemInstance(this.header.id);
-      listItem.text = this.item.text;
+      this.persistService.exists<ListItem>('items', (itm: ListItem) => {
+        return (itm.idHeader === this.header.id && itm.text === normalizedText);
+      }).subscribe((exists: boolean) => {
+
+        if (!exists) {
+          if (this.verb === 'Add') {
+            listItem = this.persistService.newItemInstance(this.header.id);
+          }
+          else {
+            listItem.idHeader = this.header.id;
+          }
+
+          listItem.text = normalizedText;
+
+          this.persistService.put('items', listItem.id, listItem).subscribe((key: any) => {
+            this.saveSubitems(listItem.id);
+            if (this.addMore) {
+              this.reset();
+            }
+            else {
+              this.location.back();
+            }
+          });
+        }
+        else {
+          this.errorMessage = `This item exists in ${this.header.text}`;
+          setTimeout(() => { this.errorMessage = ''; }, 5000);
+        }
+      });
     }
-    else {
-      listItem.idHeader = this.header.id;
-    }
-
-    listItem.text = Tools.capitalize(listItem.text);
-    this.persistService.put('items', listItem.id, listItem).subscribe((key: any) => {
-      this.saveSubitems(listItem.id);
-      if (this.addMore) {
-        this.reset();
-      }
-      else {
-        this.location.back();
-      }
-    });
   }
 
   // helpers
@@ -181,7 +196,7 @@ export class EditItemComponent implements OnInit {
     }
 
     for (let i = this.nbSubItem; i < this.subItems.length; i++) {
-      this.persistService.delete('subitems', this.subItems[i].id).subscribe(() => { /* noop */});
+      this.persistService.delete('subitems', this.subItems[i].id).subscribe(() => { /* noop */ });
     }
   }
 

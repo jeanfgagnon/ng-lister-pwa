@@ -3,7 +3,7 @@
   <mat-tab *ngFor="let header of sortedHeaders()">
 
     <ng-template mat-tab-label>
-      {{ header.name }}
+      {{ header.text }}
     </ng-template>
 
     <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
