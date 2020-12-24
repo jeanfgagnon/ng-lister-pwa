@@ -110,41 +110,56 @@ export class EditItemComponent implements OnInit {
     this.location.back();
   }
 
-  public formSubmitted(e: Event) {
+  public formSubmitted(e: Event): void {
     if (this.item.text.trim() != '') {
-
-      let listItem!: ListItem;
+      let listItem = new ListItem();
       const normalizedText = Tools.capitalize(this.item.text);
 
-      this.persistService.exists<ListItem>('items', (itm: ListItem) => {
-        return (itm.idHeader === this.header.id && itm.text === normalizedText);
-      }).subscribe((exists: boolean) => {
+      if (this.verb === 'Add') {
 
-        if (!exists) {
-          if (this.verb === 'Add') {
+        this.persistService.exists<ListItem>('items', (itm: ListItem) => {
+          return (itm.idHeader === this.header.id && itm.text === normalizedText);
+        }).subscribe((exists: boolean) => {
+          if (!exists) {
             listItem = this.persistService.newItemInstance(this.header.id);
+            listItem.text = normalizedText;
+
+            this.persistService.put('items', listItem.id, listItem).subscribe((key: any) => {
+              this.saveSubitems(listItem.id);
+              if (this.addMore) {
+                this.reset();
+              }
+              else {
+                this.location.back();
+              }
+            });
           }
           else {
-            listItem.idHeader = this.header.id;
+            this.errorMessage = `This item exists in ${this.header.text}`;
+            setTimeout(() => { this.errorMessage = ''; }, 5000);
           }
+        });
 
-          listItem.text = normalizedText;
+      }
+      else {
 
-          this.persistService.put('items', listItem.id, listItem).subscribe((key: any) => {
-            this.saveSubitems(listItem.id);
-            if (this.addMore) {
-              this.reset();
-            }
-            else {
+        this.persistService.exists<ListItem>('items', (itm: ListItem) => {
+          return (itm.idHeader === this.header.id && itm.text === normalizedText && itm.id !== this.item.id);
+        }).subscribe((exists: boolean) => {
+          if (!exists) {
+            this.item.text = normalizedText;
+            this.persistService.put('items', this.item.id, this.item).subscribe((key: any) => {
+              this.saveSubitems(this.item.id);
               this.location.back();
-            }
-          });
-        }
-        else {
-          this.errorMessage = `This item exists in ${this.header.text}`;
-          setTimeout(() => { this.errorMessage = ''; }, 5000);
-        }
-      });
+            });
+          }
+          else {
+            this.errorMessage = `This item already exists in ${this.header.text}`;
+            setTimeout(() => { this.errorMessage = ''; }, 5000);
+          }
+        });
+
+      }
     }
   }
 

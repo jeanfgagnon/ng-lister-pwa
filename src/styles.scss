@@ -81,10 +81,12 @@ body {
 // Custom themable components
 @import "app/components/main-nav/main-nav.component";
 @import "app/components/list/liste-menu/liste-menu.component";
+@import "app/components/list/consolidated-view/consolidated-view.component";
 
 @mixin custom-components-theme($theme) {
   @include sidenav-theme($theme);
   @include quick-input-theme($theme);
+  @include header-lnk-theme($theme)
 }
 
 // Light theme

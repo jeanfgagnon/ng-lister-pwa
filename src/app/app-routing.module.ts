@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'Consolidated', pathMatch: 'full' },
   { path: 'Liste', component: ListeComponent },
   { path: 'Liste/:id', component: ListeComponent },
+  { path: 'Liste/:id/:idheader', component: ListeComponent },
   { path: 'Consolidated', component: ConsolidatedViewComponent },
 
   { path: 'Manage', loadChildren: () => import('./modules/config.module').then(m => m.ConfigModule) },

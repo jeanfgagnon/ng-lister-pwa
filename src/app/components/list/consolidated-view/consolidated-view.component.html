@@ -8,9 +8,8 @@
           {{ category.text }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-
       <div *ngFor="let header of category.headers">
-        <h4>{{ header.text }}</h4>
+        <a href="#" class='header-lnk' [routerLink]="['/Liste', category.id, header.id]">{{ header.text }}</a>
         <app-check-list [header]="header" [fromConsol]="true"></app-check-list>
       </div>
 

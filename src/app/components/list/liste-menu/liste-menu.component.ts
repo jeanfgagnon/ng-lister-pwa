@@ -21,6 +21,7 @@ export class ListeComponent implements OnInit {
   public _sortedHeaders: ListHeader[] = [];
   public loaded = false;
   public quickText = '';
+  public tabIndex = 0;
 
   //@ViewChild('tabgroup') tabgroup!: MatTabGroup;
 
@@ -33,18 +34,18 @@ export class ListeComponent implements OnInit {
   ngOnInit(): void {
     this.globalStateService.message$.subscribe((m: string) => {
       if (m === 'DefaultCategory') {
-        this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory);
+        this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory, '');
       }
     });
 
     this.activatedRoute.params.subscribe(params => {
       if (params.id) {
-        this.loadDataByCategoryId(params.id);
+        this.loadDataByCategoryId(params.id, params.idheader);
         this.globalStateService.CurrentSelectedIdCategory = params.id;
       }
       else {
         if (this.globalStateService.CurrentSelectedIdCategory) {
-          this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory);
+          this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory, '');
           this.globalStateService.sendMessage('SelectedCategory');
         }
         else {
@@ -88,7 +89,7 @@ export class ListeComponent implements OnInit {
 
   // privates
 
-  private loadDataByCategoryId(id: string): void {
+  private loadDataByCategoryId(id: string, idheader: string): void {
     this.headers = [];
     this.loaded = false;
     const noFlickerHeaders: ListHeader[] = [];
@@ -117,6 +118,13 @@ export class ListeComponent implements OnInit {
       (/* complete */) => {
         this.loaded = true;
         this.headers = noFlickerHeaders;
+        if (idheader) {
+          this.headers = this.sortedHeaders();
+          this.tabIndex = this.headers.findIndex(x=>x.id === idheader);
+          console.log('this.tabIndex = ', this.tabIndex);
+          console.log('ostie on veut se positionner sur ce header %s', idheader);
+        }
+
       }
     );
   }
@@ -149,7 +157,7 @@ export class ListeComponent implements OnInit {
     this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
       if (cat.isDefault) {
         this.globalStateService.CurrentSelectedIdCategory = cat.id;
-        this.loadDataByCategoryId(cat.id);
+        this.loadDataByCategoryId(cat.id, '');
       }
     });
   }
