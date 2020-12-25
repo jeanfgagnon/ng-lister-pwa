@@ -1,0 +1,19 @@
+.quick-div {
+  font-size: 11pt !important;
+}
+
+.quick-input {
+  border: none;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  outline: none;
+  background-color: transparent;
+}
+
+@mixin quick-input-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  .quick-input {
+    color: mat-color($foreground, text);
+    border-bottom-color: mat-color($foreground, text);
+  }
+}

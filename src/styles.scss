@@ -73,6 +73,9 @@ body {
   font-size: smaller;
 }
 
+.mart10 {
+  margin-top: 10px;
+}
 /************************
  Theming section
  From: https://medium.com/@PhilippKief/automatic-dark-mode-detection-in-angular-material-8342917885a0
@@ -80,7 +83,7 @@ body {
 
 // Custom themable components
 @import "app/components/main-nav/main-nav.component";
-@import "app/components/list/liste-menu/liste-menu.component";
+@import "app/components/list/quick-add/quick-add.component";
 @import "app/components/list/consolidated-view/consolidated-view.component";
 
 @mixin custom-components-theme($theme) {

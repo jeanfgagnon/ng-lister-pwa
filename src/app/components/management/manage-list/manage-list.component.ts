@@ -48,13 +48,6 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       (cat: ListCategory) => {
         this.categories.push(cat);
         if (cat.isDefault) {
-
-          // douteux. pas besoin de faire ce machin je crois
-          // console.log('douteux curr cat id ==> %s', this.globalStateService.CurrentSelectedIdCategory);
-          // if (this.globalStateService.CurrentSelectedIdCategory === '') {
-          //   this.globalStateService.CurrentSelectedIdCategory = cat.id;
-          // }
-
           this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
         }
       },

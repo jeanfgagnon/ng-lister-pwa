@@ -8,14 +8,8 @@
 
     <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
 
-    <mat-toolbar class='pos-bottom quick-div' fxLayoutAlign="space-evenly center">
-
-      Quick add
-      <input class='quick-input' name="txtItemText" type="text" [(ngModel)]="quickText">
-      <button mat-icon-button color="primary" type="button" (click)="onQuickAddClick(header.id)">
-        <mat-icon>add_circle_outline</mat-icon>
-      </button>
-
+    <mat-toolbar class='pos-bottom cpc'>
+      <app-quick-add class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>
     </mat-toolbar>
 
   </mat-tab>

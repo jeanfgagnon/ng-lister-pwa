@@ -11,22 +11,26 @@
       <div *ngFor="let header of category.headers">
 
         <div fxLayout='row' class='header-row'>
-          <div fxFlex="95">
+          <div fxFlex="90" fxLayoutAlign="start center">
             <a href="#" class='header-lnk' [routerLink]="['/Liste', category.id, header.id]">{{ header.text }}</a>
           </div>
-          <div fxFlex="5">
-            <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+          <div fxFlex="10" fxLayoutAlign="end center">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
           </div>
-          <mat-menu #menu="matMenu">
-            <div class='mini-menu'>
-              <div fxLayoutAlign="center center" class='fb'>{{ header.text }}</div>
-              <button mat-menu-item (click)="quickAdd(header.id)">Quick Add</button>
-              <button *ngIf="isListHaveDone(header.id)" mat-menu-item (click)="removeDone(header.id)">Remove Done</button>
-            </div>
-          </mat-menu>
         </div>
+        <mat-menu #menu="matMenu">
+          <div class='mini-menu'>
+            <div fxLayoutAlign="center center" class='fb'>{{ header.text }}</div>
+            <button mat-menu-item (click)="quickAddToggle(header.id)">Quick Add</button>
+            <button *ngIf="isListHaveDone(header)" mat-menu-item (click)="removeDone(header)">Remove Done</button>
+          </div>
+        </mat-menu>
 
         <app-check-list [header]="header" [fromConsol]="true"></app-check-list>
+        <app-quick-add *ngIf="header.id===quickHeaderId" class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>
+
       </div>
 
     </mat-expansion-panel>

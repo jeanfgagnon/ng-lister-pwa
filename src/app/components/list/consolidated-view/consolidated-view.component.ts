@@ -6,6 +6,8 @@ import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { combineLatest } from 'rxjs';
 import { GlobalStateService } from 'src/app/services/global-state.service';
+import { IIDText } from 'src/app/models/interface-id-text';
+import { Tools } from 'src/app/common/Tools';
 
 @Component({
   selector: 'app-consolidated-view',
@@ -19,6 +21,7 @@ export class ConsolidatedViewComponent implements OnInit {
   public expandedState = true;
   public categories: ListCategory[] = [];
   public headers: ListHeader[] = [];
+  public quickHeaderId = '';
 
   private items: ListItem[] = [];
 
@@ -38,13 +41,27 @@ export class ConsolidatedViewComponent implements OnInit {
     this.loadAllData();
   }
 
-  public quickAdd(idHeader: string): void {}
-  public removeDone(idHeader: string): void {}
+  public quickAddToggle(idHeader: string): void {
+    if (this.quickHeaderId === idHeader) {
+      this.quickHeaderId = '';
+    }
+    else {
+      this.quickHeaderId = idHeader;
+    }
+  }
+
+  public removeDone(header: ListHeader): void {
+    header.items = header.items.filter(x => x.checked);
+  }
+
+  public onItemAdded(idt: IIDText): void {
+    this.quickAdd(idt);
+  }
 
   // helpers
 
-  public isListHaveDone(idHeader: string): boolean {
-    return this.items.filter(x => !x.checked).length > 0;
+  public isListHaveDone(header: ListHeader): boolean {
+    return header.items.filter(x => !x.checked).length > 0;
   }
 
   // private
@@ -126,4 +143,50 @@ export class ConsolidatedViewComponent implements OnInit {
     });
   }
 
+  private quickAdd(idt: IIDText): void {
+    this.persistService.exists<ListItem>('items', (itm: ListItem) => {
+      return idt.id === itm.idHeader && itm.text.toLowerCase() === idt.text.toLowerCase();
+    }).subscribe((exist: boolean) => {
+
+      if (exist) {
+        this.addExistingItem(idt, true);
+      }
+      else {
+        const splitted = idt.text.split(/[,;]/);
+
+        const item = this.persistService.newItemInstance(idt.id);
+        item.text = Tools.capitalize((splitted.shift() as string).trim());
+        item.checked = true;
+
+        this.persistService.put('items', item.id, item).subscribe(() => {
+          const header = this.headers.find(x => x.id === idt.id);
+          if (header) {
+            header.items.push(item);
+            for (let i = 0; i < splitted.length; i++) {
+              const subItem = this.persistService.newSubitemInstance(item.id);
+              subItem.text = Tools.capitalize(splitted[i].trim());
+              subItem.rank = (i + 1);
+              this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
+                /* noop */
+              });
+            }
+          }
+        });
+      }
+    });
+
+  }
+
+  private addExistingItem(idt: IIDText, checkedState: boolean): void {
+    const header = this.headers.find(x => x.id === idt.id);
+    if (header) {
+      this.persistService.query('items', true).subscribe((itm: ListItem) => {
+        if (itm.idHeader === idt.id && itm.text.toLowerCase() === idt.text.toLowerCase()) {
+          itm.checked = checkedState;
+          header.items.push(itm);
+          this.persistService.put('items', itm.id, itm).subscribe(() => { /* noop */ });
+        }
+      });
+    }
+  }
 }

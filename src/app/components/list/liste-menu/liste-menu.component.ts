@@ -9,6 +9,7 @@ import { ListItem } from 'src/app/models/list-item';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { Tools } from 'src/app/common/Tools';
 import { ListCategory } from 'src/app/models/list-category';
+import { IIDText } from 'src/app/models/interface-id-text';
 
 @Component({
   selector: 'app-liste-menu',
@@ -20,7 +21,6 @@ export class ListeComponent implements OnInit {
   public headers: ListHeader[] = [];
   public _sortedHeaders: ListHeader[] = [];
   public loaded = false;
-  public quickText = '';
   public tabIndex = 0;
 
   //@ViewChild('tabgroup') tabgroup!: MatTabGroup;
@@ -70,12 +70,16 @@ export class ListeComponent implements OnInit {
     }
   }
 
-  public onQuickAddClick(idHeader: string): void {
-    if (this.quickText.trim() !== '') {
-      this.quickAdd(idHeader);
-      this.quickText = '';
-    }
+  public onItemAdded(idt: IIDText): void {
+    this.quickAdd(idt);
   }
+
+  // public onQuickAddClick(idHeader: string): void {
+  //   if (this.quickText.trim() !== '') {
+  //     this.quickAdd(idHeader);
+  //     this.quickText = '';
+  //   }
+  // }
 
   public sortedHeaders(): ListHeader[] {
     this._sortedHeaders = this.headers.sort((a: ListHeader, b: ListHeader) => {
@@ -120,34 +124,39 @@ export class ListeComponent implements OnInit {
         this.headers = noFlickerHeaders;
         if (idheader) {
           this.headers = this.sortedHeaders();
-          this.tabIndex = this.headers.findIndex(x=>x.id === idheader);
-          console.log('this.tabIndex = ', this.tabIndex);
-          console.log('ostie on veut se positionner sur ce header %s', idheader);
+          this.tabIndex = this.headers.findIndex(x => x.id === idheader);
         }
 
       }
     );
   }
 
-  private quickAdd(idHeader: string): void {
-    const splitted = this.quickText.split(/[,;]/);
+  private quickAdd(idt: IIDText): void {
+    this.persistService.exists<ListItem>('items', (itm: ListItem) => {
+      return idt.id === itm.idHeader && itm.text.toLowerCase() === idt.text.toLowerCase();
+    }).subscribe((exist: boolean) => {
 
-    const item = this.persistService.newItemInstance(idHeader);
-    item.text = Tools.capitalize((splitted.shift() as string).trim());
-    item.checked = true;
+      if (!exist) {
+        const splitted = idt.text.split(/[,;]/);
 
-    this.persistService.put('items', item.id, item).subscribe(() => {
-      const header = this.headers.find(x => x.id === idHeader);
-      if (header) {
-        header.items.push(item);
-        for (let i = 0; i < splitted.length; i++) {
-          const subItem = this.persistService.newSubitemInstance(item.id);
-          subItem.text = Tools.capitalize(splitted[i].trim());
-          subItem.rank = (i + 1);
-          this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
-            /* noop */
-          });
-        }
+        const item = this.persistService.newItemInstance(idt.id);
+        item.text = Tools.capitalize((splitted.shift() as string).trim());
+        item.checked = true;
+
+        this.persistService.put('items', item.id, item).subscribe(() => {
+          const header = this.headers.find(x => x.id === idt.id);
+          if (header) {
+            header.items.push(item);
+            for (let i = 0; i < splitted.length; i++) {
+              const subItem = this.persistService.newSubitemInstance(item.id);
+              subItem.text = Tools.capitalize(splitted[i].trim());
+              subItem.rank = (i + 1);
+              this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
+                /* noop */
+              });
+            }
+          }
+        });
       }
     });
   }

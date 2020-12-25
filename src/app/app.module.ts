@@ -18,11 +18,13 @@ import { ListeComponent } from './components/list/liste-menu/liste-menu.componen
 import { CheckListComponent } from './components/list/check-list/check-list.component';
 import { CheckItemComponent } from './components/list/check-item/check-item.component';
 import { ConsolidatedViewComponent } from './components/list/consolidated-view/consolidated-view.component';
+import { QuickAddComponent } from './components/list/quick-add/quick-add.component';
 
 // Ceci pour permettre que le Date Pipe fonctionne.
 import localeFr from '@angular/common/locales/fr';
 import localeFrExtra from '@angular/common/locales/extra/fr';
 import { registerLocaleData } from '@angular/common';
+
 registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
 
 @NgModule({
@@ -33,6 +35,7 @@ registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
     CheckListComponent,
     CheckItemComponent,
     ConsolidatedViewComponent,
+    QuickAddComponent,
   ],
   imports: [
     BrowserModule,
