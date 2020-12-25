@@ -16,12 +16,15 @@
               {{ errorMessage }}
             </div> -->
           </div>
-          <div fxFlex="15">
+          
+          <div fxFlex="15" *ngIf="actionVerb !== 'Add'">
             <button mat-icon-button type="button" (click)="onDeleteCategory()">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
+
         </div>
+
         <mat-checkbox color="primary" (change)="onCheckboxChange($event)" [checked]="categoryIsDefault">Default category
           at startup
         </mat-checkbox><br />
@@ -34,7 +37,6 @@
           </button>&nbsp;
         </div>
       </div>
-
 
       <br />
       <mat-divider></mat-divider>

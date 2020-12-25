@@ -9,7 +9,23 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div *ngFor="let header of category.headers">
-        <a href="#" class='header-lnk' [routerLink]="['/Liste', category.id, header.id]">{{ header.text }}</a>
+
+        <div fxLayout='row' class='header-row'>
+          <div fxFlex="95">
+            <a href="#" class='header-lnk' [routerLink]="['/Liste', category.id, header.id]">{{ header.text }}</a>
+          </div>
+          <div fxFlex="5">
+            <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+          </div>
+          <mat-menu #menu="matMenu">
+            <div class='mini-menu'>
+              <div fxLayoutAlign="center center" class='fb'>{{ header.text }}</div>
+              <button mat-menu-item (click)="quickAdd(header.id)">Quick Add</button>
+              <button *ngIf="isListHaveDone(header.id)" mat-menu-item (click)="removeDone(header.id)">Remove Done</button>
+            </div>
+          </mat-menu>
+        </div>
+
         <app-check-list [header]="header" [fromConsol]="true"></app-check-list>
       </div>
 

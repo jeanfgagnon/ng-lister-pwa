@@ -5,11 +5,14 @@
   left: auto;
 }
 
-.header-lnk {
-  display: block;
-  font-size: 14pt;
+.header-row {
   padding-top: 15px;
   padding-bottom: 10px;
+}
+
+.header-lnk {
+  font-size: 14pt;
+  display: block;
   text-decoration: none;
 }
 
@@ -18,4 +21,14 @@
   .header-lnk {
     color: mat-color($foreground, text) !important;
   }
+}
+
+.mini-menu {
+  font-size: 11pt;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.mat-menu-panel {
+  background-color: 'red' !important;
 }

@@ -18,6 +18,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
 //import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -39,6 +40,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
     MatCardModule,
     //MatGridListModule,
     //MatTreeModule,
+    MatMenuModule,
     MatIconModule,
     MatRadioModule,
     MatTooltipModule,
@@ -66,6 +68,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
     MatCardModule,
     //MatGridListModule,
     //MatTreeModule,
+    MatMenuModule,
     MatIconModule,
     MatRadioModule,
     MatTooltipModule,

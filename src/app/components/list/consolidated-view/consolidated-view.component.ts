@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { PersistService } from 'src/app/services/persist.service';
 import { ListCategory } from 'src/app/models/list-category';
@@ -10,7 +10,8 @@ import { GlobalStateService } from 'src/app/services/global-state.service';
 @Component({
   selector: 'app-consolidated-view',
   templateUrl: './consolidated-view.component.html',
-  styleUrls: ['./consolidated-view.component.scss']
+  styleUrls: ['./consolidated-view.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ConsolidatedViewComponent implements OnInit {
 
@@ -35,6 +36,15 @@ export class ConsolidatedViewComponent implements OnInit {
 
   public onRefreshClick(): void {
     this.loadAllData();
+  }
+
+  public quickAdd(idHeader: string): void {}
+  public removeDone(idHeader: string): void {}
+
+  // helpers
+
+  public isListHaveDone(idHeader: string): boolean {
+    return this.items.filter(x => !x.checked).length > 0;
   }
 
   // private
