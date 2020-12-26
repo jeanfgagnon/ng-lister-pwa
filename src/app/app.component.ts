@@ -1,6 +1,9 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 
 import { ThemingService } from './services/theming.service';
+import { GlobalStateService } from './services/global-state.service';
+import { PersistService } from './services/persist.service';
+import { ApplicationSetting } from './models/application-setting';
 
 @Component({
   selector: 'app-root',

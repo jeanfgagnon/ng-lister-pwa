@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { ApplicationSetting } from '../models/application-setting';
 import { ListCategory } from '../models/list-category';
 
 import { PersistService } from './persist.service';
@@ -9,6 +10,7 @@ import { PersistService } from './persist.service';
 })
 export class GlobalStateService {
 
+  private _appSettings: ApplicationSetting[] = [];
   private _isManageListScrollSetted = false;
   private _currentSelectedIdCategory = '';
   private messageSubject = new Subject<string>();
@@ -22,6 +24,9 @@ export class GlobalStateService {
       if (cat.isDefault || this._currentSelectedIdCategory === '') {
         this._currentSelectedIdCategory = cat.id;
       }
+    });
+    this.persistService.query('settings', true).subscribe((setting: ApplicationSetting) => {
+      this._appSettings.push(setting);
     });
   }
 
@@ -47,5 +52,27 @@ export class GlobalStateService {
 
   public sendMessage(message: string): void {
     this.messageSubject.next(message);
+  }
+
+  public putSetting(name: string, value: string): void {
+    let setting = this._appSettings.find(x => x.name === name);
+    if (setting) {
+      setting.value = value;
+    }
+    else {
+      setting = this.persistService.newSettingInstance();
+      setting.name = name;
+      setting.value = value;
+    }
+
+    this.persistService.put('settings', setting.id, setting).subscribe((setting: ApplicationSetting) => {
+      this._appSettings.push(setting);
+    });
+  }
+
+  public getSetting(name: string): string {
+    const rv = this._appSettings.find(x => x.name === name);
+
+    return rv ? rv.value : '';
   }
 }

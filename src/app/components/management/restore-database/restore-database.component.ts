@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { Observable, zip } from 'rxjs';
+import { IListItem } from 'src/app/models/interface-list-item';
 import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
@@ -39,8 +40,8 @@ export class RestoreDatabaseComponent implements OnInit {
   public onDataPasted(event: ClipboardEvent): void {
     this.error = false;
     this.dbIsValid = false;
-    let clipboardData = event.clipboardData;
-    let pastedText = clipboardData?.getData('text');
+    const clipboardData = event.clipboardData;
+    const pastedText = clipboardData?.getData('text');
     if (pastedText !== undefined) {
       try {
         this.topObject = JSON.parse(pastedText);
@@ -78,13 +79,13 @@ export class RestoreDatabaseComponent implements OnInit {
     );
 
     clearAll$.subscribe(() => {
-      // here, database is cleared
+      // here, database clering jobs are done and we are reloading with backup in an ugly looop
       this.database.forEach((cat: ListCategory) => {
         this.persistService.put('categories', cat.id, cat).subscribe(() => {
           cat.headers.forEach((header: ListHeader) => {
             this.persistService.put('headers', header.id, header).subscribe(() => {
               header.items.forEach((item: ListItem) => {
-                this.persistService.put('items', item.id, item).subscribe(() => {
+                this.persistService.put('items', item.id, item as IListItem).subscribe(() => {
                   item.subs.forEach((sub: SubItem) => {
                     this.persistService.put('subitems', sub.id, sub).subscribe(() => { /* noop */ });
                   });

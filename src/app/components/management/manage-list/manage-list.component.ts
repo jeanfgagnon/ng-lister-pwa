@@ -39,16 +39,20 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       if (m === 'CategoryChanged') {
         this.categories = [];
         this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
-          this.categories.push(cat);
+          if (cat.id !== 'quick') {
+            this.categories.push(cat);
+          }
         });
       }
     });
 
     this.persistService.query('categories', true).subscribe(
       (cat: ListCategory) => {
-        this.categories.push(cat);
-        if (cat.isDefault) {
-          this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
+        if (cat.id !== 'quick') {
+          this.categories.push(cat);
+          if (cat.isDefault) {
+            this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
+          }
         }
       },
       (err) => { },
@@ -101,7 +105,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
           });
         }
         else {
-          const selectedCategory = this.categories.find(x=>x.id  === this.selectedCategoryId);
+          const selectedCategory = this.categories.find(x => x.id === this.selectedCategoryId);
           this.errorMessage = `This list exists in ${selectedCategory?.text}!`;
           setTimeout(() => { this.errorMessage = ''; }, 5000);
         }

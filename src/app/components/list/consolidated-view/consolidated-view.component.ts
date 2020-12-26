@@ -8,12 +8,12 @@ import { combineLatest } from 'rxjs';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { IIDText } from 'src/app/models/interface-id-text';
 import { Tools } from 'src/app/common/Tools';
+import { IListItem } from 'src/app/models/interface-list-item';
 
 @Component({
   selector: 'app-consolidated-view',
   templateUrl: './consolidated-view.component.html',
-  styleUrls: ['./consolidated-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./consolidated-view.component.scss']
 })
 export class ConsolidatedViewComponent implements OnInit {
 
@@ -91,7 +91,12 @@ export class ConsolidatedViewComponent implements OnInit {
         this.tieAll();
         this.removeDeadWood();
         this.categories = this.categories.sort((a: ListCategory, b: ListCategory) => {
-          return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+          if (a.id === 'quick') {
+            return -1;
+          }
+          else {
+            return  a.text.localeCompare(b.text);
+          }
         });
 
         this.categories.forEach((category: ListCategory) => {
@@ -158,7 +163,7 @@ export class ConsolidatedViewComponent implements OnInit {
         item.text = Tools.capitalize((splitted.shift() as string).trim());
         item.checked = true;
 
-        this.persistService.put('items', item.id, item).subscribe(() => {
+        this.persistService.put('items', item.id, item as IListItem).subscribe(() => {
           const header = this.headers.find(x => x.id === idt.id);
           if (header) {
             header.items.push(item);
@@ -184,7 +189,7 @@ export class ConsolidatedViewComponent implements OnInit {
         if (itm.idHeader === idt.id && itm.text.toLowerCase() === idt.text.toLowerCase()) {
           itm.checked = checkedState;
           header.items.push(itm);
-          this.persistService.put('items', itm.id, itm).subscribe(() => { /* noop */ });
+          this.persistService.put('items', itm.id, itm as IListItem).subscribe(() => { /* noop */ });
         }
       });
     }

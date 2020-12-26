@@ -51,10 +51,45 @@ export class ManageCategoryComponent implements OnInit {
   // event handlers
 
   public formSubmitted(e: Event): void {
-    const stdCatName = Tools.capitalize(this.categoryName);
+    const normalizedName = Tools.capitalize(this.categoryName);
     this.persistService.exists<ListCategory>('categories', (cat: ListCategory) => {
-        return (cat.text === stdCatName);
-      }).subscribe((exists: boolean) => {
+      return (cat.text === normalizedName);
+    }).subscribe((exist: boolean) => {
+
+      if (this.actionVerb === 'Add' && exist) {
+        this.errorMessage = "This category exists!";
+        setTimeout(() => { this.errorMessage = ''; }, 5000);
+      }
+      else {
+        if (this.actionVerb === "Add") {
+          this.currentCategory = this.persistService.newCategoryInstance();
+          this.categories.push(this.currentCategory);
+        }
+
+        this.currentCategory.text = normalizedName;
+        this.currentCategory.isDefault = this.categoryIsDefault;
+
+        if (this.currentCategory.isDefault) {
+          this.removeDefaultAll();
+        }
+        else {
+          this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
+            this.globalStateService.sendMessage('CategoryChanged');
+          });
+        }
+
+        this.resetForm();
+        this.formVisible = false;
+      }
+    });
+
+  }
+
+  public xxxformSubmitted(e: Event): void {
+    const normalizedName = Tools.capitalize(this.categoryName);
+    this.persistService.exists<ListCategory>('categories', (cat: ListCategory) => {
+      return (cat.text === normalizedName);
+    }).subscribe((exists: boolean) => {
 
       if (!exists) {
         if (this.actionVerb === "Add") {
@@ -62,7 +97,7 @@ export class ManageCategoryComponent implements OnInit {
           this.categories.push(this.currentCategory);
         }
 
-        this.currentCategory.text = stdCatName;
+        this.currentCategory.text = normalizedName;
         this.currentCategory.isDefault = this.categoryIsDefault;
 
         if (this.currentCategory.isDefault) {
@@ -190,7 +225,9 @@ export class ManageCategoryComponent implements OnInit {
   private loadCategories() {
     this.categories = [];
     this.persistService.query('categories', true).subscribe((category: ListCategory) => {
-      this.categories.push(category);
+      if (category.id !== 'quick') {
+        this.categories.push(category);
+      }
     });
   }
 

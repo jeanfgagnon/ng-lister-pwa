@@ -31,10 +31,10 @@ registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
   declarations: [
     AppComponent,
     MainNavComponent,
-    ListeComponent,
-    CheckListComponent,
     CheckItemComponent,
+    CheckListComponent,
     ConsolidatedViewComponent,
+    ListeComponent,
     QuickAddComponent,
   ],
   imports: [

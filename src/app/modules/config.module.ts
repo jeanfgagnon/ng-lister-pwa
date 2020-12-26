@@ -15,16 +15,18 @@ import { EditItemComponent } from 'src/app/components/management/manage-item/edi
 import { ManageCategoryComponent } from 'src/app/components/management/manage-category/manage-category.component';
 import { ManageItemComponent } from 'src/app/components/management/manage-item/manage-item.component';
 import { ManageListComponent } from 'src/app/components/management/manage-list/manage-list.component';
+import { EditSettingsComponent } from 'src/app/components/management/edit-settings/edit-settings.component';
 
 @NgModule({
   declarations: [
-    RestoreDatabaseComponent,
     ConfirmDialogComponent,
     DumpDatabaseComponent,
-    EditItemComponent,
     ManageCategoryComponent,
     ManageItemComponent,
+    EditItemComponent,
     ManageListComponent,
+    RestoreDatabaseComponent,
+    EditSettingsComponent,
   ],
   imports: [
     CommonModule,

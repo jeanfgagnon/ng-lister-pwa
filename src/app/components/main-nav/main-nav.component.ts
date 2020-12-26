@@ -48,7 +48,7 @@ export class MainNavComponent implements OnInit {
       if (m === 'CategoryChanged') {
         this.loadCategories();
       }
-      else if (m === 'SelectedCategory' ||  m === 'DefaultCategory') {
+      else if (m === 'SelectedCategory' || m === 'DefaultCategory') {
         this.persistService.get('categories', this.globalStateService.CurrentSelectedIdCategory).subscribe((cat: ListCategory) => {
           this.selectedCategoryName = (cat ? cat.text : 'bug!');
         });
@@ -87,7 +87,11 @@ export class MainNavComponent implements OnInit {
 
   public get sortedCategories(): ListCategory[] {
     return this.categories.sort((a: ListCategory, b: ListCategory) => {
-      return a.text.localeCompare(b.text);
+      if (a.id === 'quick') {
+        return -1;
+      }
+      else
+        return a.text.localeCompare(b.text);
     });
   }
 

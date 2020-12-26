@@ -10,6 +10,7 @@ import { SubItem } from 'src/app/models/sub-item';
 import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ConfirmDialogComponent } from 'src/app/components/management/confirm-dialog/confirm-dialog.component';
 import { Tools } from 'src/app/common/Tools';
+import { IListItem } from 'src/app/models/interface-list-item';
 
 @Component({
   selector: 'app-edit-item',
@@ -124,7 +125,7 @@ export class EditItemComponent implements OnInit {
             listItem = this.persistService.newItemInstance(this.header.id);
             listItem.text = normalizedText;
 
-            this.persistService.put('items', listItem.id, listItem).subscribe((key: any) => {
+            this.persistService.put('items', listItem.id, listItem as IListItem).subscribe((key: any) => {
               this.saveSubitems(listItem.id);
               if (this.addMore) {
                 this.reset();
@@ -148,7 +149,7 @@ export class EditItemComponent implements OnInit {
         }).subscribe((exists: boolean) => {
           if (!exists) {
             this.item.text = normalizedText;
-            this.persistService.put('items', this.item.id, this.item).subscribe((key: any) => {
+            this.persistService.put('items', this.item.id, this.item as IListItem).subscribe((key: any) => {
               this.saveSubitems(this.item.id);
               this.location.back();
             });

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, ReplaySubject, Observable, Observer } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ApplicationSetting } from '../models/application-setting';
 import { IIDText } from '../models/interface-id-text';
 import { ListCategory } from '../models/list-category';
 
@@ -8,7 +9,7 @@ import { ListHeader } from '../models/list-header';
 import { ListItem } from '../models/list-item';
 import { SubItem } from '../models/sub-item';
 
-const VERSION = 2;
+const VERSION = 3;
 const STORE_NAME = 'lister-pwa';
 
 @Injectable({
@@ -53,6 +54,10 @@ export class PersistService {
 
         if (!db.objectStoreNames.contains('subitems')) {
           db.createObjectStore('subitems', { keyPath: "id" }).createIndex("by_idItem", "idItem");
+        }
+
+        if (!db.objectStoreNames.contains('settings')) {
+          db.createObjectStore('settings', { keyPath: "id" }).createIndex("by_id", "id");
         }
       };
 
@@ -322,6 +327,16 @@ export class PersistService {
       text: '',
       rank: 0,
       checked: false
+    };
+
+    return rv;
+  }
+
+  public newSettingInstance(): ApplicationSetting {
+    const rv: ApplicationSetting = {
+      id: this.uuidv4(),
+      name: '',
+      value: ''
     };
 
     return rv;

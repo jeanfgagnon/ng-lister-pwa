@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { IListItem } from 'src/app/models/interface-list-item';
 
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
@@ -39,7 +40,7 @@ export class CheckItemComponent implements OnInit {
     if (src === 0) {
       // persist item
       this.item.checked = event.checked;
-      this.persistService.put('items', this.item.id, this.item).subscribe(() => {
+      this.persistService.put('items', this.item.id, this.item as IListItem).subscribe(() => {
         this.checkChange.emit(event.checked);
         if (!event.checked) {
           this.uncheckSubs();
@@ -52,7 +53,7 @@ export class CheckItemComponent implements OnInit {
       this.persistService.put('subitems', this.subItems[src - 1].id, this.subItems[src - 1]).subscribe(() => { /* noop */ });
       if (event.checked) {
         this.item.checked = true;
-        this.persistService.put('items', this.item.id, this.item).subscribe(() => { /* noop */ });
+        this.persistService.put('items', this.item.id, this.item as IListItem).subscribe(() => { /* noop */ });
       }
     }
   }

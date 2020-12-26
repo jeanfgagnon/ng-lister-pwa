@@ -7,7 +7,7 @@
 
       <div *ngIf="isHandset$ | async">
 
-        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a>
+        <!-- <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a> -->
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Consolidated']">Consolidated</a>
 
         <mat-accordion multi displayMode="default">
@@ -31,7 +31,7 @@
           <mat-expansion-panel [expanded]="false" class="mat-elevation-z0">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                Settings
+                Manage
               </mat-panel-title>
             </mat-expansion-panel-header>
 
@@ -40,6 +40,7 @@
             <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/BackupDatabase']">Backup</a>
             <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/RestoreDatabase']">Restore</a>
             <a mat-list-item (click)="changeTheme(drawer)">{{ nextTheme }}</a>
+            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/EditSettings']">Settings&nbsp;&nbsp;<mat-icon fxLayoutAlign="start center" [inline]="true">settings</mat-icon></a>
 
           </mat-expansion-panel>
         </mat-accordion>

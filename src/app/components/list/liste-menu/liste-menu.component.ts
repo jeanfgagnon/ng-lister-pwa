@@ -1,5 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatTabGroup } from '@angular/material/tabs';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PersistService } from 'src/app/services/persist.service';
@@ -10,6 +9,7 @@ import { GlobalStateService } from 'src/app/services/global-state.service';
 import { Tools } from 'src/app/common/Tools';
 import { ListCategory } from 'src/app/models/list-category';
 import { IIDText } from 'src/app/models/interface-id-text';
+import { IListItem } from 'src/app/models/interface-list-item';
 
 @Component({
   selector: 'app-liste-menu',
@@ -22,8 +22,7 @@ export class ListeComponent implements OnInit {
   public _sortedHeaders: ListHeader[] = [];
   public loaded = false;
   public tabIndex = 0;
-
-  //@ViewChild('tabgroup') tabgroup!: MatTabGroup;
+  public isQuick = false;
 
   constructor(
     private persistService: PersistService,
@@ -40,6 +39,7 @@ export class ListeComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(params => {
       if (params.id) {
+        this.isQuick = (params.id === 'quick');
         this.loadDataByCategoryId(params.id, params.idheader);
         this.globalStateService.CurrentSelectedIdCategory = params.id;
       }
@@ -54,7 +54,6 @@ export class ListeComponent implements OnInit {
       }
     });
   }
-
 
   // event handlers
 
@@ -74,13 +73,6 @@ export class ListeComponent implements OnInit {
     this.quickAdd(idt);
   }
 
-  // public onQuickAddClick(idHeader: string): void {
-  //   if (this.quickText.trim() !== '') {
-  //     this.quickAdd(idHeader);
-  //     this.quickText = '';
-  //   }
-  // }
-
   public sortedHeaders(): ListHeader[] {
     this._sortedHeaders = this.headers.sort((a: ListHeader, b: ListHeader) => {
       return a.text.localeCompare(b.text);
@@ -90,6 +82,10 @@ export class ListeComponent implements OnInit {
   }
 
   // helpers
+
+  public nbChekedItems(header: ListHeader): number {
+    return header.items.filter(x => x.checked).length;
+  }
 
   // privates
 
@@ -143,7 +139,7 @@ export class ListeComponent implements OnInit {
         item.text = Tools.capitalize((splitted.shift() as string).trim());
         item.checked = true;
 
-        this.persistService.put('items', item.id, item).subscribe(() => {
+        this.persistService.put('items', item.id, item as IListItem).subscribe(() => {
           const header = this.headers.find(x => x.id === idt.id);
           if (header) {
             header.items.push(item);
