@@ -26,13 +26,13 @@
           {{ headers[0].text }}
         </div>
         <div fxFlex="10" fxLayoutAlign="end center">
-          <mat-icon *ngIf="nbChekedItems(headers[0]) > 0" [matMenuTriggerFor]="menu">more_vert</mat-icon>
+          <mat-icon *ngIf="nbUnchekedItems(headers[0]) > 0" [matMenuTriggerFor]="menu">more_vert</mat-icon>
         </div>
 
         <mat-menu #menu="matMenu">
           <div class='mini-menu'>
             <div fxLayoutAlign="center center" class='fb'>{{ headers[0].text }}</div>
-            <!-- <button *ngIf="isListHaveDone(header)" mat-menu-item (click)="removeDone(header)">Remove Done</button> -->
+            <button mat-menu-item (click)="confirmCompletedRemoval(headers[0])">Remove Completed</button>
           </div>
         </mat-menu>
 
@@ -40,7 +40,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="pad10">
-      <app-check-list [header]="headers[0]" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
+      <app-check-list [header]="headers[0]" [isQuick]="true" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
     </div>
 
     <mat-toolbar class='pos-bottom cpc'>

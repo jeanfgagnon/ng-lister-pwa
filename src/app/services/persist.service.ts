@@ -39,25 +39,24 @@ export class PersistService {
 
         const db: IDBDatabase = e.target.result;
 
-        db.version
         if (!db.objectStoreNames.contains('categories')) {
-          db.createObjectStore('categories', { keyPath: "id" }).createIndex("by_id", "id");
+          db.createObjectStore('categories', { keyPath: 'id' }).createIndex('by_id', 'id');
         }
 
         if (!db.objectStoreNames.contains('headers')) {
-          db.createObjectStore('headers', { keyPath: "id" }).createIndex("by_id", "id");
+          db.createObjectStore('headers', { keyPath: 'id' }).createIndex('by_id', 'id');
         }
 
         if (!db.objectStoreNames.contains('items')) {
-          db.createObjectStore('items', { keyPath: "id" }).createIndex("by_idEntete", "idEntete");
+          db.createObjectStore('items', { keyPath: 'id' }).createIndex('by_idEntete', 'idEntete');
         }
 
         if (!db.objectStoreNames.contains('subitems')) {
-          db.createObjectStore('subitems', { keyPath: "id" }).createIndex("by_idItem", "idItem");
+          db.createObjectStore('subitems', { keyPath: 'id' }).createIndex('by_idItem', 'idItem');
         }
 
         if (!db.objectStoreNames.contains('settings')) {
-          db.createObjectStore('settings', { keyPath: "id" }).createIndex("by_id", "id");
+          db.createObjectStore('settings', { keyPath: 'id' }).createIndex('by_id', 'id');
         }
       };
 
@@ -87,11 +86,11 @@ export class PersistService {
           const txn = db.transaction(storeName, 'readonly');
           const store = txn.objectStore(storeName);
           const req = store.get(key);
-          req.onerror = function (e: any) {
+          req.onerror = (e: any) => {
             observer.error(e.target.error);
             return;
           };
-          req.onsuccess = function (e: any) {
+          req.onsuccess = (e: any) => {
             observer.next(e.target.result);
             observer.complete();
           };
@@ -116,7 +115,7 @@ export class PersistService {
           const transaction = db.transaction(storeName, 'readwrite');
           const store = transaction.objectStore(storeName);
           const req = store.put(value);
-          //const req = store.put(value, key);
+          // TODO: look into this: const req = store.put(value, key);
           req.onerror = (e: any) => {
             this.debugLog('store error event:', e);
             observer.error(e.target.error);
@@ -152,11 +151,11 @@ export class PersistService {
           const transaction = db.transaction([storeName], 'readonly');
           const store = transaction.objectStore(storeName);
           const req = store.openCursor();
-          req.onerror = function (e: any) {
+          req.onerror = (e: any) => {
             observer.error(e.target.error);
             return;
           };
-          req.onsuccess = function (e: any) {
+          req.onsuccess = (e: any) => {
             const cursor = e.target.result;
             if (cursor) {
               if (valueOnly) {
@@ -194,11 +193,11 @@ export class PersistService {
           const txn = db.transaction([storeName], 'readwrite');
           const store = txn.objectStore(storeName);
           const req = store.clear();
-          req.onerror = function (e: any) {
+          req.onerror = (e: any) => {
             observer.error(e.target.error);
             return;
           };
-          req.onsuccess = function (e: any) {
+          req.onsuccess = (e: any) => {
             observer.next(e.target.result);
             observer.complete();
           };
@@ -226,11 +225,11 @@ export class PersistService {
           const txn = db.transaction([storeName], 'readwrite');
           const store = txn.objectStore(storeName);
           const req = store.delete(key);
-          req.onerror = function (e: any) {
+          req.onerror = (e: any) => {
             observer.error(e.target.error);
             return;
           };
-          req.onsuccess = function (e: any) {
+          req.onsuccess = (e: any) => {
             observer.next(e.target.result);
             observer.complete();
           };
@@ -259,12 +258,12 @@ export class PersistService {
 
           const req = store.openCursor();
 
-          req.onerror = function (e: any) {
+          req.onerror = (e: any) => {
             observer.error(e.target.error);
             return;
           };
 
-          req.onsuccess = function (e: any) {
+          req.onsuccess = (e: any) => {
             const cursor = e.target.result;
             if (cursor) {
               const record = cursor.value as T;
@@ -347,14 +346,15 @@ export class PersistService {
   }
 
   // privates
-
   private uuidv4(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      /* tslint:disable:no-bitwise */
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      /* tslint:enable:no-bitwise */
       return v.toString(16);
     });
   }
-
   private debugLog(str: string, ...args: any[]): void {
     if (this.verbose) {
       console.log(str, args);

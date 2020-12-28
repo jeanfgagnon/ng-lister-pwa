@@ -95,7 +95,7 @@ export class RestoreDatabaseComponent implements OnInit {
           });
         });
       });
-      this.globalStateService.sendMessage("CategoryChanged");
+      this.globalStateService.sendMessage('CategoryChanged');
     });
   }
 

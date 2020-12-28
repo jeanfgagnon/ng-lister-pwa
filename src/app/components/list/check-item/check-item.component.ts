@@ -18,6 +18,7 @@ export class CheckItemComponent implements OnInit {
   public subItems: SubItem[] = [];
 
   @Input() item!: ListItem;
+  @Input() isQuick = false;
   @Output() checkChange = new EventEmitter<boolean>();
 
   constructor(

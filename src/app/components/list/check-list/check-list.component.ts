@@ -15,12 +15,11 @@ export class CheckListComponent implements OnInit {
 
   @Input() fromConsol = false;
   @Input() header!: ListHeader;
+  @Input() isQuick = false;
   @Output() itemClicked = new EventEmitter<string>();
 
-  // private scrollzone!: ElementRef;
   @ViewChild('scrollzone1') set elem(e: ElementRef) {
     if (e) {
-      // this.scrollzone = e;
       this.setScrollerHeight(e);
     }
   }
@@ -39,7 +38,7 @@ export class CheckListComponent implements OnInit {
       const i1check = i1.checked ? 1 : 0;
       const i2check = i2.checked ? 1 : 0;
       return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
-    })
+    });
   }
 
   // event handlers

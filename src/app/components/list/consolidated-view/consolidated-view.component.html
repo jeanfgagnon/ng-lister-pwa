@@ -10,12 +10,12 @@
       </mat-expansion-panel-header>
       <div *ngFor="let header of category.headers">
 
-        <div fxLayout='row' class='header-row'>
+        <div fxLayout='row' class='header-row' style='height: 40px !important'>
           <div fxFlex="90" fxLayoutAlign="start center">
-            <a href="#" class='header-lnk' [routerLink]="['/Liste', category.id, header.id]">{{ header.text }}</a>
+            <a href="#" class='header-lnk' [routerLink]="['/Liste', category.id, header.id]">{{ category.id === 'quick' ? 'List' : header.text }}</a>
           </div>
           <div fxFlex="10" fxLayoutAlign="end center">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
+            <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="isListHaveDone(header) &&  header.id === 'quick' ||  header.id !== 'quick'">
               <mat-icon>more_vert</mat-icon>
             </button>
           </div>
@@ -24,13 +24,13 @@
         <mat-menu #menu="matMenu">
           <div class='mini-menu'>
             <div fxLayoutAlign="center center" class='fb'>{{ header.text }}</div>
-            <button mat-menu-item (click)="quickAddToggle(header.id)">Quick Add</button>
-            <button *ngIf="isListHaveDone(header)" mat-menu-item (click)="removeDone(header)">Remove Done</button>
+            <button mat-menu-item (click)="quickAddToggle(header.id)" *ngIf="header.id !== 'quick'">Quick Add</button>
+            <button *ngIf="isListHaveDone(header)" mat-menu-item (click)="removeDone(header)">Remove Completed</button>
           </div>
         </mat-menu>
 
-        <app-check-list [header]="header" [fromConsol]="true"></app-check-list>
-        <app-quick-add *ngIf="header.id===quickHeaderId" class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>
+        <app-check-list [header]="header" [isQuick]="header.id === 'quick'" [fromConsol]="true"></app-check-list>
+        <app-quick-add *ngIf="header.id === 'quick' || header.id === quickHeaderId" class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>
 
       </div>
 

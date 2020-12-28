@@ -39,7 +39,7 @@
             <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/ManageLists']">Lists</a>
             <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/BackupDatabase']">Backup</a>
             <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/RestoreDatabase']">Restore</a>
-            <a mat-list-item (click)="changeTheme(drawer)">{{ nextTheme }}</a>
+            <a mat-list-item (click)="changeTheme(drawer)">{{ nextTheme }}&nbsp;&nbsp;<mat-icon fxLayoutAlign="start center" [inline]="true">format_color_fill</mat-icon></a>
             <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/EditSettings']">Settings&nbsp;&nbsp;<mat-icon fxLayoutAlign="start center" [inline]="true">settings</mat-icon></a>
 
           </mat-expansion-panel>
@@ -47,7 +47,7 @@
 
       </div>
 
-      <div *ngIf="!(isHandset$ | async)">
+      <div *ngIf="(isHandset$ | async) === false">
         <a mat-list-item href="#" [routerLink]="['/Liste']">List</a>
         <a mat-list-item href="#" [routerLink]="['/Consolidated']">Consolidated</a>
         <mat-divider></mat-divider>
@@ -64,7 +64,7 @@
           <button type="button" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
-          <span><b>Lister 0.5d</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+          <span><b>Lister 0.5e</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
         </div>
 
         <div fxFlex="30" fxLayoutAlign="center center" class='cat-name'>

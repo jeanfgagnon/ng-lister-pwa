@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   ) { }
   @HostBinding('class') public cssClass!: string;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.themingService.theme.subscribe((theme: string) => {
       this.cssClass = theme;
     });

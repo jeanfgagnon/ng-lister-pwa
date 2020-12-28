@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ListHeader } from 'src/app/models/list-header';
@@ -43,13 +42,12 @@ export class ManageItemComponent implements OnInit {
     private persistService: PersistService,
     private location: Location,
     public dialog: MatDialog,
-    private sanitizer: DomSanitizer
-    ) {
+  ) {
   }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      this.idHeader = params['id'];
+      this.idHeader = params.id;
       this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
         this.categories.push(cat);
       });
@@ -62,7 +60,7 @@ export class ManageItemComponent implements OnInit {
             if (item.idHeader === header.id) {
               localItems.push(item);
               item.subs = [];
-              this.persistService.query('subitems',true).subscribe((subItem: SubItem) => {
+              this.persistService.query('subitems', true).subscribe((subItem: SubItem) => {
                 if (subItem.idItem === item.id) {
                   item.subs.push(subItem);
                 }
@@ -82,15 +80,15 @@ export class ManageItemComponent implements OnInit {
 
   // event handlers
 
-  public onCategorySelected(matCatEvent: MatSelectChange) {
+  public onCategorySelected(matCatEvent: MatSelectChange): void {
     this.header.idCategory = matCatEvent.value;
     this.persistService.put('headers', this.header.id, this.header).subscribe(() => { /* noop */ });
   }
 
   public confirmClear(): void {
-    const dialogData = new ConfirmDialogModel("You want to clear this list?", "Confirm Action");
+    const dialogData = new ConfirmDialogModel('You want to clear this list?', 'Confirm Action');
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "300px",
+      maxWidth: '300px',
       data: dialogData
     });
 
@@ -102,9 +100,9 @@ export class ManageItemComponent implements OnInit {
   }
 
   public confirmDelete(): void {
-    const dialogData = new ConfirmDialogModel("You want to delete this list?", "Confirm Action");
+    const dialogData = new ConfirmDialogModel('You want to delete this list?', 'Confirm Action');
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "300px",
+      maxWidth: '300px',
       data: dialogData
     });
 
@@ -154,21 +152,21 @@ export class ManageItemComponent implements OnInit {
 
   // helpers
 
-  public getLinkText(item: ListItem): SafeHtml {
-    let rv = item.text;
-    let subtext = item.subs.map(subitem => {return subitem.text}).join(', ');
+  public getSubText(item: ListItem): string {
+    let subtext = item.subs.map(subitem => subitem.text).join(', ');
 
     if (subtext.length) {
       subtext = '[' + subtext + ']';
     }
-    return this.sanitizer.bypassSecurityTrustHtml( rv + " <span style='  color:#c0c0c0;font-size: 8pt;'>" + subtext + "</span>");
+
+    return subtext;
   }
 
   // privates
 
   private clearList(): void {
-    for (let i = 0; i < this.items.length; i++) {
-      this.persistService.delete('items', this.items[i].id).subscribe(() => {
+    for (const item of this.items) {
+      this.persistService.delete('items', item.id).subscribe(() => {
         // noop
       });
     }

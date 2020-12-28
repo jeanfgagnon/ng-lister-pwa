@@ -43,8 +43,8 @@ export class EditItemComponent implements OnInit {
   ngOnInit(): void {
     this.item.text = '';
     this.activatedRoute.params.subscribe(params => {
-      const headerId = params['id'];
-      const itemId = params['itemid'];
+      const headerId = params.id;
+      const itemId = params.itemid;
       if (itemId === '') {
         this.verb = 'Add';
       }
@@ -66,18 +66,17 @@ export class EditItemComponent implements OnInit {
   // event handlers
 
   public onDeleteItem(): void {
-    const dialogData = new ConfirmDialogModel("You want to delete this item?", "Confirm Action");
+    const dialogData = new ConfirmDialogModel('You want to delete this item?', 'Confirm Action');
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "300px",
+      maxWidth: '300px',
       data: dialogData
     });
 
     dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
       if (dialogResult) {
         this.persistService.delete('items', this.item.id).subscribe(() => {
-          for (let i = 0; i < this.subItems.length; i++) {
-            this.persistService.delete('subitems', this.subItems[i].id).subscribe(() => {
-            });
+          for (const subItem of this.subItems) {
+            this.persistService.delete('subitems', subItem.id).subscribe(() => { /* noop */ });
           }
         });
         this.location.back();
@@ -107,12 +106,12 @@ export class EditItemComponent implements OnInit {
     }
   }
 
-  public cancel() {
+  public cancel(): void {
     this.location.back();
   }
 
   public formSubmitted(e: Event): void {
-    if (this.item.text.trim() != '') {
+    if (this.item.text.trim() !== '') {
       let listItem = new ListItem();
       const normalizedText = Tools.capitalize(this.item.text);
 
@@ -167,8 +166,8 @@ export class EditItemComponent implements OnInit {
   // helpers
 
   public canAddSubItem(): boolean {
-    if (this.nbSubItem === 0) return true;
-    if (this.nbSubItem === 1 && this.subItemText1.length > 0) return true;
+    if (this.nbSubItem === 0) { return true; }
+    if (this.nbSubItem === 1 && this.subItemText1.length > 0) { return true; }
     return false;
   }
 

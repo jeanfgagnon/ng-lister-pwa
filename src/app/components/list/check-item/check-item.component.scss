@@ -16,3 +16,7 @@
 .mat-checkbox-anim-checked-unchecked {
   transform: scale(var(--my-scale));
 }
+
+.striked-text {
+  text-decoration: line-through;
+}

@@ -1,4 +1,4 @@
-import { IIDText } from "./interface-id-text";
+import { IIDText } from './interface-id-text';
 
 export class SubItem implements IIDText  {
   id: string;

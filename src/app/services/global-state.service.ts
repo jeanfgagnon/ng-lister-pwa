@@ -10,9 +10,9 @@ import { PersistService } from './persist.service';
 })
 export class GlobalStateService {
 
-  private _appSettings: ApplicationSetting[] = [];
-  private _isManageListScrollSetted = false;
-  private _currentSelectedIdCategory = '';
+  private appSettings: ApplicationSetting[] = [];
+  private isManageListScrollSetted = false;         // TODO: to be removed, ugly
+  private currentSelectedIdCategory = '';
   private messageSubject = new Subject<string>();
 
   public message$ = this.messageSubject.asObservable();
@@ -21,31 +21,31 @@ export class GlobalStateService {
     private persistService: PersistService
   ) {
     this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
-      if (cat.isDefault || this._currentSelectedIdCategory === '') {
-        this._currentSelectedIdCategory = cat.id;
+      if (cat.isDefault || this.currentSelectedIdCategory === '') {
+        this.currentSelectedIdCategory = cat.id;
       }
     });
     this.persistService.query('settings', true).subscribe((setting: ApplicationSetting) => {
-      this._appSettings.push(setting);
+      this.appSettings.push(setting);
     });
   }
 
   // properties
 
   public get CurrentSelectedIdCategory(): string {
-    return this._currentSelectedIdCategory;
+    return this.currentSelectedIdCategory;
   }
   public set CurrentSelectedIdCategory(value: string) {
-    this._currentSelectedIdCategory = value;
+    this.currentSelectedIdCategory = value;
     this.sendMessage('SelectedCategory');
   }
 
 
   public get IsManageListScrollSetted(): boolean {
-    return this._isManageListScrollSetted;
+    return this.isManageListScrollSetted;
   }
   public set IsManageListScrollSetted(value: boolean) {
-    this._isManageListScrollSetted = value;
+    this.isManageListScrollSetted = value;
   }
 
   // public interface
@@ -55,7 +55,7 @@ export class GlobalStateService {
   }
 
   public putSetting(name: string, value: string): void {
-    let setting = this._appSettings.find(x => x.name === name);
+    let setting = this.appSettings.find(x => x.name === name);
     if (setting) {
       setting.value = value;
     }
@@ -65,13 +65,13 @@ export class GlobalStateService {
       setting.value = value;
     }
 
-    this.persistService.put('settings', setting.id, setting).subscribe((setting: ApplicationSetting) => {
-      this._appSettings.push(setting);
+    this.persistService.put('settings', setting.id, setting).subscribe((s: ApplicationSetting) => {
+      this.appSettings.push(s);
     });
   }
 
   public getSetting(name: string): string {
-    const rv = this._appSettings.find(x => x.name === name);
+    const rv = this.appSettings.find(x => x.name === name);
 
     return rv ? rv.value : '';
   }

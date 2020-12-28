@@ -2,7 +2,8 @@
 
   <div class="main-item kingsize" fxFlex="40" *ngIf="item">
     <mat-checkbox color="primary" (change)="onCheckboxChange($event, 0)" [checked]="item.checked">
-      {{ item?.text }}</mat-checkbox>
+      <span [ngClass]="{'striked-text': isQuick && !item.checked}" title="{{item.id}}">{{ item?.text }}</span>
+    </mat-checkbox>
   </div>
 
   <div fxFlex="30" *ngIf="subItems.length > 0">

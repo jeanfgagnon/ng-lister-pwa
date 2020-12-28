@@ -33,7 +33,7 @@ export class MainNavComponent implements OnInit {
     private themingService: ThemingService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.themingService.theme.subscribe((theme: string) => {
       if (theme === 'dark-theme') {
         this.nextTheme = 'Light mode';
@@ -73,10 +73,10 @@ export class MainNavComponent implements OnInit {
 
   // event handlers
 
-  public changeTheme(drawer: MatSidenav) {
+  public changeTheme(drawer: MatSidenav): void {
     drawer.toggle();
     if (this.nextTheme === 'Light mode') {
-      this.themingService.theme.next('light-theme')
+      this.themingService.theme.next('light-theme');
     }
     else {
       this.themingService.theme.next('dark-theme');
@@ -90,8 +90,9 @@ export class MainNavComponent implements OnInit {
       if (a.id === 'quick') {
         return -1;
       }
-      else
+      else {
         return a.text.localeCompare(b.text);
+      }
     });
   }
 

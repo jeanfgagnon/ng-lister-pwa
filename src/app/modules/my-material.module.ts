@@ -69,7 +69,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
     MatSlideToggleModule
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: "fr-CA" },
+    { provide: LOCALE_ID, useValue: 'fr-CA' },
     { provide: MAT_DATE_LOCALE, useValue: 'fr-CA' },
   ]
 })

@@ -57,7 +57,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       },
       (err) => { },
       (/* completed */) => {
-        this.persistService.query("headers", true).subscribe((header: ListHeader) => {
+        this.persistService.query('headers', true).subscribe((header: ListHeader) => {
           if (header.idCategory === this.selectedCategoryId || header.idCategory === undefined) {
             this.headers.push(header);
           }
@@ -65,7 +65,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       }
     );
 
-    this.persistService.query("items", true).subscribe((item: ListItem) => {
+    this.persistService.query('items', true).subscribe((item: ListItem) => {
       this.allItems.push(item);
     });
   }
@@ -76,11 +76,11 @@ export class ManageListComponent implements OnInit, AfterViewInit {
 
   // event handlers
 
-  public onCategorySelected(e: MatSelectChange) {
+  public onCategorySelected(e: MatSelectChange): void {
     this.globalStateService.CurrentSelectedIdCategory = e.value;
     this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
     this.headers = [];
-    this.persistService.query("headers", true).subscribe((header: ListHeader) => {
+    this.persistService.query('headers', true).subscribe((header: ListHeader) => {
       if (header.idCategory === this.selectedCategoryId) {
         this.headers.push(header);
       }
@@ -137,7 +137,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public toggleFormVisibility() {
+  public toggleFormVisibility(): void {
     this.formVisible = !this.formVisible;
     setTimeout(() => this.recalcScroll(), 0);
   }

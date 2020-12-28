@@ -25,7 +25,7 @@ export class ManageCategoryComponent implements OnInit {
   public categoryName = '';
   public categoryIsDefault = false;
   public formVisible = false;
-  public actionVerb = "Add";
+  public actionVerb = 'Add';
   public errorMessage = '';
 
   private currentCategory!: ListCategory;
@@ -57,11 +57,11 @@ export class ManageCategoryComponent implements OnInit {
     }).subscribe((exist: boolean) => {
 
       if (this.actionVerb === 'Add' && exist) {
-        this.errorMessage = "This category exists!";
+        this.errorMessage = 'This category exists!';
         setTimeout(() => { this.errorMessage = ''; }, 5000);
       }
       else {
-        if (this.actionVerb === "Add") {
+        if (this.actionVerb === 'Add') {
           this.currentCategory = this.persistService.newCategoryInstance();
           this.categories.push(this.currentCategory);
         }
@@ -92,7 +92,7 @@ export class ManageCategoryComponent implements OnInit {
     }).subscribe((exists: boolean) => {
 
       if (!exists) {
-        if (this.actionVerb === "Add") {
+        if (this.actionVerb === 'Add') {
           this.currentCategory = this.persistService.newCategoryInstance();
           this.categories.push(this.currentCategory);
         }
@@ -113,7 +113,7 @@ export class ManageCategoryComponent implements OnInit {
         this.formVisible = false;
       }
       else {
-        this.errorMessage = "This category exists!";
+        this.errorMessage = 'This category exists!';
         setTimeout(() => { this.errorMessage = ''; }, 5000);
       }
     });
@@ -125,7 +125,7 @@ export class ManageCategoryComponent implements OnInit {
   }
 
   public onCategoryClick(category: ListCategory): void {
-    this.actionVerb = "Save";
+    this.actionVerb = 'Save';
     this.formVisible = true;
 
     this.currentCategory = category;
@@ -134,9 +134,9 @@ export class ManageCategoryComponent implements OnInit {
   }
 
   public onDeleteCategory(): void {
-    const dialogData = new ConfirmDialogModel("You want to delete this category?", "Confirm Action");
+    const dialogData = new ConfirmDialogModel('You want to delete this category?', 'Confirm Action');
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "300px",
+      maxWidth: '300px',
       data: dialogData
     });
 
@@ -180,16 +180,14 @@ export class ManageCategoryComponent implements OnInit {
 
   // helpers
 
-  public toggleFormVisibility() {
+  public toggleFormVisibility(): void {
     this.formVisible = !this.formVisible;
     this.categoryName = '';
   }
 
   public get sortedCategories(): ListCategory[] {
     return this.categories.sort((a: ListCategory, b: ListCategory) => {
-      if (a.text.toLowerCase() < b.text.toLowerCase()) return -1;
-      if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
-      return 0;
+      return a.text.toLowerCase().localeCompare(b.text.toLowerCase());
     });
   }
 
@@ -198,7 +196,7 @@ export class ManageCategoryComponent implements OnInit {
   private resetForm(): void {
     this.categoryName = '';
     this.categoryIsDefault = false;
-    this.actionVerb = "Add";
+    this.actionVerb = 'Add';
   }
 
   // There can only be one category with the default flag
@@ -222,7 +220,7 @@ export class ManageCategoryComponent implements OnInit {
       });
   }
 
-  private loadCategories() {
+  private loadCategories(): void {
     this.categories = [];
     this.persistService.query('categories', true).subscribe((category: ListCategory) => {
       if (category.id !== 'quick') {
