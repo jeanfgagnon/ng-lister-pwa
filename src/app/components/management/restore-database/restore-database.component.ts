@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
-import { Observable, zip } from 'rxjs';
+import { Observable, Subject, zip } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IListItem } from 'src/app/models/interface-list-item';
 import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
@@ -14,7 +15,7 @@ import { PersistService } from 'src/app/services/persist.service';
   templateUrl: './restore-database.component.html',
   styleUrls: ['./restore-database.component.scss']
 })
-export class RestoreDatabaseComponent implements OnInit {
+export class RestoreDatabaseComponent implements OnInit, OnDestroy {
 
   public textData = '';
   public dbIsValid = false;
@@ -26,6 +27,8 @@ export class RestoreDatabaseComponent implements OnInit {
   public dbVersion = 0;
   public database: ListCategory[] = [];
 
+  private unsubscribe$ = new Subject<void>();
+
   constructor(
     private persistService: PersistService,
     private globalStateService: GlobalStateService
@@ -33,6 +36,11 @@ export class RestoreDatabaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.globalStateService.sendMessage('ManageRestore');
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   // event handlers
@@ -51,7 +59,6 @@ export class RestoreDatabaseComponent implements OnInit {
 
           this.dbVersion = this.topObject.version;
           this.database = this.topObject.database;
-          console.log(JSON.stringify(this.database, null, 2));
         }
         else {
           this.textData = '';
@@ -78,16 +85,16 @@ export class RestoreDatabaseComponent implements OnInit {
       this.persistService.clear('subitems')
     );
 
-    clearAll$.subscribe(() => {
-      // here, database clering jobs are done and we are reloading with backup in an ugly looop
+    clearAll$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      // here, database clearing jobs are done and we are reloading with backup in an ugly looop
       this.database.forEach((cat: ListCategory) => {
-        this.persistService.put('categories', cat.id, cat).subscribe(() => {
+        this.persistService.put('categories', cat.id, cat).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
           cat.headers.forEach((header: ListHeader) => {
-            this.persistService.put('headers', header.id, header).subscribe(() => {
+            this.persistService.put('headers', header.id, header).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
               header.items.forEach((item: ListItem) => {
-                this.persistService.put('items', item.id, item as IListItem).subscribe(() => {
+                this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
                   item.subs.forEach((sub: SubItem) => {
-                    this.persistService.put('subitems', sub.id, sub).subscribe(() => { /* noop */ });
+                    this.persistService.put('subitems', sub.id, sub).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
                   });
                 });
               });

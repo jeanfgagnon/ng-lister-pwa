@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,13 +11,15 @@ import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ConfirmDialogComponent } from 'src/app/components/management/confirm-dialog/confirm-dialog.component';
 import { Tools } from 'src/app/common/Tools';
 import { IListItem } from 'src/app/models/interface-list-item';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-edit-item',
   templateUrl: './edit-item.component.html',
   styleUrls: ['./edit-item.component.scss']
 })
-export class EditItemComponent implements OnInit {
+export class EditItemComponent implements OnInit, OnDestroy {
 
   public allHeaders: ListHeader[] = [];
 
@@ -33,6 +35,8 @@ export class EditItemComponent implements OnInit {
 
   public verb = 'Edit';
 
+  private unsubscribe$ = new Subject<void>();
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private persistService: PersistService,
@@ -42,25 +46,30 @@ export class EditItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.item.text = '';
-    this.activatedRoute.params.subscribe(params => {
+    this.activatedRoute.params.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       const headerId = params.id;
       const itemId = params.itemid;
       if (itemId === '') {
         this.verb = 'Add';
       }
       else {
-        this.persistService.get('items', itemId).subscribe((item: ListItem) => {
+        this.persistService.get('items', itemId).pipe(takeUntil(this.unsubscribe$)).subscribe((item: ListItem) => {
           this.item = item;
           this.loadSubitems(item.id);
         });
       }
-      this.persistService.get('headers', headerId).subscribe((header: ListHeader) => {
+      this.persistService.get('headers', headerId).pipe(takeUntil(this.unsubscribe$)).subscribe((header: ListHeader) => {
         this.header = header;
-        this.persistService.query('headers', true).subscribe((other: ListHeader) => {
+        this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe((other: ListHeader) => {
           this.allHeaders.push(other);
         });
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   // event handlers
@@ -72,11 +81,11 @@ export class EditItemComponent implements OnInit {
       data: dialogData
     });
 
-    dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
+    dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((dialogResult: boolean) => {
       if (dialogResult) {
-        this.persistService.delete('items', this.item.id).subscribe(() => {
+        this.persistService.delete('items', this.item.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
           for (const subItem of this.subItems) {
-            this.persistService.delete('subitems', subItem.id).subscribe(() => { /* noop */ });
+            this.persistService.delete('subitems', subItem.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
           }
         });
         this.location.back();
@@ -119,12 +128,12 @@ export class EditItemComponent implements OnInit {
 
         this.persistService.exists<ListItem>('items', (itm: ListItem) => {
           return (itm.idHeader === this.header.id && itm.text === normalizedText);
-        }).subscribe((exists: boolean) => {
+        }).pipe(takeUntil(this.unsubscribe$)).subscribe((exists: boolean) => {
           if (!exists) {
             listItem = this.persistService.newItemInstance(this.header.id);
             listItem.text = normalizedText;
 
-            this.persistService.put('items', listItem.id, listItem as IListItem).subscribe((key: any) => {
+            this.persistService.put('items', listItem.id, listItem as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe((key: any) => {
               this.saveSubitems(listItem.id);
               if (this.addMore) {
                 this.reset();
@@ -145,10 +154,10 @@ export class EditItemComponent implements OnInit {
 
         this.persistService.exists<ListItem>('items', (itm: ListItem) => {
           return (itm.idHeader === this.header.id && itm.text === normalizedText && itm.id !== this.item.id);
-        }).subscribe((exists: boolean) => {
+        }).pipe(takeUntil(this.unsubscribe$)).subscribe((exists: boolean) => {
           if (!exists) {
             this.item.text = normalizedText;
-            this.persistService.put('items', this.item.id, this.item as IListItem).subscribe((key: any) => {
+            this.persistService.put('items', this.item.id, this.item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe((key: any) => {
               this.saveSubitems(this.item.id);
               this.location.back();
             });
@@ -175,7 +184,7 @@ export class EditItemComponent implements OnInit {
 
   private loadSubitems(idItem: string): void {
     this.subItems = [];
-    this.persistService.query('subitems', true).subscribe((si: SubItem) => {
+    this.persistService.query('subitems', true).pipe(takeUntil(this.unsubscribe$)).subscribe((si: SubItem) => {
       if (si.idItem === idItem) {
         this.subItems.push(si);
         this.nbSubItem++;
@@ -197,7 +206,7 @@ export class EditItemComponent implements OnInit {
       }
       subItem.text = Tools.capitalize(this.subItemText1.trim());
       subItem.rank = 1;
-      this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
+      this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
         if (this.subItemText2) {
           subItem = this.persistService.newSubitemInstance(idItem);
           if (this.subItems.length > 1) {
@@ -205,13 +214,13 @@ export class EditItemComponent implements OnInit {
           }
           subItem.text = Tools.capitalize(this.subItemText2.trim());
           subItem.rank = 2;
-          this.persistService.put('subitems', subItem.id, subItem).subscribe(() => { /* noop */ });
+          this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
         }
       });
     }
 
     for (let i = this.nbSubItem; i < this.subItems.length; i++) {
-      this.persistService.delete('subitems', this.subItems[i].id).subscribe(() => { /* noop */ });
+      this.persistService.delete('subitems', this.subItems[i].id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
     }
   }
 

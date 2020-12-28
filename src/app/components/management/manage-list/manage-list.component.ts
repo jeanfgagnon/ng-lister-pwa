@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 
 import { GlobalStateService } from 'src/app/services/global-state.service';
@@ -8,13 +8,15 @@ import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
 import { Tools } from 'src/app/common/Tools';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-manage-list',
   templateUrl: './manage-list.component.html',
   styleUrls: ['./manage-list.component.scss']
 })
-export class ManageListComponent implements OnInit, AfterViewInit {
+export class ManageListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public listName = '';
   public formVisible = false;
@@ -26,6 +28,8 @@ export class ManageListComponent implements OnInit, AfterViewInit {
   public selectedCategoryId = '';
 
   private scrollSetted = false;
+  private unsubscribe$ = new Subject<void>();
+
   @ViewChild('scrollzone') scrollzone!: ElementRef;
 
   constructor(
@@ -35,10 +39,10 @@ export class ManageListComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.globalStateService.sendMessage('ManageLists');
-    this.globalStateService.message$.subscribe((m: string) => {
+    this.globalStateService.message$.pipe(takeUntil(this.unsubscribe$)).subscribe((m: string) => {
       if (m === 'CategoryChanged') {
         this.categories = [];
-        this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
+        this.persistService.query('categories', true).pipe(takeUntil(this.unsubscribe$)).subscribe((cat: ListCategory) => {
           if (cat.id !== 'quick') {
             this.categories.push(cat);
           }
@@ -46,7 +50,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.persistService.query('categories', true).subscribe(
+    this.persistService.query('categories', true).pipe(takeUntil(this.unsubscribe$)).subscribe(
       (cat: ListCategory) => {
         if (cat.id !== 'quick') {
           this.categories.push(cat);
@@ -57,7 +61,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       },
       (err) => { },
       (/* completed */) => {
-        this.persistService.query('headers', true).subscribe((header: ListHeader) => {
+        this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe((header: ListHeader) => {
           if (header.idCategory === this.selectedCategoryId || header.idCategory === undefined) {
             this.headers.push(header);
           }
@@ -65,9 +69,14 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       }
     );
 
-    this.persistService.query('items', true).subscribe((item: ListItem) => {
+    this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe((item: ListItem) => {
       this.allItems.push(item);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   ngAfterViewInit(): void {
@@ -80,7 +89,7 @@ export class ManageListComponent implements OnInit, AfterViewInit {
     this.globalStateService.CurrentSelectedIdCategory = e.value;
     this.selectedCategoryId = this.globalStateService.CurrentSelectedIdCategory;
     this.headers = [];
-    this.persistService.query('headers', true).subscribe((header: ListHeader) => {
+    this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe((header: ListHeader) => {
       if (header.idCategory === this.selectedCategoryId) {
         this.headers.push(header);
       }
@@ -92,12 +101,12 @@ export class ManageListComponent implements OnInit, AfterViewInit {
       const stdListText = Tools.capitalize(this.listName.trim());
       this.persistService.exists<ListHeader>('headers', (h: ListHeader) => {
         return (h.idCategory === this.selectedCategoryId && h.text === stdListText);
-      }).subscribe((exists: boolean) => {
+      }).pipe(takeUntil(this.unsubscribe$)).subscribe((exists: boolean) => {
 
         if (!exists) {
           const header = this.persistService.newHeaderInstance(this.selectedCategoryId);
           header.text = Tools.capitalize(this.listName);
-          this.persistService.put('headers', header.id, header).subscribe((key: any) => {
+          this.persistService.put('headers', header.id, header).pipe(takeUntil(this.unsubscribe$)).subscribe((key: any) => {
             this.headers.push(header);
             this.listName = '';
             this.formVisible = false;

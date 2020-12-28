@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { GlobalStateService } from 'src/app/services/global-state.service';
@@ -11,13 +11,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
 import { Tools } from 'src/app/common/Tools';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-manage-category',
   templateUrl: './manage-category.component.html',
   styleUrls: ['./manage-category.component.scss']
 })
-export class ManageCategoryComponent implements OnInit {
+export class ManageCategoryComponent implements OnInit, OnDestroy {
 
   public categories: ListCategory[] = [];
   public headers: ListHeader[] = [];
@@ -29,6 +31,7 @@ export class ManageCategoryComponent implements OnInit {
   public errorMessage = '';
 
   private currentCategory!: ListCategory;
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private persistService: PersistService,
@@ -41,11 +44,16 @@ export class ManageCategoryComponent implements OnInit {
     this.loadCategories();
 
     // ramasse tout les headers plus quick
-    this.persistService.query('headers', true).subscribe((header: ListHeader) => {
+    this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe((header: ListHeader) => {
       this.headers.push(header);
     });
 
     this.globalStateService.sendMessage('ManageCategories');
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   // event handlers
@@ -54,7 +62,7 @@ export class ManageCategoryComponent implements OnInit {
     const normalizedName = Tools.capitalize(this.categoryName);
     this.persistService.exists<ListCategory>('categories', (cat: ListCategory) => {
       return (cat.text === normalizedName);
-    }).subscribe((exist: boolean) => {
+    }).pipe(takeUntil(this.unsubscribe$)).subscribe((exist: boolean) => {
 
       if (this.actionVerb === 'Add' && exist) {
         this.errorMessage = 'This category exists!';
@@ -73,7 +81,7 @@ export class ManageCategoryComponent implements OnInit {
           this.removeDefaultAll();
         }
         else {
-          this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
+          this.persistService.put('categories', this.currentCategory.id, this.currentCategory).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
             this.globalStateService.sendMessage('CategoryChanged');
           });
         }
@@ -89,7 +97,7 @@ export class ManageCategoryComponent implements OnInit {
     const normalizedName = Tools.capitalize(this.categoryName);
     this.persistService.exists<ListCategory>('categories', (cat: ListCategory) => {
       return (cat.text === normalizedName);
-    }).subscribe((exists: boolean) => {
+    }).pipe(takeUntil(this.unsubscribe$)).subscribe((exists: boolean) => {
 
       if (!exists) {
         if (this.actionVerb === 'Add') {
@@ -104,7 +112,7 @@ export class ManageCategoryComponent implements OnInit {
           this.removeDefaultAll();
         }
         else {
-          this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
+          this.persistService.put('categories', this.currentCategory.id, this.currentCategory).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
             this.globalStateService.sendMessage('CategoryChanged');
           });
         }
@@ -140,25 +148,25 @@ export class ManageCategoryComponent implements OnInit {
       data: dialogData
     });
 
-    dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
+    dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((dialogResult: boolean) => {
       if (dialogResult) {
-        this.persistService.delete('categories', this.currentCategory.id).subscribe((cat: ListCategory) => {
+        this.persistService.delete('categories', this.currentCategory.id).pipe(takeUntil(this.unsubscribe$)).subscribe((cat: ListCategory) => {
           this.globalStateService.sendMessage('CategoryChanged');
-          this.persistService.query('headers', true).subscribe((header: ListHeader) => {
+          this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe((header: ListHeader) => {
             if (header.idCategory === this.currentCategory.id) {
-              this.persistService.query('items', true).subscribe(
+              this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe(
                 (item: ListItem) => {
 
                   if (item.idHeader === header.id) {
                     this.persistService.query('subitems', true).subscribe(
                       (sub: SubItem) => {
                         if (sub.idItem === item.id) {
-                          this.persistService.delete('subitems', sub.id).subscribe(() => { /* noop */ });
+                          this.persistService.delete('subitems', sub.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
                         }
                       },
                       (err) => console.log(err),
                       (/* subitems completed */) => {
-                        this.persistService.delete('items', item.id).subscribe(() => { /* noop */ });
+                        this.persistService.delete('items', item.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
                       }
                     );
                   }
@@ -166,7 +174,7 @@ export class ManageCategoryComponent implements OnInit {
                 },
                 (err) => console.log(err),
                 (/* items completed */) => {
-                  this.persistService.delete('headers', header.id).subscribe(() => { /* noop */ });
+                  this.persistService.delete('headers', header.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
                 }
               );
             }
@@ -207,14 +215,14 @@ export class ManageCategoryComponent implements OnInit {
       }
     });
 
-    this.persistService.query('categories', true).subscribe(
+    this.persistService.query('categories', true).pipe(takeUntil(this.unsubscribe$)).subscribe(
       (cat: ListCategory) => {
         cat.isDefault = false;
-        this.persistService.put('categories', cat.id, cat).subscribe(() => { /* noop */ });
+        this.persistService.put('categories', cat.id, cat).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
       },
       err => { },
       ( /* completed */) => {
-        this.persistService.put('categories', this.currentCategory.id, this.currentCategory).subscribe(() => {
+        this.persistService.put('categories', this.currentCategory.id, this.currentCategory).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
           this.globalStateService.sendMessage('CategoryChanged');
         });
       });
@@ -222,7 +230,7 @@ export class ManageCategoryComponent implements OnInit {
 
   private loadCategories(): void {
     this.categories = [];
-    this.persistService.query('categories', true).subscribe((category: ListCategory) => {
+    this.persistService.query('categories', true).pipe(takeUntil(this.unsubscribe$)).subscribe((category: ListCategory) => {
       if (category.id !== 'quick') {
         this.categories.push(category);
       }

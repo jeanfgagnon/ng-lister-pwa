@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { PersistService } from 'src/app/services/persist.service';
@@ -9,9 +11,11 @@ import { PersistService } from 'src/app/services/persist.service';
   templateUrl: './edit-settings.component.html',
   styleUrls: ['./edit-settings.component.scss']
 })
-export class EditSettingsComponent implements OnInit {
+export class EditSettingsComponent implements OnInit, OnDestroy{
 
   public quickMode = false;
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private globalStateService: GlobalStateService,
@@ -21,6 +25,11 @@ export class EditSettingsComponent implements OnInit {
   ngOnInit(): void {
     const quickModeValue = this.globalStateService.getSetting('quick-mode');
     this.quickMode = quickModeValue === '1';
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   // event handlers
@@ -44,17 +53,17 @@ export class EditSettingsComponent implements OnInit {
       cat.description = 'Quick Category';
       cat.isDefault = false;
       cat.headers = [];
-      this.persistService.put('categories', cat.id, cat).subscribe(() => {
+      this.persistService.put('categories', cat.id, cat).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
         const header = this.persistService.newHeaderInstance(cat.id);
         header.id = cat.id;
         header.text = cat.text;
         header.items = [];
-        this.persistService.put('headers', header.id, header).subscribe(() => { /* noop */ });
+        this.persistService.put('headers', header.id, header).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
       });
     }
     else {
-      this.persistService.delete('headers', 'quick').subscribe(() => {
-        this.persistService.delete('categories', 'quick').subscribe(() => { /* noop */ });
+      this.persistService.delete('headers', 'quick').pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+        this.persistService.delete('categories', 'quick').pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
       });
     }
   }

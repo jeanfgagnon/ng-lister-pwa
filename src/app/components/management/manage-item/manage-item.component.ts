@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,13 +13,15 @@ import { ListCategory } from 'src/app/models/list-category';
 import { MatSelectChange } from '@angular/material/select';
 import { Tools } from 'src/app/common/Tools';
 import { SubItem } from 'src/app/models/sub-item';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-manage-item',
   templateUrl: './manage-item.component.html',
   styleUrls: ['./manage-item.component.scss']
 })
-export class ManageItemComponent implements OnInit {
+export class ManageItemComponent implements OnInit, OnDestroy {
 
   public title = '';
   public idHeader = '';
@@ -27,14 +29,13 @@ export class ManageItemComponent implements OnInit {
   public items: ListItem[] = [];
   public categories: ListCategory[] = [];
 
-  private scrollzone!: ElementRef;
-
   @ViewChild('scrollzone') set elem(e: ElementRef) {
     if (e) {
-      this.scrollzone = e;
       this.setScrollerHeight(e);
     }
   }
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private route: Router,
@@ -46,21 +47,21 @@ export class ManageItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
+    this.activatedRoute.params.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.idHeader = params.id;
-      this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
+      this.persistService.query('categories', true).pipe(takeUntil(this.unsubscribe$)).subscribe((cat: ListCategory) => {
         this.categories.push(cat);
       });
-      this.persistService.get('headers', this.idHeader).subscribe((header: ListHeader) => {
+      this.persistService.get('headers', this.idHeader).pipe(takeUntil(this.unsubscribe$)).subscribe((header: ListHeader) => {
         this.header = header;
         this.title = header.text;
         const localItems: ListItem[] = [];
-        this.persistService.query('items', true).subscribe(
+        this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe(
           (item: ListItem) => {
             if (item.idHeader === header.id) {
               localItems.push(item);
               item.subs = [];
-              this.persistService.query('subitems', true).subscribe((subItem: SubItem) => {
+              this.persistService.query('subitems', true).pipe(takeUntil(this.unsubscribe$)).subscribe((subItem: SubItem) => {
                 if (subItem.idItem === item.id) {
                   item.subs.push(subItem);
                 }
@@ -78,11 +79,16 @@ export class ManageItemComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   // event handlers
 
   public onCategorySelected(matCatEvent: MatSelectChange): void {
     this.header.idCategory = matCatEvent.value;
-    this.persistService.put('headers', this.header.id, this.header).subscribe(() => { /* noop */ });
+    this.persistService.put('headers', this.header.id, this.header).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
   }
 
   public confirmClear(): void {
@@ -92,7 +98,7 @@ export class ManageItemComponent implements OnInit {
       data: dialogData
     });
 
-    dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
+    dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((dialogResult: boolean) => {
       if (dialogResult) {
         this.clearList();
       }
@@ -106,10 +112,10 @@ export class ManageItemComponent implements OnInit {
       data: dialogData
     });
 
-    dialogRef.afterClosed().subscribe(dialogResult => {
+    dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe(dialogResult => {
       if (dialogResult) {
         this.clearList();
-        this.persistService.delete('headers', this.header.id).subscribe(() => {
+        this.persistService.delete('headers', this.header.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
           this.location.back();
         });
       }
@@ -134,7 +140,7 @@ export class ManageItemComponent implements OnInit {
         this.header.text = el.innerText.substring(0, 16);
       }
       this.header.text = Tools.capitalize(this.header.text);
-      this.persistService.put('headers', this.header.id, this.header).subscribe((h: ListHeader) => {
+      this.persistService.put('headers', this.header.id, this.header).pipe(takeUntil(this.unsubscribe$)).subscribe((h: ListHeader) => {
         if (el.innerText.length > 16) {
           el.innerText = el.innerText.substring(0, 16);
         }
@@ -166,7 +172,7 @@ export class ManageItemComponent implements OnInit {
 
   private clearList(): void {
     for (const item of this.items) {
-      this.persistService.delete('items', item.id).subscribe(() => {
+      this.persistService.delete('items', item.id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
         // noop
       });
     }

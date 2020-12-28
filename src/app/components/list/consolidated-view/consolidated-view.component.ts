@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { PersistService } from 'src/app/services/persist.service';
 import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
 import { ListItem } from 'src/app/models/list-item';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { IIDText } from 'src/app/models/interface-id-text';
 import { Tools } from 'src/app/common/Tools';
@@ -12,13 +12,14 @@ import { IListItem } from 'src/app/models/interface-list-item';
 import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ConfirmDialogComponent } from '../../management/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-consolidated-view',
   templateUrl: './consolidated-view.component.html',
   styleUrls: ['./consolidated-view.component.scss']
 })
-export class ConsolidatedViewComponent implements OnInit {
+export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
 
   public cleaned = false;
   public expandedState = true;
@@ -27,6 +28,7 @@ export class ConsolidatedViewComponent implements OnInit {
   public quickHeaderId = '';
 
   private items: ListItem[] = [];
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private persistService: PersistService,
@@ -37,6 +39,11 @@ export class ConsolidatedViewComponent implements OnInit {
   ngOnInit(): void {
     this.globalStateService.sendMessage('ConsolidatedView');
     this.loadAllData();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   // event handlers
@@ -65,7 +72,7 @@ export class ConsolidatedViewComponent implements OnInit {
         data: dialogData
       });
 
-      dialogRef.afterClosed().subscribe(dialogResult => {
+      dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe(dialogResult => {
         if (dialogResult) {
           this.deleteCompleted(header);
         }
@@ -88,7 +95,7 @@ export class ConsolidatedViewComponent implements OnInit {
   private deleteCompleted(header: ListHeader): void {
     for (let i = header.items.length - 1; i >= 0; i--) {
       if (!header.items[i].checked) {
-        this.persistService.delete('items', header.items[i].id).subscribe(() => { /* noop */ });
+        this.persistService.delete('items', header.items[i].id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
         header.items.splice(i, 1);
       }
     }
@@ -108,7 +115,7 @@ export class ConsolidatedViewComponent implements OnInit {
         this.persistService.query('items', true)
       ]
     );
-    tree$.subscribe(
+    tree$.pipe(takeUntil(this.unsubscribe$)).subscribe(
       ([category, header, item]) => {
         this.appendObject(this.categories, category);
         this.appendObject(this.headers, header);
@@ -188,7 +195,7 @@ export class ConsolidatedViewComponent implements OnInit {
         item.text = Tools.capitalize((splitted.shift() as string).trim());
         item.checked = true;
 
-        this.persistService.put('items', item.id, item as IListItem).subscribe(() => {
+        this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
           const header = this.headers.find(x => x.id === idt.id);
           if (header) {
             header.items.push(item);
@@ -196,7 +203,7 @@ export class ConsolidatedViewComponent implements OnInit {
               const subItem = this.persistService.newSubitemInstance(item.id);
               subItem.text = Tools.capitalize(splitted[i].trim());
               subItem.rank = (i + 1);
-              this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
+              this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
                 /* noop */
               });
             }
@@ -210,7 +217,7 @@ export class ConsolidatedViewComponent implements OnInit {
   private addExistingItem(idt: IIDText, checkedState: boolean): void {
     const header = this.headers.find(x => x.id === idt.id);
     if (header) {
-      this.persistService.query('items', true).subscribe((itm: ListItem) => {
+      this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe((itm: ListItem) => {
         if (itm.idHeader === idt.id && itm.text.toLowerCase() === idt.text.toLowerCase()) {
           itm.checked = checkedState;
           const curItem = header.items.find(x => x.id === itm.id);
@@ -220,7 +227,7 @@ export class ConsolidatedViewComponent implements OnInit {
           else {
             header.items.push(itm);
           }
-          this.persistService.put('items', itm.id, itm as IListItem).subscribe(() => { /* noop */ });
+          this.persistService.put('items', itm.id, itm).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
         }
       });
     }

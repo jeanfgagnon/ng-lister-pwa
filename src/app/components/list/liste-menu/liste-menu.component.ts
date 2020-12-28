@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { takeUntil } from 'rxjs/operators';
 
 import { PersistService } from 'src/app/services/persist.service';
 import { GlobalStateService } from 'src/app/services/global-state.service';
@@ -15,18 +16,21 @@ import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
 import { ConfirmDialogComponent } from '../../management/confirm-dialog/confirm-dialog.component';
 
 import { Tools } from 'src/app/common/Tools';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-liste-menu',
   templateUrl: './liste-menu.component.html',
   styleUrls: ['./liste-menu.component.scss']
 })
-export class ListeComponent implements OnInit {
+export class ListeComponent implements OnInit, OnDestroy  {
 
   public headers: ListHeader[] = [];
   public loaded = false;
   public tabIndex = 0;
   public isQuick = false;
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private persistService: PersistService,
@@ -60,6 +64,11 @@ export class ListeComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   // event handlers
 
   public onItemClicked(idHeader: string): void {
@@ -76,6 +85,7 @@ export class ListeComponent implements OnInit {
 
   public onItemAdded(idt: IIDText): void {
     this.quickAdd(idt);
+    setTimeout(() => this.onItemClicked(idt.id));
   }
 
   public confirmCompletedRemoval(header: ListHeader): void {
@@ -85,7 +95,7 @@ export class ListeComponent implements OnInit {
       data: dialogData
     });
 
-    dialogRef.afterClosed().subscribe(dialogResult => {
+    dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe(dialogResult => {
       if (dialogResult) {
         this.deleteCompleted(header);
       }
@@ -109,7 +119,7 @@ export class ListeComponent implements OnInit {
   private deleteCompleted(header: ListHeader): void {
     for (let i = header.items.length - 1; i >= 0; i--) {
       if (!header.items[i].checked) {
-        this.persistService.delete('items', header.items[i].id).subscribe(() => { /* noop */ });
+        this.persistService.delete('items', header.items[i].id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
         header.items.splice(i, 1);
       }
     }
@@ -119,12 +129,12 @@ export class ListeComponent implements OnInit {
     this.headers = [];
     this.loaded = false;
     const noFlickerHeaders: ListHeader[] = [];
-    this.persistService.query('headers', true).subscribe(
+    this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe(
       (header: ListHeader) => {
         if (header.idCategory === id) {
           noFlickerHeaders.push(header);
           header.items = [];
-          this.persistService.query('items', true).subscribe(
+          this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe(
             (item: ListItem) => {
               if (item.idHeader === header.id) {
                 header.items.push(item);
@@ -156,7 +166,7 @@ export class ListeComponent implements OnInit {
   private quickAdd(idt: IIDText): void {
     this.persistService.exists<ListItem>('items', (itm: ListItem) => {
       return idt.id === itm.idHeader && itm.text.toLowerCase() === idt.text.toLowerCase();
-    }).subscribe((exist: boolean) => {
+    }).pipe(takeUntil(this.unsubscribe$)).subscribe((exist: boolean) => {
 
       if (!exist) {
         const splitted = idt.text.split(/[,;]/);
@@ -165,7 +175,7 @@ export class ListeComponent implements OnInit {
         item.text = Tools.capitalize((splitted.shift() as string).trim());
         item.checked = true;
 
-        this.persistService.put('items', item.id, item as IListItem).subscribe(() => {
+        this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
           const header = this.headers.find(x => x.id === idt.id);
           if (header) {
             header.items.push(item);
@@ -173,7 +183,7 @@ export class ListeComponent implements OnInit {
               const subItem = this.persistService.newSubitemInstance(item.id);
               subItem.text = Tools.capitalize(splitted[i].trim());
               subItem.rank = (i + 1);
-              this.persistService.put('subitems', subItem.id, subItem).subscribe(() => {
+              this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
                 /* noop */
               });
             }
@@ -185,7 +195,7 @@ export class ListeComponent implements OnInit {
 
   // If luser is starting by Liste
   private findDefaultCategory(): void {
-    this.persistService.query('categories', true).subscribe((cat: ListCategory) => {
+    this.persistService.query('categories', true).pipe(takeUntil(this.unsubscribe$)).subscribe((cat: ListCategory) => {
       if (cat.isDefault) {
         this.globalStateService.CurrentSelectedIdCategory = cat.id;
         this.loadDataByCategoryId(cat.id, '');

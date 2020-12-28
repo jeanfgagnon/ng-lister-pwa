@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, shareReplay, takeUntil } from 'rxjs/operators';
 
 import { PersistService } from 'src/app/services/persist.service';
 import { GlobalStateService } from 'src/app/services/global-state.service';
@@ -14,17 +14,19 @@ import { MatSidenav } from '@angular/material/sidenav';
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.scss']
 })
-export class MainNavComponent implements OnInit {
+export class MainNavComponent implements OnInit, OnDestroy  {
 
   public categories: ListCategory[] = [];
   public selectedCategoryName = 'loading';
   public nextTheme = '';
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  public isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
       shareReplay()
     );
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -44,12 +46,12 @@ export class MainNavComponent implements OnInit {
     });
 
     this.loadCategories();
-    this.globalStateService.message$.subscribe((m: string) => {
+    this.globalStateService.message$.pipe(takeUntil(this.unsubscribe$)).subscribe((m: string) => {
       if (m === 'CategoryChanged') {
         this.loadCategories();
       }
       else if (m === 'SelectedCategory' || m === 'DefaultCategory') {
-        this.persistService.get('categories', this.globalStateService.CurrentSelectedIdCategory).subscribe((cat: ListCategory) => {
+        this.persistService.get('categories', this.globalStateService.CurrentSelectedIdCategory).pipe(takeUntil(this.unsubscribe$)).subscribe((cat: ListCategory) => {
           this.selectedCategoryName = (cat ? cat.text : 'bug!');
         });
       }
@@ -69,6 +71,11 @@ export class MainNavComponent implements OnInit {
         this.selectedCategoryName = 'Restore Database';
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   // event handlers
