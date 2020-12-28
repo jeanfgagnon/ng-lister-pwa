@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
   templateUrl: './liste-menu.component.html',
   styleUrls: ['./liste-menu.component.scss']
 })
-export class ListeComponent implements OnInit, OnDestroy  {
+export class ListeComponent implements OnInit, OnDestroy {
 
   public headers: ListHeader[] = [];
   public loaded = false;
@@ -85,7 +85,10 @@ export class ListeComponent implements OnInit, OnDestroy  {
 
   public onItemAdded(idt: IIDText): void {
     this.quickAdd(idt);
-    setTimeout(() => this.onItemClicked(idt.id));
+    const h = this.headers.find(x => x.id === idt.id);
+    if (h && h.text.indexOf('*') === -1) {
+      h.text += '*';
+    }
   }
 
   public confirmCompletedRemoval(header: ListHeader): void {

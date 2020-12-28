@@ -159,7 +159,9 @@ export class ManageItemComponent implements OnInit, OnDestroy {
   // helpers
 
   public getSubText(item: ListItem): string {
-    let subtext = item.subs.map(subitem => subitem.text).join(', ');
+    let subtext = item.subs.sort((a: SubItem, b: SubItem) => {
+      return a.rank - b.rank;
+    }).map(subitem => subitem.text).join(', ');
 
     if (subtext.length) {
       subtext = '[' + subtext + ']';

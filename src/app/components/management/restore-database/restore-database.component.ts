@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
-import { Observable, Subject, zip } from 'rxjs';
+import { Subject, zip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IListItem } from 'src/app/models/interface-list-item';
 import { ListCategory } from 'src/app/models/list-category';
