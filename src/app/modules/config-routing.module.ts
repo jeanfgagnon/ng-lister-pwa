@@ -8,6 +8,7 @@ import { ManageItemComponent } from '../components/management/manage-item/manage
 import { ManageListComponent } from '../components/management/manage-list/manage-list.component';
 import { RestoreDatabaseComponent } from '../components/management/restore-database/restore-database.component';
 import { EditSettingsComponent } from '../components/management/edit-settings/edit-settings.component';
+import { FreshInstallComponent } from '../components/management/fresh-install/fresh-install.component';
 
 const routes: Routes = [
   { path: 'ManageLists', component: ManageListComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'BackupDatabase', component: DumpDatabaseComponent },
   { path: 'RestoreDatabase', component: RestoreDatabaseComponent },
   { path: 'EditSettings', component: EditSettingsComponent },
+  { path: 'FreshInstall', component: FreshInstallComponent },
 ];
 
 @NgModule({

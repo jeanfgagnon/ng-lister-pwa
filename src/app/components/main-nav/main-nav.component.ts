@@ -70,6 +70,9 @@ export class MainNavComponent implements OnInit, OnDestroy  {
       else if (m === 'ManageRestore') {
         this.selectedCategoryName = 'Restore Database';
       }
+      else if (m === 'FreshInstall') {
+        this.selectedCategoryName = 'Welcome!';
+      }
     });
   }
 

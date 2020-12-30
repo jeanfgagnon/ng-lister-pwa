@@ -16,6 +16,9 @@ import { ManageCategoryComponent } from 'src/app/components/management/manage-ca
 import { ManageItemComponent } from 'src/app/components/management/manage-item/manage-item.component';
 import { ManageListComponent } from 'src/app/components/management/manage-list/manage-list.component';
 import { EditSettingsComponent } from 'src/app/components/management/edit-settings/edit-settings.component';
+import { FreshInstallComponent } from 'src/app/components/management/fresh-install/fresh-install.component';
+
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,7 @@ import { EditSettingsComponent } from 'src/app/components/management/edit-settin
     ManageListComponent,
     RestoreDatabaseComponent,
     EditSettingsComponent,
+    FreshInstallComponent,
   ],
   imports: [
     CommonModule,
@@ -35,7 +39,8 @@ import { EditSettingsComponent } from 'src/app/components/management/edit-settin
     FlexLayoutModule,
     ClipboardModule,
     MyMaterialModule,
-    ConfigRoutingModule
+    ConfigRoutingModule,
+    MatProgressSpinnerModule
   ]
 })
 export class ConfigModule { }

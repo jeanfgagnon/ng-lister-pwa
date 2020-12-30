@@ -1,0 +1,49 @@
+<div class="pad10">
+  <div fxLayoutAlign="center">
+    <div class='img-row' fxLayoutAlign="start center">
+      <img src='assets/icons/icon-72x72.png' alt='Logo' />&nbsp; <h1>Welcome to Lister</h1>
+    </div>
+  </div>
+
+  <div class='main-bloc tac'>
+    It l👀ks like it's your first time here!<br />
+    Don't worry! You'll be good to go in no time.<br />
+    <br />
+    <br />
+    You need to define a category and a list.<br />
+    <br />
+    <div fxLayoutAlign="center">
+      <mat-card style="width: 80%;">
+
+        <div>
+          <mat-form-field class='cpc'>
+            <mat-label>Initial Category Name</mat-label>
+            <input name="txtCatName" matInput type="text" [(ngModel)]="categoryName">
+            <mat-hint>eg.: Grocery, Kids, Car</mat-hint>
+            <!-- <div class='err-mess' *ngIf="errorMessage !== ''">{{ errorMessage }}</div> -->
+          </mat-form-field>
+        </div>
+        <div class='mart20'>
+          <mat-form-field class='cpc'>
+            <mat-label>Initial List Name</mat-label>
+            <input name="txtListName" matInput type="text" [(ngModel)]="listName">
+            <mat-hint>eg.: Dairies, Fresh, Health, Booze</mat-hint>
+            <!-- <div class='err-mess' *ngIf="errorMessage !== ''">{{ errorMessage }}</div> -->
+          </mat-form-field>
+        </div>
+
+        <br /><br />
+        <div fxLayoutAlign="end center">
+          <button mat-raised-button color="primary" [disabled]="!formValid" (click)="install()">Continue</button>&nbsp;
+          <button mat-raised-button color="accent" type="button" (click)="cancel()">Get me outa here!</button>
+          <!-- <button mat-raised-button color="primary" [disabled]="item.text===''">Save</button>&nbsp;
+          <button mat-raised-button color="accent" type="button" (click)="cancel()">Return</button> -->
+        </div>
+
+      </mat-card>
+    </div>
+  </div>
+  <div class='pos-bottom tac cpc fine-print' fxLayoutAlign="center center">
+    Brought to you by JF Gagnon - January 2021
+  </div>
+</div>

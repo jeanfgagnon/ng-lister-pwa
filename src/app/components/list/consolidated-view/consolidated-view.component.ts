@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { PersistService } from 'src/app/services/persist.service';
@@ -34,6 +35,7 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
     private persistService: PersistService,
     private globalStateService: GlobalStateService,
     public dialog: MatDialog,
+    private route: Router,
   ) { }
 
   ngOnInit(): void {
@@ -123,6 +125,10 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
       },
       (error) => { },
       (/* complete */) => {
+        if (this.categories.length === 0) {
+          // new installation, help new user
+          this.route.navigate(['/Manage/FreshInstall']);
+        }
         this.tieAll();
         this.removeDeadWood();
         this.categories = this.categories.sort((a: ListCategory, b: ListCategory) => {

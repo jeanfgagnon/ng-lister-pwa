@@ -1,7 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TOUCH_BUFFER_MS } from '@angular/cdk/a11y';
+import { DOCUMENT, Location } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
+import { Router } from '@angular/router';
 import { Subject, zip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ApplicationSetting } from 'src/app/models/application-setting';
 import { IListItem } from 'src/app/models/interface-list-item';
 import { ListCategory } from 'src/app/models/list-category';
 import { ListHeader } from 'src/app/models/list-header';
@@ -20,6 +24,7 @@ export class RestoreDatabaseComponent implements OnInit, OnDestroy {
   public textData = '';
   public dbIsValid = false;
   public error = false;
+  public isRestoring = false;
   public restoreMode = 'R';
 
   public topObject: any = {};
@@ -31,7 +36,9 @@ export class RestoreDatabaseComponent implements OnInit, OnDestroy {
 
   constructor(
     private persistService: PersistService,
-    private globalStateService: GlobalStateService
+    private globalStateService: GlobalStateService,
+    private router: Router,
+    @Inject(DOCUMENT) private document: Document
   ) { }
 
   ngOnInit(): void {
@@ -76,33 +83,62 @@ export class RestoreDatabaseComponent implements OnInit, OnDestroy {
   }
 
   public onRestoreClick(): void {
+    this.isRestoring = true;
+    setTimeout(() => this.restore());
+  }
+
+  private restore(): void {
     this.textData = '';
 
     const clearAll$ = zip(
       this.persistService.clear('categories'),
       this.persistService.clear('headers'),
       this.persistService.clear('items'),
-      this.persistService.clear('subitems')
+      this.persistService.clear('subitems'),
+      this.persistService.clear('settings')
     );
 
     clearAll$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       // here, database clearing jobs are done and we are reloading with backup in an ugly looop
-      this.database.forEach((cat: ListCategory) => {
-        this.persistService.put('categories', cat.id, cat).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-          cat.headers.forEach((header: ListHeader) => {
+
+      for (const cat of this.database) {
+        const flatCat = Object.assign({}, cat);
+        flatCat.headers = [];
+        this.persistService.put('categories', cat.id, flatCat).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+
+          for (const header of cat.headers) {
+            const flatHeader = Object.assign({}, header);
+            flatHeader.items = [];
             this.persistService.put('headers', header.id, header).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-              header.items.forEach((item: ListItem) => {
+
+              for (const item of header.items) {
+                const flatItem = Object.assign({}, item);
+                flatItem.subs = [];
                 this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-                  item.subs.forEach((sub: SubItem) => {
+
+                  for (const sub of item.subs) {
                     this.persistService.put('subitems', sub.id, sub).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
-                  });
+                  }
+
                 });
-              });
+
+              }
+
             });
-          });
+
+          }
+
         });
+      }
+
+      this.topObject.settings.forEach((setting: ApplicationSetting) => {
+        this.persistService.put('settings', setting.id, setting).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
       });
+
       this.globalStateService.sendMessage('CategoryChanged');
+      setTimeout(() => {
+        this.document.location.href = "/";
+      }, 5000);
     });
   }
 

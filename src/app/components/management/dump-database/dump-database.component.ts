@@ -9,6 +9,7 @@ import { ListItem } from 'src/app/models/list-item';
 import { SubItem } from 'src/app/models/sub-item';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { takeUntil } from 'rxjs/operators';
+import { ApplicationSetting } from 'src/app/models/application-setting';
 @Component({
   selector: 'app-dump-database',
   templateUrl: './dump-database.component.html',
@@ -22,6 +23,8 @@ export class DumpDatabaseComponent implements OnInit, OnDestroy, AfterViewInit {
   private headers: ListHeader[] = [];
   private items: ListItem[] = [];
   private subItems: SubItem[] = [];
+  private settings: ApplicationSetting[] = [];
+
   private unsubscribe$ = new Subject<void>();
 
   @ViewChild('dumpzone') dumpzone!: ElementRef;
@@ -47,15 +50,17 @@ export class DumpDatabaseComponent implements OnInit, OnDestroy, AfterViewInit {
         this.persistService.query('categories', true),
         this.persistService.query('headers', true),
         this.persistService.query('items', true),
-        this.persistService.query('subitems', true)
+        this.persistService.query('subitems', true),
+        this.persistService.query('settings', true)
       ]
     );
     tree$.pipe(takeUntil(this.unsubscribe$)).subscribe(
-      ([category, header, item, subItem]) => {
+      ([category, header, item, subItem, setting]) => {
         this.appendObject(this.categories, category);
         this.appendObject(this.headers, header);
         this.appendObject(this.items, item);
         this.appendObject(this.subItems, subItem);
+        this.appendObject(this.settings, setting);
       },
       (error) => { },
       (/* complete */) => {
@@ -73,7 +78,7 @@ export class DumpDatabaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // privates
 
-  private appendObject(srcArray: any[], v: ListCategory | ListHeader | ListItem | SubItem): void {
+  private appendObject(srcArray: any[], v: ListCategory | ListHeader | ListItem | SubItem | ApplicationSetting): void {
     if (srcArray.findIndex(x => x.id === v.id) === -1) {
       srcArray.push(v);
     }
@@ -95,6 +100,7 @@ export class DumpDatabaseComponent implements OnInit, OnDestroy, AfterViewInit {
     const top = {
       version: this.persistService.dbVersion,
       date: new Date(),
+      settings: this.settings,
       database: this.categories
     };
     this.json = JSON.stringify(top, null, 2);
