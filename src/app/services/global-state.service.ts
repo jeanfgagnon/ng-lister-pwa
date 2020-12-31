@@ -63,11 +63,10 @@ export class GlobalStateService {
       setting = this.persistService.newSettingInstance();
       setting.name = name;
       setting.value = value;
+      this.appSettings.push(setting);
     }
 
-    this.persistService.put('settings', setting.id, setting).subscribe((s: ApplicationSetting) => {
-      this.appSettings.push(s);
-    });
+    this.persistService.put('settings', setting.id, setting).subscribe((s: ApplicationSetting) => { /* noop */ });
   }
 
   public getSetting(name: string): string {

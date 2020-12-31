@@ -1,17 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ConfirmDialogModel } from 'src/app/models/confirm-dialog-model';
+import { ListItem } from 'src/app/models/list-item';
 
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { PersistService } from 'src/app/services/persist.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-edit-settings',
   templateUrl: './edit-settings.component.html',
   styleUrls: ['./edit-settings.component.scss']
 })
-export class EditSettingsComponent implements OnInit, OnDestroy{
+export class EditSettingsComponent implements OnInit, OnDestroy {
 
   public quickMode = false;
 
@@ -20,6 +25,8 @@ export class EditSettingsComponent implements OnInit, OnDestroy{
   constructor(
     private globalStateService: GlobalStateService,
     private persistService: PersistService,
+    public dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -35,12 +42,14 @@ export class EditSettingsComponent implements OnInit, OnDestroy{
   // event handlers
 
   public sliderChange(e: MatSlideToggleChange): void {
-    console.log(e);
     if (e.source && e.source.name) {
       this.globalStateService.putSetting(e.source.name, e.checked ? '1' : '0');
     }
-    this.prepareQuickList(e.checked);
+    this.prepareQuickList(e.source.checked);
+    e.source.checked = this.quickMode;
   }
+
+  // helpers
 
   // privates
 
@@ -58,13 +67,49 @@ export class EditSettingsComponent implements OnInit, OnDestroy{
         header.id = cat.id;
         header.text = cat.text;
         header.items = [];
-        this.persistService.put('headers', header.id, header).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
+        this.persistService.put('headers', header.id, header).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+          this.globalStateService.putSetting('quick-mode', '1');
+          location.reload();
+        });
+
       });
     }
     else {
-      this.persistService.delete('headers', 'quick').pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-        this.persistService.delete('categories', 'quick').pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
-      });
+      this.confirmRemoval();
     }
   }
+
+  private confirmRemoval(): void {
+    this.persistService.exists<ListItem>('items', (item: ListItem) => {
+      return item.idHeader === 'quick';
+    }).pipe(takeUntil(this.unsubscribe$)).subscribe((exist: boolean) => {
+      if (!exist) {
+        this.quickRemoval();
+      }
+      else {
+        const dialogData = new ConfirmDialogModel('You want to cancel quick mode?', 'Confirm Action');
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          maxWidth: '300px',
+          data: dialogData
+        });
+
+        dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((dialogResult: boolean) => {
+          if (dialogResult) {
+            this.quickRemoval();
+          }
+          else {
+            this.globalStateService.putSetting('quick-mode', '1');
+          }
+          location.reload();
+        });
+      }
+    });
+  }
+
+  private quickRemoval(): void {
+    this.persistService.delete('headers', 'quick').pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      this.persistService.delete('categories', 'quick').pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
+    });
+  }
+
 }
