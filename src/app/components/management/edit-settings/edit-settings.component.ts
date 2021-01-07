@@ -30,6 +30,7 @@ export class EditSettingsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.globalStateService.sendMessage('EditSettings');
     const quickModeValue = this.globalStateService.getSetting('quick-mode');
     this.quickMode = quickModeValue === '1';
   }

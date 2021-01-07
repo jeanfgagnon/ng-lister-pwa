@@ -17,7 +17,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 export class MainNavComponent implements OnInit, OnDestroy  {
 
   public categories: ListCategory[] = [];
-  public selectedCategoryName = 'loading';
+  public currentActionDisplay = 'loading';
   public nextTheme = '';
 
   public isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -52,26 +52,29 @@ export class MainNavComponent implements OnInit, OnDestroy  {
       }
       else if (m === 'SelectedCategory' || m === 'DefaultCategory') {
         this.persistService.get('categories', this.globalStateService.CurrentSelectedIdCategory).pipe(takeUntil(this.unsubscribe$)).subscribe((cat: ListCategory) => {
-          this.selectedCategoryName = (cat ? cat.text : 'bug!');
+          this.currentActionDisplay = (cat ? cat.text : 'bug!');
         });
       }
       else if (m === 'ConsolidatedView') {
-        this.selectedCategoryName = 'Consolidated';
+        this.currentActionDisplay = 'Consolidated';
       }
       else if (m === 'ManageLists') {
-        this.selectedCategoryName = 'Manage Lists';
+        this.currentActionDisplay = 'Manage Lists';
       }
       else if (m === 'ManageCategories') {
-        this.selectedCategoryName = 'Manage Categories';
+        this.currentActionDisplay = 'Manage Categories';
       }
       else if (m === 'ManageBackup') {
-        this.selectedCategoryName = 'Backup Database';
+        this.currentActionDisplay = 'Backup Database';
       }
       else if (m === 'ManageRestore') {
-        this.selectedCategoryName = 'Restore Database';
+        this.currentActionDisplay = 'Restore Database';
       }
       else if (m === 'FreshInstall') {
-        this.selectedCategoryName = 'Welcome!';
+        this.currentActionDisplay = 'Welcome!';
+      }
+      else if (m === 'EditSettings') {
+        this.currentActionDisplay = 'Settings';
       }
     });
   }
