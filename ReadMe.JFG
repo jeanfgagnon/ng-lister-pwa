@@ -1,0 +1,13 @@
+Comment modifier la bd:
+
+        if (!db.objectStoreNames.contains('items')) {
+          db.createObjectStore('items', { keyPath: 'id' }).createIndex('by_idEntete', 'idEntete');
+        }
+        else if (e.oldVersion < 4) {
+
+          this.query('items', true).subscribe(
+            (item: ListItem) => {
+              item.rank = 0;
+              this.put('items', item.id, item).subscribe(_ => {});
+            });
+        }

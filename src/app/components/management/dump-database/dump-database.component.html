@@ -1,6 +1,22 @@
-<div class='pad10 ovh'>
-  <pre #dumpzone></pre>
+<div class="pad10">
+
+  <h2>Backup</h2>
+  <div *ngIf="dumpMethod === ''">
+    Please choose the backup method:<br />
+    <button mat-raised-button color="primary" (click)="setDumpMethod('cut')">Cut & Paste</button>&nbsp;
+    <button mat-raised-button color="accent" (click)="setDumpMethod('file')">File download</button><br />
+
+    <span class="pssit">download is the suggested way</span>
+  </div>
+
+  <div class='ovh'>
+    <pre #dumpzone></pre>
+  </div>
+  <div *ngIf="dumpMethod === 'cut'">
+    <button mat-mini-fab color="primary" type="button" (click)="onClip()" class="clipboard-fab" matTooltip="Copy to clipboard"
+      [cdkCopyToClipboard]="json">
+      <mat-icon>copy_all</mat-icon>
+    </button>
+  </div>
+
 </div>
-<button mat-mini-fab color="primary" type="button" (click)="onClip()" class="clipboard-fab" matTooltip="Copy to clipboard" [cdkCopyToClipboard]="json">
-  <mat-icon>copy_all</mat-icon>
-</button>

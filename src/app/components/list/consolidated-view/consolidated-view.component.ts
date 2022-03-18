@@ -200,8 +200,12 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
         const item = this.persistService.newItemInstance(idt.id);
         item.text = Tools.capitalize((splitted.shift() as string).trim());
         item.checked = true;
+        if (idt.id === 'quick') {
+          item.rank = this.getQuickRank();
+        }
 
         this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+          console.log('on save ce fdp ', item.id);
           const header = this.headers.find(x => x.id === idt.id);
           if (header) {
             header.items.push(item);
@@ -217,7 +221,16 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
         });
       }
     });
+  }
 
+  private getQuickRank(): number {
+    let rv = 0;
+    // this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe((itm: ListItem) => {
+    //   if (itm.idHeader === 'quick' && itm.rank > rv) {
+    //     rv =
+    //   }
+    // });
+    return rv;
   }
 
   private addExistingItem(idt: IIDText, checkedState: boolean): void {

@@ -9,7 +9,7 @@ import { ListHeader } from '../models/list-header';
 import { ListItem } from '../models/list-item';
 import { SubItem } from '../models/sub-item';
 
-const VERSION = 3;
+const VERSION = 4;
 const STORE_NAME = 'lister-pwa';
 
 @Injectable({
@@ -37,6 +37,7 @@ export class PersistService {
       openRequest.onupgradeneeded = (e: any) => {
         this.debugLog('localdb - upgrade needed!');
 
+        const txn: IDBTransaction = e.target.transaction;
         const db: IDBDatabase = e.target.result;
 
         if (!db.objectStoreNames.contains('categories')) {
@@ -49,6 +50,14 @@ export class PersistService {
 
         if (!db.objectStoreNames.contains('items')) {
           db.createObjectStore('items', { keyPath: 'id' }).createIndex('by_idEntete', 'idEntete');
+        }
+        else if (e.oldVersion < 4) {
+
+          this.query('items', true).subscribe(
+            (item: ListItem) => {
+              item.rank = 0;
+              this.put('items', item.id, item).subscribe(_ => {});
+            });
         }
 
         if (!db.objectStoreNames.contains('subitems')) {
@@ -313,6 +322,7 @@ export class PersistService {
       idHeader: idHeader,
       text: '',
       checked: false,
+      rank: 0,
       subs: []
     };
 
@@ -355,6 +365,7 @@ export class PersistService {
       return v.toString(16);
     });
   }
+
   private debugLog(str: string, ...args: any[]): void {
     if (this.verbose) {
       console.log(str, args);

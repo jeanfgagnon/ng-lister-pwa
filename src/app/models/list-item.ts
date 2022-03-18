@@ -7,13 +7,15 @@ export class ListItem implements IIDText, IListItem  {
   idHeader: string;
   text: string;
   checked: boolean;
+  rank: number;
   subs: SubItem[];
 
-  constructor(id = '', idHeader = '', text = '', checked = false) {
+  constructor(id = '', idHeader = '', text = '', checked = false, rank = 0) {
     this.id = id;
     this.idHeader = idHeader;
     this.text = text;
     this.checked = checked;
+    this.rank = rank;
     this.subs = [];
   }
 }

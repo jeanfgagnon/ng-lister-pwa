@@ -1,6 +1,8 @@
 import { combineLatest, Subject } from 'rxjs';
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
+import { saveAs } from 'file-saver';
+
 import { PersistService } from 'src/app/services/persist.service';
 
 import { ListCategory } from 'src/app/models/list-category';
@@ -10,14 +12,14 @@ import { SubItem } from 'src/app/models/sub-item';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { takeUntil } from 'rxjs/operators';
 import { ApplicationSetting } from 'src/app/models/application-setting';
+import * as FileSaver from 'file-saver';
+
 @Component({
   selector: 'app-dump-database',
   templateUrl: './dump-database.component.html',
   styleUrls: ['./dump-database.component.scss']
 })
 export class DumpDatabaseComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  public json = '';
 
   private categories: ListCategory[] = [];
   private headers: ListHeader[] = [];
@@ -26,6 +28,9 @@ export class DumpDatabaseComponent implements OnInit, OnDestroy, AfterViewInit {
   private settings: ApplicationSetting[] = [];
 
   private unsubscribe$ = new Subject<void>();
+
+  public json = '';
+  public dumpMethod = '';
 
   @ViewChild('dumpzone') dumpzone!: ElementRef;
 
@@ -76,6 +81,18 @@ export class DumpDatabaseComponent implements OnInit, OnDestroy, AfterViewInit {
     this.window.navigator.vibrate(200);
   }
 
+  // helpers
+
+  public setDumpMethod(method: string): void {
+    this.dumpMethod = method;
+    if (method === 'cut') {
+      this.dumpzone.nativeElement.innerText = this.json;
+    }
+    else {
+      this.downloadJson(this.json);
+    }
+  }
+
   // privates
 
   private appendObject(srcArray: any[], v: ListCategory | ListHeader | ListItem | SubItem | ApplicationSetting): void {
@@ -104,7 +121,11 @@ export class DumpDatabaseComponent implements OnInit, OnDestroy, AfterViewInit {
       database: this.categories
     };
     this.json = JSON.stringify(top, null, 2);
-    this.dumpzone.nativeElement.innerText = this.json;
+  }
+
+  private downloadJson(json: string): void {
+    const blob = new Blob([json], { type: 'application/json' });
+    FileSaver.saveAs(blob, "lister-database.txt");
   }
 
 }
