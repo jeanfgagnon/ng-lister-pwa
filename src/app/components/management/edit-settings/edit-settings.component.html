@@ -1,14 +1,22 @@
 <div class="pad10">
   <h1>Settings</h1>
 
+  <form [formGroup]="formSettings">
+    <mat-list>
+      <mat-list-item>
+        <mat-slide-toggle class="example-margin" color="accent" name="quick-mode" formControlName='QuickList'>
+          Enable Quick List
+        </mat-slide-toggle>
+      </mat-list-item>
 
-  <mat-list>
-    <mat-list-item>
-      <mat-slide-toggle class="example-margin" color="accent" name="quick-mode" [checked]="quickMode" (change)="sliderChange($event)">
-        Enable Quick List
-      </mat-slide-toggle>
-    </mat-list-item>
-  </mat-list>
+      <mat-list-item>
+        <mat-slide-toggle class="example-margin" color="accent" name="quick-mode" formControlName='SortChecked'>
+          Sort checked items
+        </mat-slide-toggle>
+      </mat-list-item>
+
+    </mat-list>
+  </form>
 
   <mat-divider></mat-divider>
 </div>

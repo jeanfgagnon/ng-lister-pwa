@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Outp
 import { PersistService } from 'src/app/services/persist.service';
 import { ListItem } from 'src/app/models/list-item';
 import { ListHeader } from 'src/app/models/list-header';
+import { GlobalStateService } from 'src/app/services/global-state.service';
 
 @Component({
   selector: 'app-check-list',
@@ -12,6 +13,7 @@ import { ListHeader } from 'src/app/models/list-header';
 export class CheckListComponent implements OnInit {
 
   public items: ListItem[] = [];
+  public sortChecked = true;
 
   @Input() fromConsol = false;
   @Input() header!: ListHeader;
@@ -26,15 +28,18 @@ export class CheckListComponent implements OnInit {
 
   constructor(
     private persistService: PersistService,
+    private globalStateService: GlobalStateService,
   ) { }
 
   ngOnInit(): void {
+    this.sortChecked = this.globalStateService.getSetting('sort-checked') === '1';
   }
 
   // helpers
 
   public get sortedItems(): ListItem[] {
     if (this.isQuick) {
+      if (!this.sortChecked) { return this.header.items }
       return this.header.items.sort((i1: ListItem, i2: ListItem) => {
         const i1check = i1.checked ? 1 : 0;
         const i2check = i2.checked ? 1 : 0;
@@ -42,11 +47,18 @@ export class CheckListComponent implements OnInit {
       });
     }
     else {
-      return this.header.items.sort((i1: ListItem, i2: ListItem) => {
-        const i1check = i1.checked ? 1 : 0;
-        const i2check = i2.checked ? 1 : 0;
-        return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
-      });
+      if (this.sortChecked) {
+        return this.header.items.sort((i1: ListItem, i2: ListItem) => {
+          const i1check = i1.checked ? 1 : 0;
+          const i2check = i2.checked ? 1 : 0;
+          return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
+        });
+      }
+      else {
+        return this.header.items.sort((i1: ListItem, i2: ListItem) => {
+          return i1.text.localeCompare(i2.text)
+        });
+      }
     }
   }
 
