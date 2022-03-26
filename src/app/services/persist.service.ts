@@ -1,5 +1,9 @@
+import { Observable } from 'rxjs/internal/Observable';
 import { Injectable } from '@angular/core';
-import { Subject, ReplaySubject, Observable, Observer } from 'rxjs';
+
+import { Subject } from 'rxjs/internal/Subject';
+import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
+import { Observer } from 'rxjs/internal/types';
 import { take } from 'rxjs/operators';
 import { ApplicationSetting } from '../models/application-setting';
 import { IIDText } from '../models/interface-id-text';
@@ -9,8 +13,10 @@ import { ListHeader } from '../models/list-header';
 import { ListItem } from '../models/list-item';
 import { SubItem } from '../models/sub-item';
 
+
 const VERSION = 4;
 const STORE_NAME = 'lister-pwa';
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +28,7 @@ export class PersistService {
 
   constructor() {
     if (!window.indexedDB) {
-      this.db.next(undefined);
+      this.db.next(new IDBDatabase());
       this.db.complete();
     } else {
       this.debugLog(`localdb - requesting open of '${STORE_NAME}' version ${VERSION}`);
