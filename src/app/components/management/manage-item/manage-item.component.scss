@@ -1,0 +1,32 @@
+.add-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 60px;
+  left: auto;
+}
+
+.no-item {
+  margin-top: 20px;
+  color: #808080;
+  text-align: center;
+}
+
+.icon-kit {
+  font-size: 9pt;
+}
+
+.list-item {
+  overflow-y: auto;
+}
+
+.scroll-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.ghost-text {
+  color: #c0c0c0;
+  font-size: 8pt;
+}
