@@ -46,8 +46,6 @@ testem.log
 Thumbs.db
 
 bzs.sh
-bd-cell-backup.json
 trak-insta-pwa.ps1
-bd-cell-backup-text.json
-
 .angular
+bd-backup*

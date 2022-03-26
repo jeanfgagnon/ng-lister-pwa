@@ -21,3 +21,17 @@
 .data-valid {
   margin-top: 20px;
 }
+
+.upload-zone {
+  margin-top: 20px;
+}
+
+.radius {
+  border-radius: 7px;
+}
+
+::ng-deep .snack-style {
+  background-color: rgb(129, 165, 184);
+  color: black;
+  font-weight: bold;
+}

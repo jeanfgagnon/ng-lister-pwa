@@ -1,10 +1,18 @@
-<div class="pad10" style='min-height: 100%;'>
+<div class='pad10' style='min-height: 100%;'>
 
   <div>
-    <div class='container'>
-      Please paste database data in area below
-      <textarea id="dbData" (paste)="onDataPasted($event)" rows="5" [(ngModel)]="textData"></textarea>
-    </div>
+    <ng-container *ngIf="!dbIsValid">
+      <div class='container'>
+        Please paste JSON data in area below
+        <textarea class='radius' id='dbData' (paste)="onDataPasted($event)" rows='5' [(ngModel)]="textData"></textarea>
+      </div>
+
+      <div class='upload-zone' fxLayout='column' fxLayoutAlign='start center'>
+        <input hidden #upload type='file' id='upload' (change)="onUpload($event)" />
+        <span>Or select a file on your device</span>
+        <button mat-raised-button color="primary" type='button' (click)="upload.click()">Select file</button>
+      </div>
+    </ng-container>
 
     <div *ngIf="dbIsValid" class='data-valid'>
       <span class='fb'>Data is valid.</span><br />

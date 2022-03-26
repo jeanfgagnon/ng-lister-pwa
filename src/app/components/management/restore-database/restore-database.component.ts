@@ -1,15 +1,14 @@
-import { DOCUMENT, Location } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { MatRadioChange } from '@angular/material/radio';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subject, zip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { ApplicationSetting } from 'src/app/models/application-setting';
 import { IListItem } from 'src/app/models/interface-list-item';
 import { ListCategory } from 'src/app/models/list-category';
-import { ListHeader } from 'src/app/models/list-header';
-import { ListItem } from 'src/app/models/list-item';
-import { SubItem } from 'src/app/models/sub-item';
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { PersistService } from 'src/app/services/persist.service';
 
@@ -37,6 +36,7 @@ export class RestoreDatabaseComponent implements OnInit, OnDestroy {
     private persistService: PersistService,
     private globalStateService: GlobalStateService,
     private router: Router,
+    private snackBar: MatSnackBar,
     @Inject(DOCUMENT) private document: Document
   ) { }
 
@@ -51,25 +51,35 @@ export class RestoreDatabaseComponent implements OnInit, OnDestroy {
 
   // event handlers
 
+  public onUpload(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    const ext = files[0].name.split('.').pop().toLowerCase();
+
+    if ("txt json".indexOf(ext) > -1) {
+      const reader = new FileReader();
+      reader.readAsText(files[0]);
+      reader.onload = () => {
+        const jsonText = reader.result.toString();
+        try {
+          this.validateTexte(jsonText);
+        }
+        catch {
+          this.error = true;
+        }
+      }
+    }
+    else {
+      this.snackBar.open('.json is required', 'Fermer', { duration: 3000, panelClass: 'snack-style' });
+    }
+  }
+
   public onDataPasted(event: ClipboardEvent): void {
-    this.error = false;
-    this.dbIsValid = false;
     const clipboardData = event.clipboardData;
     const pastedText = clipboardData?.getData('text');
     if (pastedText !== undefined) {
       try {
-        this.topObject = JSON.parse(pastedText);
-        if (this.topObject.version && this.topObject.date && this.topObject.database) {
-          this.dbIsValid = true;
-          this.dbDate = this.topObject.date;
-
-          this.dbVersion = this.topObject.version;
-          this.database = this.topObject.database;
-        }
-        else {
-          this.textData = '';
-          this.error = true;
-        }
+        this.validateTexte(pastedText);
       }
       catch {
         this.error = true;
@@ -84,6 +94,25 @@ export class RestoreDatabaseComponent implements OnInit, OnDestroy {
   public onRestoreClick(): void {
     this.isRestoring = true;
     setTimeout(() => this.restore());
+  }
+
+  // privates
+
+  private validateTexte(texte: string): void {
+    this.error = false;
+    this.dbIsValid = false;
+    this.topObject = JSON.parse(texte);
+    if (this.topObject.version && this.topObject.date && this.topObject.database) {
+      this.dbIsValid = true;
+      this.dbDate = this.topObject.date;
+
+      this.dbVersion = this.topObject.version;
+      this.database = this.topObject.database;
+    }
+    else {
+      this.textData = '';
+      this.error = true;
+    }
   }
 
   private restore(): void {
@@ -131,7 +160,7 @@ export class RestoreDatabaseComponent implements OnInit, OnDestroy {
       }
 
       this.topObject.settings.forEach((setting: ApplicationSetting) => {
-        this.persistService.put('settings', setting.id, setting).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
+        this.persistService.put('settings', setting.id, setting).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
       });
 
       this.globalStateService.sendMessage('CategoryChanged');
