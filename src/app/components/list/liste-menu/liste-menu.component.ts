@@ -186,9 +186,7 @@ export class ListeComponent implements OnInit, OnDestroy {
               const subItem = this.persistService.newSubitemInstance(item.id);
               subItem.text = Tools.capitalize(splitted[i].trim());
               subItem.rank = (i + 1);
-              this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-                /* noop */
-              });
+              this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
             }
           }
         });
@@ -205,5 +203,4 @@ export class ListeComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 }

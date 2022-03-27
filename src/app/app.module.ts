@@ -24,6 +24,7 @@ import { QuickAddComponent } from './components/list/quick-add/quick-add.compone
 import localeFr from '@angular/common/locales/fr';
 import localeFrExtra from '@angular/common/locales/extra/fr';
 import { registerLocaleData } from '@angular/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
 
@@ -38,6 +39,7 @@ registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
     QuickAddComponent,
   ],
   imports: [
+    DragDropModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,

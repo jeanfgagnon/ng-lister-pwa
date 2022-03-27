@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
-import { PersistService } from 'src/app/services/persist.service';
 import { ListItem } from 'src/app/models/list-item';
 import { ListHeader } from 'src/app/models/list-header';
 import { GlobalStateService } from 'src/app/services/global-state.service';
@@ -16,7 +16,7 @@ export class CheckListComponent implements OnInit {
   public sortChecked = true;
 
   @Input() fromConsol = false;
-  @Input() header!: ListHeader;
+  @Input() header: ListHeader;
   @Input() isQuick = false;
   @Output() itemClicked = new EventEmitter<string>();
 
@@ -27,7 +27,6 @@ export class CheckListComponent implements OnInit {
   }
 
   constructor(
-    private persistService: PersistService,
     private globalStateService: GlobalStateService,
   ) { }
 
@@ -39,11 +38,8 @@ export class CheckListComponent implements OnInit {
 
   public get sortedItems(): ListItem[] {
     if (this.isQuick) {
-      if (!this.sortChecked) { return this.header.items }
-      return this.header.items.sort((i1: ListItem, i2: ListItem) => {
-        const i1check = i1.checked ? 1 : 0;
-        const i2check = i2.checked ? 1 : 0;
-        return i2check - i1check;
+      return  this.header.items.sort((i1: ListItem, i2: ListItem) => {
+        return i1.rank - i2.rank;
       });
     }
     else {
@@ -63,6 +59,14 @@ export class CheckListComponent implements OnInit {
   }
 
   // event handlers
+
+  public itemDrop(event: CdkDragDrop<ListItem[]>): void {
+    moveItemInArray(this.header.items, event.previousIndex, event.currentIndex);
+    [this.header.items[event.previousIndex].rank, this.header.items[event.currentIndex].rank] =
+    [this.header.items[event.currentIndex].rank,this.header.items[event.previousIndex].rank];
+
+    console.log(JSON.stringify(this.header.items, null, 2));
+  }
 
   public onCheckChange(): void {
     this.itemClicked.emit(this.header.id);

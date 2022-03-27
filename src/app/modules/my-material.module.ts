@@ -45,7 +45,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
     MatSidenavModule,
     MatToolbarModule,
     MatExpansionModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+
   ],
   exports: [
     MatButtonModule,
