@@ -132,38 +132,43 @@ export class ListeComponent implements OnInit, OnDestroy {
     this.headers = [];
     this.loaded = false;
     const noFlickerHeaders: ListHeader[] = [];
-    this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe(
-      (header: ListHeader) => {
+    this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
+      next: (header: ListHeader) => {
         if (header.idCategory === id) {
           noFlickerHeaders.push(header);
           header.items = [];
-          this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe(
-            (item: ListItem) => {
+          this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
+            next: (item: ListItem) => {
               if (item.idHeader === header.id) {
                 header.items.push(item);
               }
             },
-            (err) => { },
-            (/* complete */) => {
+
+            error: (err) => { },
+
+            complete: (/* complete */) => {
               if (header.items.filter(x => x.checked).length > 0) {
                 header.text += '*';
               }
             }
-          );
+
+          });
         }
       },
-      (err) => {
+
+      error: (err) => {
       },
-      (/* complete */) => {
+
+      complete: () => {
         this.loaded = true;
         this.headers = noFlickerHeaders;
         if (idheader) {
           this.headers = this.sortedHeaders();
           this.tabIndex = this.headers.findIndex(x => x.id === idheader);
         }
-
       }
-    );
+
+    });
   }
 
   private quickAdd(idt: IIDText): void {
