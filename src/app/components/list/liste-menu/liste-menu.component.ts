@@ -26,6 +26,8 @@ import { Subject } from 'rxjs';
 export class ListeComponent implements OnInit, OnDestroy {
 
   public headers: ListHeader[] = [];
+  public header: ListHeader;
+  public selectedIdHeader = '';
   public loaded = false;
   public tabIndex = 0;
   public isQuick = false;
@@ -49,6 +51,7 @@ export class ListeComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(params => {
       if (params.id) {
         this.isQuick = (params.id === 'quick');
+        this.selectedIdHeader = params.idheader;
         this.loadDataByCategoryId(params.id, params.idheader);
         this.globalStateService.CurrentSelectedIdCategory = params.id;
       }
@@ -70,6 +73,11 @@ export class ListeComponent implements OnInit, OnDestroy {
   }
 
   // event handlers
+
+  public headerSelected(idHeader: string): void {
+    this.selectedIdHeader = idHeader;
+    this.header = this.headers.find(x => x.id === idHeader);
+  }
 
   public onItemClicked(idHeader: string): void {
     const h = this.headers.find(x => x.id === idHeader);
@@ -129,6 +137,7 @@ export class ListeComponent implements OnInit, OnDestroy {
   }
 
   private loadDataByCategoryId(id: string, idheader: string): void {
+    let t1 = new Date().getTime();
     this.headers = [];
     this.loaded = false;
     const noFlickerHeaders: ListHeader[] = [];
@@ -165,6 +174,10 @@ export class ListeComponent implements OnInit, OnDestroy {
         if (idheader) {
           this.headers = this.sortedHeaders();
           this.tabIndex = this.headers.findIndex(x => x.id === idheader);
+          this.header = this.headers[this.tabIndex];
+        }
+        else {
+          this.header = this.headers[0];
         }
       }
 

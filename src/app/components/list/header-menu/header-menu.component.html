@@ -1,0 +1,6 @@
+<div class='menu-div' fxLayout='row'>
+    <div *ngFor="let header of listHeaders" #menu
+        [ngClass]="{'sel-item': header.id === selectedIdHeader}"
+        class='menu-item' (click)="headerSelected(header.id)">{{header.text}}</div>
+</div>
+<mat-divider></mat-divider>

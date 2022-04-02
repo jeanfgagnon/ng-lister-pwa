@@ -1,0 +1,27 @@
+.menu-div {
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.menu-div::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-item {
+  padding: 20px 10px 20px 10px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  scroll-snap-align: end;
+  font-size: 11pt;
+}
+
+.sel-item {
+  font-weight: bold;
+}
+
+@mixin header-menu-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  .menu-item {
+    color: mat.get-color-from-palette($foreground, text);
+  }
+}

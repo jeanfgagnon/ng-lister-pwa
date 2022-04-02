@@ -22,7 +22,7 @@ export class CheckListComponent implements OnInit {
 
   @ViewChild('scrollzone1') set elem(e: ElementRef) {
     if (e) {
-      this.setScrollerHeight(e);
+      //this.setScrollerHeight(e);
     }
   }
 

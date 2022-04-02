@@ -1,4 +1,4 @@
-<div cdkDropList
+<div cdkDropList [ngClass]="{'marge-50': !fromConsol}"
   class='scroll-container pad10' #scrollzone1 (cdkDropListDropped)="itemDrop($event)">
   <div *ngFor="let item of sortedItems" class='pad10 my-pad' cdkDrag>
     <div class="drag-placeholder" *cdkDragPlaceholder></div>

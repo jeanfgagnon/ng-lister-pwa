@@ -25,6 +25,7 @@ import localeFr from '@angular/common/locales/fr';
 import localeFrExtra from '@angular/common/locales/extra/fr';
 import { registerLocaleData } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { HeaderMenuComponent } from './components/list/header-menu/header-menu.component';
 
 registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
 
@@ -37,6 +38,7 @@ registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
     ConsolidatedViewComponent,
     ListeComponent,
     QuickAddComponent,
+    HeaderMenuComponent,
   ],
   imports: [
     DragDropModule,

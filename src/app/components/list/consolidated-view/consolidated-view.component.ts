@@ -205,7 +205,6 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
         }
 
         this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-          console.log('on save ce fdp ', item.id);
           const header = this.headers.find(x => x.id === idt.id);
           if (header) {
             header.items.push(item);

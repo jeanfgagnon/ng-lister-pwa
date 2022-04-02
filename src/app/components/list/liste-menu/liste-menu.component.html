@@ -1,6 +1,12 @@
 <div *ngIf="loaded">
-
-  <mat-tab-group #tabgroup [selectedIndex]="tabIndex" *ngIf="!isQuick">
+  <ng-container *ngIf="!isQuick">
+    <app-header-menu (selected)="headerSelected($event)" [listHeaders]="headers" [selectedIdHeader]="selectedIdHeader"></app-header-menu>
+    <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
+    <mat-toolbar class='pos-bottom cpc'>
+      <app-quick-add class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>
+    </mat-toolbar>
+  </ng-container>
+  <!-- <mat-tab-group #tabgroup [selectedIndex]="tabIndex" *ngIf="!isQuick">
 
     <mat-tab *ngFor="let header of sortedHeaders()">
 
@@ -8,7 +14,6 @@
         {{ header.text }}
       </ng-template>
 
-      <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
 
       <mat-toolbar class='pos-bottom cpc'>
         <app-quick-add class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>
@@ -16,7 +21,7 @@
 
     </mat-tab>
 
-  </mat-tab-group>
+  </mat-tab-group> -->
 
   <div *ngIf="isQuick">
 
@@ -40,7 +45,8 @@
     </div>
     <mat-divider></mat-divider>
     <div class="pad10">
-      <app-check-list [header]="headers[0]" [isQuick]="true" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
+      <app-check-list [header]="headers[0]" [isQuick]="true" [fromConsol]="false" (itemClicked)="onItemClicked($event)">
+      </app-check-list>
     </div>
 
     <mat-toolbar class='pos-bottom cpc'>

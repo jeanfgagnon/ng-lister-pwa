@@ -96,11 +96,13 @@ body {
 @import "app/components/main-nav/main-nav.component";
 @import "app/components/list/quick-add/quick-add.component";
 @import "app/components/list/consolidated-view/consolidated-view.component";
+@import "app/components/list/header-menu/header-menu.component";
 
 @mixin custom-components-theme($theme) {
   @include sidenav-theme($theme);
   @include quick-input-theme($theme);
-  @include header-lnk-theme($theme)
+  @include header-lnk-theme($theme);
+  @include header-menu-theme($theme);
 }
 
 // Light theme
