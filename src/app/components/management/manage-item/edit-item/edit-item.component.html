@@ -4,7 +4,6 @@
   <form (submit)="formSubmitted($event)">
 
     <mat-form-field *ngIf="verb !== 'Add' && allHeaders.length > 0">
-      <!-- (selectionChange)="onListSelected($event)" -->
 
       <mat-select placeholder="Current List" name="curlist" [(ngModel)]="header.id">
         <mat-option *ngFor="let header of allHeaders" [value]="header.id">

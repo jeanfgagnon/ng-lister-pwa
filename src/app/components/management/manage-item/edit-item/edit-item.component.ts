@@ -60,9 +60,21 @@ export class EditItemComponent implements OnInit, OnDestroy {
       }
       this.persistService.get('headers', headerId).pipe(takeUntil(this.unsubscribe$)).subscribe((header: ListHeader) => {
         this.header = header;
-        this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe((other: ListHeader) => {
-          this.allHeaders.push(other);
+
+        this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
+          next: (other: ListHeader) => {
+            if (other.idCategory === header.idCategory) {
+              this.allHeaders.push(other);
+            }
+          },
+          error: (err: any) => {},
+          complete: () => {
+            this.allHeaders = [...this.allHeaders].sort((a: ListHeader, b: ListHeader) => {
+              return a.text.localeCompare(b.text);
+            })
+          }
         });
+
       });
     });
   }
@@ -157,6 +169,7 @@ export class EditItemComponent implements OnInit, OnDestroy {
         }).pipe(takeUntil(this.unsubscribe$)).subscribe((exists: boolean) => {
           if (!exists) {
             this.item.text = normalizedText;
+            this.item.idHeader = this.header.id;
             this.persistService.put('items', this.item.id, this.item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe((key: any) => {
               this.saveSubitems(this.item.id);
               this.location.back();

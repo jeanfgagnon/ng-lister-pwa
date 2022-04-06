@@ -13,7 +13,9 @@
 
         <div fxLayout='row' class='header-row' style='height: 40px !important'>
           <div fxFlex="90" fxLayoutAlign="start center">
-            <a href="#" class='header-lnk' [routerLink]="['/Liste', category.id, header.id]">{{ category.id === 'quick' ? 'List' : header.text }}</a>
+
+            <span *ngIf="category.id==='quick'" class='header-lnk'>List</span>
+            <a *ngIf="category.id!=='quick'" href="#" class='header-lnk' [routerLink]="['/Liste', category.id, header.id]">{{ header.text }}</a>
           </div>
           <div fxFlex="10" fxLayoutAlign="end center">
             <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="isListHaveDone(header) &&  header.id === 'quick' ||  header.id !== 'quick'">

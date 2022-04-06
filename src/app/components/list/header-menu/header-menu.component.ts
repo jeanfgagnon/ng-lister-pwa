@@ -23,7 +23,6 @@ export class HeaderMenuComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     const index = this.listHeaders.findIndex(x => x.id === this.selectedIdHeader);
-    console.log('marde  ', this.menuItems);
     if (index > -1) {
       this.menuItems.forEach((el: ElementRef, i: number) => {
         if (i === index) {

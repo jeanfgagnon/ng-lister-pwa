@@ -132,8 +132,8 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
         this.tieAll();
         this.removeDeadWood();
         this.categories = this.categories.sort((a: ListCategory, b: ListCategory) => {
-          if (a.id === 'quick') {
-            return -1;
+          if (b.id === 'quick' || a.id === 'quick') {
+            return 1;
           }
           else {
             return a.text.localeCompare(b.text);

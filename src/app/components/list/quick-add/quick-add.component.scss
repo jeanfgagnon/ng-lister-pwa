@@ -10,6 +10,10 @@
   background-color: transparent;
 }
 
+.nobr {
+  white-space: nowrap;
+}
+
 @mixin quick-input-theme($theme) {
   $foreground: map-get($theme, foreground);
   .quick-input {

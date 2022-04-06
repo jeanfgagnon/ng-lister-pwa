@@ -80,7 +80,7 @@ export class ManageListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.setScrollerHeight();
+    //this.setScrollerHeight();
   }
 
   // event handlers
