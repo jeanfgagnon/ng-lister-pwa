@@ -18,7 +18,6 @@ export class HeaderMenuComponent implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log('menu headers ', this.listHeaders);
   }
 
   ngAfterViewInit(): void {

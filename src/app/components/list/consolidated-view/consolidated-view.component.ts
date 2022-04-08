@@ -20,13 +20,14 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './consolidated-view.component.html',
   styleUrls: ['./consolidated-view.component.scss']
 })
-export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
+export class ConsolidatedViewComponent implements OnInit, OnDestroy {
 
   public cleaned = false;
   public expandedState = true;
   public categories: ListCategory[] = [];
   public headers: ListHeader[] = [];
   public quickHeaderId = '';
+  public sortChecked = true;
 
   private items: ListItem[] = [];
   private unsubscribe$ = new Subject<void>();
@@ -39,6 +40,7 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
   ) { }
 
   ngOnInit(): void {
+    this.sortChecked = this.globalStateService.getSetting('sort-checked') === '1';
     this.globalStateService.sendMessage('ConsolidatedView');
     this.loadAllData();
   }
@@ -144,11 +146,33 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
           category.headers = category.headers.sort((a: ListHeader, b: ListHeader) => {
             return a.text.localeCompare(b.text);
           });
+          category.headers.forEach((header: ListHeader) => {
+            if (header.id === 'quick') {
+              header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+                return i1.rank - i2.rank;
+              });
+            }
+            else {
+              if (this.sortChecked) {
+                header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+                  const i1check = i1.checked ? 1 : 0;
+                  const i2check = i2.checked ? 1 : 0;
+                  return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
+                });
+              }
+              else {
+                header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+                  return i1.text.localeCompare(i2.text)
+                });
+              }
+            }
+          });
         });
       }
     );
   }
 
+  // retire les headers sans items et les catégories sans header
   private removeDeadWood(): void {
     for (let i = this.categories.length - 1; i >= 0; i--) {
       for (let j = this.categories[i].headers.length - 1; j >= 0; j--) {
@@ -197,15 +221,16 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
       else {
         const splitted = idt.text.split(/[,;]/);
 
+        const header = this.headers.find(x => x.id === idt.id);
         const item = this.persistService.newItemInstance(idt.id);
         item.text = Tools.capitalize((splitted.shift() as string).trim());
         item.checked = true;
         if (idt.id === 'quick') {
-          item.rank = this.getQuickRank();
+          item.rank = header.items.length;
+          console.log('rank ', item.rank);
         }
 
         this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-          const header = this.headers.find(x => x.id === idt.id);
           if (header) {
             header.items.push(item);
             for (let i = 0; i < splitted.length; i++) {
@@ -220,16 +245,6 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy  {
         });
       }
     });
-  }
-
-  private getQuickRank(): number {
-    let rv = 0;
-    // this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe((itm: ListItem) => {
-    //   if (itm.idHeader === 'quick' && itm.rank > rv) {
-    //     rv =
-    //   }
-    // });
-    return rv;
   }
 
   private addExistingItem(idt: IIDText, checkedState: boolean): void {

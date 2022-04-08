@@ -1,19 +1,23 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
+import { GlobalStateService } from 'src/app/services/global-state.service';
+import { PersistService } from 'src/app/services/persist.service';
 import { ListItem } from 'src/app/models/list-item';
 import { ListHeader } from 'src/app/models/list-header';
-import { GlobalStateService } from 'src/app/services/global-state.service';
+import { IListItem } from 'src/app/models/interface-list-item';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-check-list',
   templateUrl: './check-list.component.html',
   styleUrls: ['./check-list.component.scss']
 })
-export class CheckListComponent implements OnInit {
+export class CheckListComponent implements OnInit, OnDestroy {
+
+  private unsubscribe$ = new Subject<void>();
 
   public items: ListItem[] = [];
-  public sortChecked = true;
 
   @Input() fromConsol = false;
   @Input() header: ListHeader;
@@ -28,44 +32,27 @@ export class CheckListComponent implements OnInit {
 
   constructor(
     private globalStateService: GlobalStateService,
-  ) { }
+    private persistService: PersistService,
+    ) { }
 
   ngOnInit(): void {
-    this.sortChecked = this.globalStateService.getSetting('sort-checked') === '1';
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   // helpers
-
-  public get sortedItems(): ListItem[] {
-    if (this.isQuick) {
-      return  this.header.items.sort((i1: ListItem, i2: ListItem) => {
-        return i1.rank - i2.rank;
-      });
-    }
-    else {
-      if (this.sortChecked) {
-        return this.header.items.sort((i1: ListItem, i2: ListItem) => {
-          const i1check = i1.checked ? 1 : 0;
-          const i2check = i2.checked ? 1 : 0;
-          return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
-        });
-      }
-      else {
-        return this.header.items.sort((i1: ListItem, i2: ListItem) => {
-          return i1.text.localeCompare(i2.text)
-        });
-      }
-    }
-  }
 
   // event handlers
 
   public itemDrop(event: CdkDragDrop<ListItem[]>): void {
     moveItemInArray(this.header.items, event.previousIndex, event.currentIndex);
-    [this.header.items[event.previousIndex].rank, this.header.items[event.currentIndex].rank] =
-    [this.header.items[event.currentIndex].rank,this.header.items[event.previousIndex].rank];
-
-    console.log(JSON.stringify(this.header.items, null, 2));
+    this.header.items.forEach((item: ListItem, i: number) => {
+      item.rank = i;
+      this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe((key: any) => undefined);
+    });
   }
 
   public onCheckChange(): void {

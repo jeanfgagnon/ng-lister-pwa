@@ -31,6 +31,7 @@ export class ListeComponent implements OnInit, OnDestroy {
   public loaded = false;
   public tabIndex = 0;
   public isQuick = false;
+  public sortChecked = true;
 
   private unsubscribe$ = new Subject<void>();
 
@@ -42,6 +43,8 @@ export class ListeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.sortChecked = this.globalStateService.getSetting('sort-checked') === '1';
+
     this.globalStateService.message$.subscribe((m: string) => {
       if (m === 'DefaultCategory') {
         this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory, '');
@@ -158,6 +161,25 @@ export class ListeComponent implements OnInit, OnDestroy {
             complete: (/* complete */) => {
               if (header.items.filter(x => x.checked).length > 0) {
                 header.text += '*';
+              }
+              if (header.id === 'quick') {
+                header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+                  return i1.rank - i2.rank;
+                });
+              }
+              else {
+                if (this.sortChecked) {
+                  header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+                    const i1check = i1.checked ? 1 : 0;
+                    const i2check = i2.checked ? 1 : 0;
+                    return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
+                  });
+                }
+                else {
+                  header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+                    return i1.text.localeCompare(i2.text)
+                  });
+                }
               }
             }
 
