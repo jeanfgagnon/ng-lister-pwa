@@ -177,8 +177,9 @@ export class ListeComponent implements OnInit, OnDestroy {
           this.header = this.headers[this.tabIndex];
         }
         else {
-          this.header = this.headers[0];
+          this.header = this.sortedHeaders()[0];
         }
+        this.selectedIdHeader = this.header.id;
       }
 
     });

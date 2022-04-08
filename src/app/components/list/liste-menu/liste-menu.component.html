@@ -1,6 +1,6 @@
 <div *ngIf="loaded">
   <ng-container *ngIf="!isQuick">
-    <app-header-menu (selected)="headerSelected($event)" [listHeaders]="headers" [selectedIdHeader]="selectedIdHeader"></app-header-menu>
+    <app-header-menu (selected)="headerSelected($event)" [listHeaders]="sortedHeaders()" [selectedIdHeader]="selectedIdHeader"></app-header-menu>
     <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
     <mat-toolbar class='pos-bottom cpc'>
       <app-quick-add class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>

@@ -101,7 +101,7 @@ export class MainNavComponent implements OnInit, OnDestroy  {
   public get sortedCategories(): ListCategory[] {
     return this.categories.sort((a: ListCategory, b: ListCategory) => {
       if (a.id === 'quick' || b.id === 'quick') {
-        return 1;
+        return -1;
       }
       else {
         return a.text.localeCompare(b.text);
