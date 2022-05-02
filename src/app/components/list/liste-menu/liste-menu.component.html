@@ -1,7 +1,9 @@
 <div *ngIf="loaded">
   <div *ngIf="!isQuick">
     <app-header-menu (selected)="headerSelected($event)" [listHeaders]="sortedHeaders()" [selectedIdHeader]="selectedIdHeader"></app-header-menu>
-    <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
+     <div (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
+      <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
+    </div>
     <mat-toolbar class='pos-bottom cpc'>
       <app-quick-add class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>
     </mat-toolbar>
