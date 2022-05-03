@@ -8,10 +8,11 @@ import { ListHeader } from 'src/app/models/list-header';
 })
 export class HeaderMenuComponent implements OnInit, AfterViewInit {
 
+  private _selectedIdHeader: string;
+
   public scrollto: HTMLDivElement;
 
   @Input() listHeaders: ListHeader[];
-  @Input() selectedIdHeader: string;
   @Output() selected = new EventEmitter<string>()
   @ViewChildren('menu', { read: ElementRef }) menuItems: QueryList<ElementRef>;
 
@@ -20,12 +21,12 @@ export class HeaderMenuComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void { // TODO: this should be a function DRY
     const index = this.listHeaders.findIndex(x => x.id === this.selectedIdHeader);
     if (index > -1) {
       this.menuItems.forEach((el: ElementRef, i: number) => {
         if (i === index) {
-          el.nativeElement.scrollIntoView({behaviour: 'smooth'});
+          el.nativeElement.scrollIntoView({ behaviour: 'smooth' });
         }
       })
     }
@@ -35,6 +36,25 @@ export class HeaderMenuComponent implements OnInit, AfterViewInit {
 
   public headerSelected(id: string): void {
     this.selected.emit(id);
+  }
+
+  // properties
+
+  @Input() public set selectedIdHeader(id: string) {
+    this._selectedIdHeader = id;
+    if (this.menuItems) { // DRY
+      const index = this.listHeaders.findIndex(x => x.id === this._selectedIdHeader);
+      if (index > -1) {
+        this.menuItems.forEach((el: ElementRef, i: number) => {
+          if (i === index) {
+            el.nativeElement.scrollIntoView({ behaviour: 'smooth' });
+          }
+        })
+      }
+    }
+  }
+  public get selectedIdHeader(): string {
+    return this._selectedIdHeader;
   }
 
 }

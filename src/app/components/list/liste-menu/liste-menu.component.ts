@@ -94,8 +94,12 @@ export class ListeComponent implements OnInit, OnDestroy {
       if (duration < 1000 //
         && Math.abs(direction[0]) > 30 // Long enough
         && Math.abs(direction[0]) > Math.abs(direction[1] * 3)) { // Horizontal enough
-          const swipe = direction[0] < 0 ? 'next' : 'previous';
-          console.log(swipe);
+          const swipeDir: number = direction[0] < 0 ?  1 : -1;
+          let index = this.headers.findIndex(x => x.id === this.selectedIdHeader) + swipeDir;
+          if (index >= 0 && index < this.headers.length) {
+            this.header = this.headers[index];
+            this.selectedIdHeader = this.header.id;
+          }
       }
     }
   }

@@ -1,5 +1,4 @@
-<div *ngIf="isQuick" cdkDropList [ngClass]="{'marge-50': !fromConsol}"
-  class='scroll-container pad10' #scrollzone1 (cdkDropListDropped)="itemDrop($event)">
+<div *ngIf="isQuick" cdkDropList [ngClass]="{'marge-50': !fromConsol}" class='scroll-container pad10' #scrollzone1 (cdkDropListDropped)="itemDrop($event)">
   <div *ngFor="let item of header.items" class='pad10 my-pad' cdkDrag>
     <div class="drag-placeholder" *cdkDragPlaceholder></div>
     <app-check-item [item]="item" [isQuick]="isQuick" (checkChange)="onCheckChange()"></app-check-item>
