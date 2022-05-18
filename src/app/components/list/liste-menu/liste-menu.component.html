@@ -1,8 +1,8 @@
-<div *ngIf="loaded" fxFill>
+<div *ngIf="loaded">
 
-  <div *ngIf="!isQuick" fxFill fxLayout='column' >
-    <div  fxFlex='56px'>
-    <app-header-menu (selected)="headerSelected($event)" [listHeaders]="sortedHeaders()" [selectedIdHeader]="selectedIdHeader"></app-header-menu>
+  <div *ngIf="!isQuick" fxFill fxLayout='column'>
+    <div fxFlex='56px'>
+      <app-header-menu (selected)="headerSelected($event)" [listHeaders]="sortedHeaders()" [selectedIdHeader]="selectedIdHeader"></app-header-menu>
     </div>
     <div fxFlex (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
       <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>
@@ -29,7 +29,6 @@
             <button mat-menu-item (click)="confirmCompletedRemoval(headers[0])">Remove Completed</button>
           </div>
         </mat-menu>
-
       </div>
     </div>
 
@@ -45,4 +44,5 @@
     </mat-toolbar>
 
   </div>
+
 </div>

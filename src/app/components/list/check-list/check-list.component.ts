@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { GlobalStateService } from 'src/app/services/global-state.service';
 import { PersistService } from 'src/app/services/persist.service';
@@ -26,14 +26,14 @@ export class CheckListComponent implements OnInit, OnDestroy {
 
   @ViewChild('scrollzone1') set elem(e: ElementRef) {
     if (e) {
-      //this.setScrollerHeight(e);
+      this.setScrollerHeight(e);
     }
   }
 
   constructor(
     private globalStateService: GlobalStateService,
     private persistService: PersistService,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
   }
@@ -65,8 +65,7 @@ export class CheckListComponent implements OnInit, OnDestroy {
     if (!this.fromConsol) {
       // no scrolling in consolidated view
       const br = el.nativeElement.getBoundingClientRect();
-      // 170: top bar 56, tab 48, toolbar 56, 10px free
-      el.nativeElement.style.height = `${window.innerHeight - (br.top + 170)}px`;
+      el.nativeElement.style.height = `${window.innerHeight - (br.top + 112)}px`;
     }
   }
 

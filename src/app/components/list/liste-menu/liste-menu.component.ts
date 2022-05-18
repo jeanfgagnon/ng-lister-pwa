@@ -218,7 +218,6 @@ export class ListeComponent implements OnInit, OnDestroy {
       },
 
       complete: () => {
-        this.loaded = true;
         this.headers = noFlickerHeaders;
         if (idheader) {
           this.headers = this.sortedHeaders();
@@ -229,6 +228,7 @@ export class ListeComponent implements OnInit, OnDestroy {
           this.header = this.sortedHeaders()[0];
         }
         this.selectedIdHeader = this.header.id;
+        this.loaded = true;
       }
 
     });
