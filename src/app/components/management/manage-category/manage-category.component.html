@@ -12,9 +12,6 @@
               <input name="txtListName" matInput type="text" [(ngModel)]="categoryName">
               <div class='err-mess' *ngIf="errorMessage !== ''">{{ errorMessage }}</div>
             </mat-form-field>
-            <!-- <div class='err-mess' *ngIf="errorMessage !== ''">
-              {{ errorMessage }}
-            </div> -->
           </div>
 
           <div fxFlex="15" *ngIf="actionVerb !== 'Add'">
@@ -43,7 +40,6 @@
 
     </form>
 
-    <!-- <div *ngIf="headers"> -->
     <mat-card-subtitle>Existing categories</mat-card-subtitle>
     <div class='scroll-container'>
       <mat-nav-list>
@@ -53,7 +49,6 @@
         </a>
       </mat-nav-list>
     </div>
-    <!-- </div> -->
 
     <button mat-mini-fab color="primary" type="button" (click)="toggleFormVisibility()" class="add-fab"
       matTooltip="Add category">

@@ -7,11 +7,9 @@
 
       <div *ngIf="isHandset$ | async">
 
-        <!-- <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Liste']">List</a> -->
         <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Consolidated']">Consolidated</a>
 
         <mat-accordion multi displayMode="default">
-          <!-- class="mat-elevation-z0" -->
           <mat-expansion-panel [expanded]="true" class="mat-elevation-z0">
             <mat-expansion-panel-header>
               <mat-panel-title>

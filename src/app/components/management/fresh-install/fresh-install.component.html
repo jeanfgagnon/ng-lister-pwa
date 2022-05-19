@@ -20,7 +20,6 @@
             <mat-label>Initial Category Name</mat-label>
             <input name="txtCatName" matInput type="text" [(ngModel)]="categoryName">
             <mat-hint>eg.: Grocery, Kids, Car</mat-hint>
-            <!-- <div class='err-mess' *ngIf="errorMessage !== ''">{{ errorMessage }}</div> -->
           </mat-form-field>
         </div>
         <div class='mart20'>
@@ -28,7 +27,6 @@
             <mat-label>Initial List Name</mat-label>
             <input name="txtListName" matInput type="text" [(ngModel)]="listName">
             <mat-hint>eg.: Dairies, Fresh, Health, Booze</mat-hint>
-            <!-- <div class='err-mess' *ngIf="errorMessage !== ''">{{ errorMessage }}</div> -->
           </mat-form-field>
         </div>
 
@@ -36,8 +34,6 @@
         <div fxLayoutAlign="end center">
           <button mat-raised-button color="primary" [disabled]="!formValid" (click)="install()">Continue</button>&nbsp;
           <button mat-raised-button color="accent" type="button" (click)="cancel()">Get me outa here!</button>
-          <!-- <button mat-raised-button color="primary" [disabled]="item.text===''">Save</button>&nbsp;
-          <button mat-raised-button color="accent" type="button" (click)="cancel()">Return</button> -->
         </div>
 
       </mat-card>
