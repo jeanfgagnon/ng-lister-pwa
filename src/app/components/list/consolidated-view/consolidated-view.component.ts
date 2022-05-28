@@ -27,9 +27,11 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
   public categories: ListCategory[] = [];
   public headers: ListHeader[] = [];
   public quickHeaderId = '';
+  public quickEditText = '';
   public sortChecked = true;
 
   private items: ListItem[] = [];
+  private editedItem: ListItem;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -54,6 +56,21 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
 
   public onRefreshClick(): void {
     this.loadAllData();
+  }
+
+  public onLongPressed(idItem: string): void {
+    const header = this.headers.find(x => x.id === 'quick');
+    if (header) {
+      this.editedItem = header.items.find(i => i.id === idItem);
+      if (this.editedItem) {
+        this.quickEditText = this.editedItem.text;
+      }
+    }
+  }
+
+  public onEditCancelled(): void {
+    this.quickEditText = '';
+    this.editedItem = null;
   }
 
   public quickAddToggle(idHeader: string): void {
@@ -85,7 +102,12 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
   }
 
   public onItemAdded(idt: IIDText): void {
-    this.quickAdd(idt);
+    if (this.editedItem) {
+      this.saveEditedItem(idt);
+    }
+    else {
+      this.quickAdd(idt);
+    }
   }
 
   // helpers
@@ -96,10 +118,32 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
 
   // private
 
+  private saveEditedItem(idt: IIDText): void {
+    const header = this.headers.find(x => x.id === idt.id);
+    if (header) {
+      this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (itm: ListItem) => {
+          if (itm.id === this.editedItem.id) {
+            const curItem = header.items.find(x => x.id === itm.id);
+            if (curItem) {
+              curItem.text = idt.text;
+            }
+            itm.text = idt.text;
+            this.persistService.put('items', itm.id, itm).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
+          }
+        },
+        error: () => undefined,
+        complete: () => {
+          this.editedItem = null;
+        }
+      });
+    }
+  }
+
   private deleteCompleted(header: ListHeader): void {
     for (let i = header.items.length - 1; i >= 0; i--) {
       if (!header.items[i].checked) {
-        this.persistService.delete('items', header.items[i].id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
+        this.persistService.delete('items', header.items[i].id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
         header.items.splice(i, 1);
       }
     }

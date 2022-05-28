@@ -32,8 +32,12 @@
           </div>
         </mat-menu>
 
-        <app-check-list [header]="header" [isQuick]="header.id === 'quick'" [fromConsol]="true"></app-check-list>
-        <app-quick-add *ngIf="header.id === 'quick' || header.id === quickHeaderId" class="cpc" [idHeader]="header.id" (itemAdded)="onItemAdded($event)"></app-quick-add>
+        <app-check-list [header]="header" [isQuick]="header.id === 'quick'" [fromConsol]="true" (longPressed)="onLongPressed($event)" ></app-check-list>
+        <app-quick-add *ngIf="header.id === 'quick' || header.id === quickHeaderId" class="cpc"
+          [editText]="quickEditText"
+          [idHeader]="header.id"
+          (editCancelled)="onEditCancelled()"
+          (itemAdded)="onItemAdded($event)"></app-quick-add>
 
       </div>
 

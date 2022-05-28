@@ -18,11 +18,13 @@ export class CheckListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
   public items: ListItem[] = [];
+  public dragging = false;
 
   @Input() fromConsol = false;
   @Input() header: ListHeader;
   @Input() isQuick = false;
   @Output() itemClicked = new EventEmitter<string>();
+  @Output() longPressed = new EventEmitter<string>();
 
   @ViewChild('scrollzone1') set elem(e: ElementRef) {
     if (e) {
@@ -46,6 +48,12 @@ export class CheckListComponent implements OnInit, OnDestroy {
   // helpers
 
   // event handlers
+
+  public longPress(id: string): void {
+    if (!this.dragging) {
+      this.longPressed.emit(id);
+    }
+  }
 
   public itemDrop(event: CdkDragDrop<ListItem[]>): void {
     moveItemInArray(this.header.items, event.previousIndex, event.currentIndex);

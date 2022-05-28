@@ -1,8 +1,20 @@
 <div class='quick-div' fxLayout='row' fxLayoutAlign="center center">
-  <span class='nobr'>Quick add</span>&nbsp;
+
+  <span class='nobr'>Quick {{ mode === 'add' ? 'add' : 'edit' }}</span>&nbsp;
   <input class='quick-input' name="txtItemText" type="text" [(ngModel)]="quickText">
   <button mat-icon-button color="primary" type="button" (click)="onAddClick()">
-    <mat-icon>add_circle_outline</mat-icon>
+    <mat-icon *ngIf="mode==='add'">add_circle_outline</mat-icon>
+    <mat-icon *ngIf="mode==='edit'">check_circle_outline</mat-icon>
+  </button>
+
+  <button *ngIf="mode === 'edit'" mat-icon-button color="accent" type="button" (click)="cancelEdit()">
+    <mat-icon>cancel</mat-icon>
   </button>
 
 </div>
+
+<!--
+
+  check_circle_outline
+
+-->

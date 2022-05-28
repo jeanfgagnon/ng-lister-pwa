@@ -8,9 +8,12 @@ import { IIDText } from 'src/app/models/interface-id-text';
 })
 export class QuickAddComponent implements OnInit {
 
+  private _editText = '';
   public quickText = '';
+  public mode: 'add' | 'edit' = 'add';
 
   @Output() itemAdded = new EventEmitter<IIDText>();
+  @Output() editCancelled = new EventEmitter();
   @Input() idHeader = '';
 
   constructor() { }
@@ -19,6 +22,10 @@ export class QuickAddComponent implements OnInit {
   }
 
   // event handlers
+
+  public cancelEdit(): void {
+    this.editCancelled.emit();
+  }
 
   public onAddClick(): void {
     if (this.quickText.trim() !== '') {
@@ -29,6 +36,12 @@ export class QuickAddComponent implements OnInit {
         });
       }
       this.quickText = '';
+      this.mode = 'add';
     }
+  }
+
+  @Input() set editText(text: string) {
+    this.quickText = text;
+    this.mode = text ? 'edit' : 'add';
   }
 }

@@ -29,6 +29,8 @@ import { registerLocaleData } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HeaderMenuComponent } from './components/list/header-menu/header-menu.component';
 
+import { LongPressDirective } from './directives/long-press.directive';
+
 registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
 
 @NgModule({
@@ -41,6 +43,7 @@ registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
     ListeComponent,
     QuickAddComponent,
     HeaderMenuComponent,
+    LongPressDirective,
   ],
   imports: [
     DragDropModule,
