@@ -34,7 +34,7 @@
 
         <app-check-list [header]="header" [isQuick]="header.id === 'quick'" [fromConsol]="true" (longPressed)="onLongPressed($event)" ></app-check-list>
         <app-quick-add *ngIf="header.id === 'quick' || header.id === quickHeaderId" class="cpc"
-          [editText]="quickEditText"
+          [editText]="header.id === 'quick' ? quickEditText : ''"
           [idHeader]="header.id"
           (editCancelled)="onEditCancelled()"
           (itemAdded)="onItemAdded($event)"></app-quick-add>

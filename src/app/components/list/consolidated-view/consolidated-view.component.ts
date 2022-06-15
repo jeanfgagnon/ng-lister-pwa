@@ -102,11 +102,12 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
   }
 
   public onItemAdded(idt: IIDText): void {
-    if (this.editedItem) {
+    if (idt.id === 'quick' && this.editedItem) {
       this.saveEditedItem(idt);
     }
     else {
       this.quickAdd(idt);
+      this.quickHeaderId = ''; // sort du quick add mode
     }
   }
 
@@ -163,14 +164,14 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
         this.persistService.query('items', true)
       ]
     );
-    tree$.pipe(takeUntil(this.unsubscribe$)).subscribe(
-      ([category, header, item]) => {
+    tree$.pipe(takeUntil(this.unsubscribe$)).subscribe({
+      next: ([category, header, item]) => {
         this.appendObject(this.categories, category);
         this.appendObject(this.headers, header);
         this.appendItem(item as ListItem);
       },
-      (error) => { },
-      (/* complete */) => {
+      error: (error) => { },
+      complete: () => {
         if (this.categories.length === 0) {
           // new installation, help new user
           this.route.navigate(['/Manage/FreshInstall']);
@@ -213,7 +214,7 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
           });
         });
       }
-    );
+    });
   }
 
   // retire les headers sans items et les catégories sans header
@@ -281,9 +282,7 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
               const subItem = this.persistService.newSubitemInstance(item.id);
               subItem.text = Tools.capitalize(splitted[i].trim());
               subItem.rank = (i + 1);
-              this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-                /* noop */
-              });
+              this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
             }
           }
         });
@@ -304,7 +303,7 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
           else {
             header.items.push(itm);
           }
-          this.persistService.put('items', itm.id, itm).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
+          this.persistService.put('items', itm.id, itm).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
         }
       });
     }
