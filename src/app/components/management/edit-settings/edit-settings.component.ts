@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Router } from '@angular/router';
@@ -21,14 +21,14 @@ export class EditSettingsComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<void>();
 
-  public formSettings: FormGroup;
+  public formSettings: UntypedFormGroup;
 
   constructor(
     private globalStateService: GlobalStateService,
     private persistService: PersistService,
     public dialog: MatDialog,
     private router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private ref: ChangeDetectorRef,
   ) { }
 
