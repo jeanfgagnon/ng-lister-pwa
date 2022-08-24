@@ -17,7 +17,8 @@
     "sash.hoverBorder": "#fbed80",
     "statusBarItem.remoteBackground": "#f9e64f",
     "statusBarItem.remoteForeground": "#15202b",
-    "tab.activeBorder": "#fbed80"
+    "tab.activeBorder": "#fbed80",
+    "commandCenter.border": "#15202b99"
   },
   "peacock.color": "#f9e64f"
 }
