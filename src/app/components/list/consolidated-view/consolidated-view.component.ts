@@ -278,11 +278,13 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
         this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
           if (header) {
             header.items.push(item);
-            for (let i = 0; i < splitted.length; i++) {
-              const subItem = this.persistService.newSubitemInstance(item.id);
-              subItem.text = Tools.capitalize(splitted[i].trim());
-              subItem.rank = (i + 1);
-              this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
+            if (header.id !== 'quick') {
+              for (let i = 0; i < splitted.length; i++) {
+                const subItem = this.persistService.newSubitemInstance(item.id);
+                subItem.text = Tools.capitalize(splitted[i].trim());
+                subItem.rank = (i + 1);
+                this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
+              }
             }
           }
         });
