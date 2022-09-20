@@ -29,6 +29,8 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
   public quickHeaderId = '';
   public quickEditText = '';
   public sortChecked = true;
+  public refreshed = false;
+  public openCategories: string[] = [];
 
   private items: ListItem[] = [];
   private editedItem: ListItem;
@@ -55,6 +57,7 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
   // event handlers
 
   public onRefreshClick(): void {
+    this.refreshed = true;
     this.loadAllData();
   }
 
@@ -111,10 +114,33 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  public panelOpened(idCategory: string): void {
+    this.openCategories.push(idCategory);
+    console.log('categories ouvertes: ', this.openCategories);
+  }
+
+  public panelClosed(idCategory: string): void {
+    const index = this.openCategories.findIndex(x => x === idCategory);
+    if (index >= 0) {
+      this.openCategories.splice(index, 1);
+    }
+    console.log('categories ouvertes: ', this.openCategories);
+  }
+
   // helpers
 
   public isListHaveDone(header: ListHeader): boolean {
     return header.items.filter(x => !x.checked).length > 0;
+  }
+
+  public getExpandState(category: ListCategory): boolean {
+    if (!this.refreshed) {
+      return category.isDefault;
+    }
+    else {
+      const index = this.openCategories.findIndex(x => x === category.id);
+      return index >= 0;
+    }
   }
 
   // private
@@ -188,6 +214,10 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
         });
 
         this.categories.forEach((category: ListCategory) => {
+          if (!this.refreshed && category.isDefault) {
+            this.openCategories.push(category.id);
+          }
+
           category.headers = category.headers.sort((a: ListHeader, b: ListHeader) => {
             return a.text.localeCompare(b.text);
           });

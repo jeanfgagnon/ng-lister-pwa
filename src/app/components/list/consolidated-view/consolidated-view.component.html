@@ -1,7 +1,11 @@
 <div *ngIf="cleaned" class="pc-consol">
 
   <mat-accordion multi="true" displayMode='flat' class="cpc">
-    <mat-expansion-panel *ngFor="let category of categories" [expanded]="category.isDefault" class="mat-elevation-z0">
+    <mat-expansion-panel
+        *ngFor="let category of categories" [expanded]="getExpandState(category)" class="mat-elevation-z0"
+        (afterExpand)="panelOpened(category.id)"
+        (afterCollapse)="panelClosed(category.id)"
+    >
 
       <mat-expansion-panel-header collapsedHeight="20" expandedHeight="20">
         <mat-panel-title class='my-panel-header-title'>
