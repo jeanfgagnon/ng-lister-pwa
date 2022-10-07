@@ -74,7 +74,9 @@ export class CheckItemComponent implements OnInit, OnDestroy {
       this.persistService.put('subitems', this.subItems[src - 1].id, this.subItems[src - 1]).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
       if (event.checked) {
         this.item.checked = true;
-        this.persistService.put('items', this.item.id, this.item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
+        this.persistService.put('items', this.item.id, this.item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+          this.checkChange.emit(event.checked);
+        });
       }
     }
   }
