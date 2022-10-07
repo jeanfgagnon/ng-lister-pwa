@@ -15,7 +15,7 @@ import { PersistService } from 'src/app/services/persist.service';
   styleUrls: ['./check-item.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class CheckItemComponent implements OnInit, OnDestroy  {
+export class CheckItemComponent implements OnInit, OnDestroy {
 
   public subItems: SubItem[] = [];
 
@@ -31,11 +31,22 @@ export class CheckItemComponent implements OnInit, OnDestroy  {
 
   ngOnInit(): void {
     if (this.item) {
-      this.persistService.query('subitems', true).pipe(takeUntil(this.unsubscribe$)).subscribe((subitem: SubItem) => {
-        if (subitem.idItem === this.item.id) {
-          this.subItems.push(subitem);
-        }
-      });
+      if (this.item.subs && this.item.subs.length == 0) {
+        this.persistService.query('subitems', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
+          next: (subitem: SubItem) => {
+            if (subitem.idItem === this.item.id) {
+              this.item.subs.push(subitem);
+            }
+          },
+          error: (err: any) => {},
+          complete: () => {
+            this.subItems = this.item.subs;
+          }
+        });
+      }
+      else {
+        this.subItems = this.item.subs;
+      }
     }
   }
 

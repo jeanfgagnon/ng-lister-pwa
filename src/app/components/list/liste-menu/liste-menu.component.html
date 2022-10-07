@@ -2,7 +2,9 @@
 
   <div *ngIf="!isQuick" fxFill fxLayout='column'>
     <div fxFlex='56px'>
-      <app-header-menu (selected)="headerSelected($event)" [listHeaders]="sortedHeaders()" [selectedIdHeader]="selectedIdHeader"></app-header-menu>
+      <!-- sur la tabarnak de ligne suivante, essayer la var headers au lieu de sortedHeaders pour accelerer la putain de page sale -->
+      <app-header-menu (selected)="headerSelected($event)" [listHeaders]="headers" [selectedIdHeader]="selectedIdHeader"></app-header-menu>
+      <!-- <app-header-menu (selected)="headerSelected($event)" [listHeaders]="sortedHeaders()" [selectedIdHeader]="selectedIdHeader"></app-header-menu> -->
     </div>
     <div fxFlex (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
       <app-check-list [header]="header" [fromConsol]="false" (itemClicked)="onItemClicked($event)"></app-check-list>

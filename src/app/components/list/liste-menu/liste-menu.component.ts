@@ -94,12 +94,13 @@ export class ListeComponent implements OnInit, OnDestroy {
       if (duration < 1000 //
         && Math.abs(direction[0]) > 30 // Long enough
         && Math.abs(direction[0]) > Math.abs(direction[1] * 3)) { // Horizontal enough
-          const swipeDir: number = direction[0] < 0 ?  1 : -1;
-          let index = this.headers.findIndex(x => x.id === this.selectedIdHeader) + swipeDir;
-          if (index >= 0 && index < this.headers.length) {
-            this.header = this.headers[index];
-            this.selectedIdHeader = this.header.id;
-          }
+        const swipeDir: number = direction[0] < 0 ? 1 : -1;
+        let index = this.headers.findIndex(x => x.id === this.selectedIdHeader) + swipeDir;
+        if (index >= 0 && index < this.headers.length) {
+          this.header = this.headers[index];
+          this.loadItems(this.header);
+          this.selectedIdHeader = this.header.id;
+        }
       }
     }
   }
@@ -107,6 +108,7 @@ export class ListeComponent implements OnInit, OnDestroy {
   public headerSelected(idHeader: string): void {
     this.selectedIdHeader = idHeader;
     this.header = this.headers.find(x => x.id === idHeader);
+    this.loadItems(this.header);
   }
 
   public onItemClicked(idHeader: string): void {
@@ -176,41 +178,43 @@ export class ListeComponent implements OnInit, OnDestroy {
         if (header.idCategory === id) {
           noFlickerHeaders.push(header);
           header.items = [];
-          this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
-            next: (item: ListItem) => {
-              if (item.idHeader === header.id) {
-                header.items.push(item);
-              }
-            },
 
-            error: (err) => { },
+          // pk pas mover ce merdier dans le complete du query precedent?
+          // this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
+          //   next: (item: ListItem) => {
+          //     if (item.idHeader === header.id) {
+          //       header.items.push(item);
+          //     }
+          //   },
 
-            complete: (/* complete */) => {
-              if (header.items.filter(x => x.checked).length > 0) {
-                header.text += '*';
-              }
-              if (header.id === 'quick') {
-                header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-                  return i1.rank - i2.rank;
-                });
-              }
-              else {
-                if (this.sortChecked) {
-                  header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-                    const i1check = i1.checked ? 1 : 0;
-                    const i2check = i2.checked ? 1 : 0;
-                    return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
-                  });
-                }
-                else {
-                  header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-                    return i1.text.localeCompare(i2.text)
-                  });
-                }
-              }
-            }
+          //   error: (err) => { },
 
-          });
+          //   complete: (/* complete */) => {
+          //     if (header.items.filter(x => x.checked).length > 0) {
+          //       header.text += '*';
+          //     }
+          //     if (header.id === 'quick') {
+          //       header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+          //         return i1.rank - i2.rank;
+          //       });
+          //     }
+          //     else {
+          //       if (this.sortChecked) {
+          //         header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+          //           const i1check = i1.checked ? 1 : 0;
+          //           const i2check = i2.checked ? 1 : 0;
+          //           return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
+          //         });
+          //       }
+          //       else {
+          //         header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+          //           return i1.text.localeCompare(i2.text)
+          //         });
+          //       }
+          //     }
+          //   }
+
+          // });
         }
       },
 
@@ -227,10 +231,59 @@ export class ListeComponent implements OnInit, OnDestroy {
         else {
           this.header = this.sortedHeaders()[0];
         }
+
+        this.loadItems(this.header);
+
+        // ici loader les items juste du this.header pour activer la criss de page.
         this.selectedIdHeader = this.header.id;
-        this.loaded = true;
+        // this.loaded = true;
       }
 
+    });
+  }
+
+  private loadItems(header: ListHeader): void {
+    if (this.header.items && this.header.items.length > 0) {
+      return;
+    }
+
+    this.loaded = false;
+
+    this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
+      next: (item: ListItem) => {
+        if (item.idHeader === header.id) {
+          header.items.push(item);
+        }
+      },
+
+      error: (err) => { },
+
+      complete: (/* complete */) => {
+        if (header.items.filter(x => x.checked).length > 0) {
+          header.text += '*';
+        }
+        if (header.id === 'quick') {
+          header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+            return i1.rank - i2.rank;
+          });
+        }
+        else {
+          if (this.sortChecked) {
+            header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+              const i1check = i1.checked ? 1 : 0;
+              const i2check = i2.checked ? 1 : 0;
+              return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
+            });
+          }
+          else {
+            header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+              return i1.text.localeCompare(i2.text)
+            });
+          }
+        }
+
+        this.loaded = true;
+      }
     });
   }
 
