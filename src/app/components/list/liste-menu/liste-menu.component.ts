@@ -178,43 +178,6 @@ export class ListeComponent implements OnInit, OnDestroy {
         if (header.idCategory === id) {
           noFlickerHeaders.push(header);
           header.items = [];
-
-          // pk pas mover ce merdier dans le complete du query precedent?
-          // this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
-          //   next: (item: ListItem) => {
-          //     if (item.idHeader === header.id) {
-          //       header.items.push(item);
-          //     }
-          //   },
-
-          //   error: (err) => { },
-
-          //   complete: (/* complete */) => {
-          //     if (header.items.filter(x => x.checked).length > 0) {
-          //       header.text += '*';
-          //     }
-          //     if (header.id === 'quick') {
-          //       header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-          //         return i1.rank - i2.rank;
-          //       });
-          //     }
-          //     else {
-          //       if (this.sortChecked) {
-          //         header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-          //           const i1check = i1.checked ? 1 : 0;
-          //           const i2check = i2.checked ? 1 : 0;
-          //           return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
-          //         });
-          //       }
-          //       else {
-          //         header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-          //           return i1.text.localeCompare(i2.text)
-          //         });
-          //       }
-          //     }
-          //   }
-
-          // });
         }
       },
 
@@ -233,12 +196,8 @@ export class ListeComponent implements OnInit, OnDestroy {
         }
 
         this.loadItems(this.header);
-
-        // ici loader les items juste du this.header pour activer la criss de page.
         this.selectedIdHeader = this.header.id;
-        // this.loaded = true;
       }
-
     });
   }
 
