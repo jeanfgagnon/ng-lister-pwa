@@ -61,23 +61,21 @@ export class CheckItemComponent implements OnInit, OnDestroy {
     if (src === 0) {
       // persist item
       this.item.checked = event.checked;
+      if (!event.checked) {
+        this.uncheckSubs();
+      }
       this.persistService.put('items', this.item.id, this.item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
         this.checkChange.emit(event.checked);
-        if (!event.checked) {
-          this.uncheckSubs();
-        }
       });
     }
     else {
       // persist subitem
       this.subItems[src - 1].checked = event.checked;
-      this.persistService.put('subitems', this.subItems[src - 1].id, this.subItems[src - 1]).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
       if (event.checked) {
         this.item.checked = true;
-        this.persistService.put('items', this.item.id, this.item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-          this.checkChange.emit(event.checked);
-        });
+        this.checkChange.emit(true);
       }
+      this.persistService.put('items', this.item.id, this.item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
     }
   }
 
@@ -86,7 +84,6 @@ export class CheckItemComponent implements OnInit, OnDestroy {
   private uncheckSubs(): void {
     this.subItems.forEach((s: SubItem) => {
       s.checked = false;
-      this.persistService.put('subitems', s.id, s).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
     });
   }
 }
