@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs/operators';
 
@@ -21,10 +21,9 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-liste-menu',
   templateUrl: './liste-menu.component.html',
-  styleUrls: ['./liste-menu.component.scss']
+  styleUrls: ['./liste-menu.component.scss'],
 })
 export class ListeComponent implements OnInit, OnDestroy {
-
   private swipeCoord?: [number, number];
   private swipeTime?: number;
 
@@ -42,31 +41,36 @@ export class ListeComponent implements OnInit, OnDestroy {
     private persistService: PersistService,
     private globalStateService: GlobalStateService,
     private activatedRoute: ActivatedRoute,
-    public dialog: MatDialog,
-  ) { }
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.sortChecked = this.globalStateService.getSetting('sort-checked') === '1';
+    this.sortChecked =
+      this.globalStateService.getSetting('sort-checked') === '1';
 
     this.globalStateService.message$.subscribe((m: string) => {
       if (m === 'DefaultCategory') {
-        this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory, '');
+        this.loadDataByCategoryId(
+          this.globalStateService.CurrentSelectedIdCategory,
+          ''
+        );
       }
     });
 
-    this.activatedRoute.params.subscribe(params => {
+    this.activatedRoute.params.subscribe((params) => {
       if (params.id) {
-        this.isQuick = (params.id === 'quick');
+        this.isQuick = params.id === 'quick';
         this.selectedIdHeader = params.idheader;
         this.loadDataByCategoryId(params.id, params.idheader);
         this.globalStateService.CurrentSelectedIdCategory = params.id;
-      }
-      else {
+      } else {
         if (this.globalStateService.CurrentSelectedIdCategory) {
-          this.loadDataByCategoryId(this.globalStateService.CurrentSelectedIdCategory, '');
+          this.loadDataByCategoryId(
+            this.globalStateService.CurrentSelectedIdCategory,
+            ''
+          );
           this.globalStateService.sendMessage('SelectedCategory');
-        }
-        else {
+        } else {
           this.findDefaultCategory();
         }
       }
@@ -81,21 +85,32 @@ export class ListeComponent implements OnInit, OnDestroy {
   // event handlers
 
   public swipe(e: TouchEvent, when: string): void {
-    const coord: [number, number] = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
+    const coord: [number, number] = [
+      e.changedTouches[0].clientX,
+      e.changedTouches[0].clientY,
+    ];
     const time = new Date().getTime();
 
     if (when === 'start') {
       this.swipeCoord = coord;
       this.swipeTime = time;
     } else if (when === 'end') {
-      const direction = [coord[0] - this.swipeCoord[0], coord[1] - this.swipeCoord[1]];
+      const direction = [
+        coord[0] - this.swipeCoord[0],
+        coord[1] - this.swipeCoord[1],
+      ];
       const duration = time - this.swipeTime;
 
-      if (duration < 1000 //
-        && Math.abs(direction[0]) > 30 // Long enough
-        && Math.abs(direction[0]) > Math.abs(direction[1] * 3)) { // Horizontal enough
+      if (
+        duration < 1000 && //
+        Math.abs(direction[0]) > 30 && // Long enough
+        Math.abs(direction[0]) > Math.abs(direction[1] * 3)
+      ) {
+        // Horizontal enough
         const swipeDir: number = direction[0] < 0 ? 1 : -1;
-        let index = this.headers.findIndex(x => x.id === this.selectedIdHeader) + swipeDir;
+        let index =
+          this.headers.findIndex((x) => x.id === this.selectedIdHeader) +
+          swipeDir;
         if (index >= 0 && index < this.headers.length) {
           this.header = this.headers[index];
           this.loadItems(this.header);
@@ -107,17 +122,16 @@ export class ListeComponent implements OnInit, OnDestroy {
 
   public headerSelected(idHeader: string): void {
     this.selectedIdHeader = idHeader;
-    this.header = this.headers.find(x => x.id === idHeader);
+    this.header = this.headers.find((x) => x.id === idHeader);
     this.loadItems(this.header);
   }
 
   public onItemClicked(idHeader: string): void {
-    const h = this.headers.find(x => x.id === idHeader);
+    const h = this.headers.find((x) => x.id === idHeader);
     if (h) {
-      if (h.items.filter(x => x.checked).length === 0) {
+      if (h.items.filter((x) => x.checked).length === 0) {
         h.text = h.text.replace(/\*/, '');
-      }
-      else if (h.text.indexOf('*') === -1) {
+      } else if (h.text.indexOf('*') === -1) {
         h.text += '*';
       }
     }
@@ -125,24 +139,30 @@ export class ListeComponent implements OnInit, OnDestroy {
 
   public onItemAdded(idt: IIDText): void {
     this.quickAdd(idt);
-    const h = this.headers.find(x => x.id === idt.id);
+    const h = this.headers.find((x) => x.id === idt.id);
     if (h && h.text.indexOf('*') === -1) {
       h.text += '*';
     }
   }
 
   public confirmCompletedRemoval(header: ListHeader): void {
-    const dialogData = new ConfirmDialogModel('Permanently remove completed item?', 'Confirm Action');
+    const dialogData = new ConfirmDialogModel(
+      'Permanently remove completed item?',
+      'Confirm Action'
+    );
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '300px',
-      data: dialogData
+      data: dialogData,
     });
 
-    dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe(dialogResult => {
-      if (dialogResult) {
-        this.deleteCompleted(header);
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((dialogResult) => {
+        if (dialogResult) {
+          this.deleteCompleted(header);
+        }
+      });
   }
 
   // helpers
@@ -154,7 +174,7 @@ export class ListeComponent implements OnInit, OnDestroy {
   }
 
   public nbUnchekedItems(header: ListHeader): number {
-    return header.items.filter(x => !x.checked).length;
+    return header.items.filter((x) => !x.checked).length;
   }
 
   // privates
@@ -162,7 +182,12 @@ export class ListeComponent implements OnInit, OnDestroy {
   private deleteCompleted(header: ListHeader): void {
     for (let i = header.items.length - 1; i >= 0; i--) {
       if (!header.items[i].checked) {
-        this.persistService.delete('items', header.items[i].id).pipe(takeUntil(this.unsubscribe$)).subscribe(() => { /* noop */ });
+        this.persistService
+          .delete('items', header.items[i].id)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(() => {
+            /* noop */
+          });
         header.items.splice(i, 1);
       }
     }
@@ -173,33 +198,62 @@ export class ListeComponent implements OnInit, OnDestroy {
     this.headers = [];
     this.loaded = false;
     const noFlickerHeaders: ListHeader[] = [];
-    this.persistService.query('headers', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
-      next: (header: ListHeader) => {
-        if (header.idCategory === id) {
-          noFlickerHeaders.push(header);
-          header.items = [];
-        }
-      },
+    this.persistService
+      .query('headers', true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (header: ListHeader) => {
+          if (header.idCategory === id) {
+            noFlickerHeaders.push(header);
+            header.items = [];
+          }
+        },
 
-      error: (err) => {
-      },
+        error: (err) => {},
 
-      complete: () => {
-        this.headers = noFlickerHeaders;
-        if (idheader) {
-          this.headers = this.sortedHeaders();
-          this.tabIndex = this.headers.findIndex(x => x.id === idheader);
-          this.header = this.headers[this.tabIndex];
-        }
-        else {
-          this.header = this.sortedHeaders()[0];
-        }
+        complete: () => {
+          this.headers = noFlickerHeaders;
+          if (idheader) {
+            this.headers = this.sortedHeaders();
+            this.tabIndex = this.headers.findIndex((x) => x.id === idheader);
+            this.header = this.headers[this.tabIndex];
+          } else {
+            this.header = this.sortedHeaders()[0];
+          }
 
-        this.loadItems(this.header);
-        this.selectedIdHeader = this.header.id;
-      }
-    });
+          this.loadItems(this.header);
+          this.selectedIdHeader = this.header.id;
+          this.gatherStars(this.headers, idheader);
+        },
+      });
   }
+
+  private gatherStars = (headers: ListHeader[], idheader: string): void => {
+    headers.map((header: ListHeader, index: number) => {
+      if (!!idheader) {
+        if (header.id === idheader) {
+          return;
+        }
+      } else if (index === 0) {
+        return;
+      }
+
+      const sub = this.persistService
+        .query('items', true)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: (item: ListItem) => {
+            if (item.idHeader === header.id && item.checked) {
+              header.text += '*';
+              sub.unsubscribe();
+            }
+          },
+
+          error: (err) => {},
+
+        });
+    });
+  };
 
   private loadItems(header: ListHeader): void {
     if (this.header.items && this.header.items.length > 0) {
@@ -208,79 +262,99 @@ export class ListeComponent implements OnInit, OnDestroy {
 
     this.loaded = false;
 
-    this.persistService.query('items', true).pipe(takeUntil(this.unsubscribe$)).subscribe({
-      next: (item: ListItem) => {
-        if (item.idHeader === header.id) {
-          header.items.push(item);
-        }
-      },
-
-      error: (err) => { },
-
-      complete: (/* complete */) => {
-        if (header.items.filter(x => x.checked).length > 0) {
-          header.text += '*';
-        }
-        if (header.id === 'quick') {
-          header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-            return i1.rank - i2.rank;
-          });
-        }
-        else {
-          if (this.sortChecked) {
-            header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-              const i1check = i1.checked ? 1 : 0;
-              const i2check = i2.checked ? 1 : 0;
-              return i2check - i1check || (i1.text < i2.text ? -1 : (i1.text > i2.text ? 1 : 0));
-            });
+    this.persistService
+      .query('items', true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (item: ListItem) => {
+          if (item.idHeader === header.id) {
+            header.items.push(item);
           }
-          else {
-            header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
-              return i1.text.localeCompare(i2.text)
-            });
-          }
-        }
+        },
 
-        this.loaded = true;
-      }
-    });
+        error: (err) => {},
+
+        complete: (/* complete */) => {
+          if (!header.text.endsWith('*') && header.items.filter((x) => x.checked).length > 0) {
+            header.text += '*';
+          }
+          if (header.id === 'quick') {
+            header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+              return i1.rank - i2.rank;
+            });
+          } else {
+            if (this.sortChecked) {
+              header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+                const i1check = i1.checked ? 1 : 0;
+                const i2check = i2.checked ? 1 : 0;
+                return (
+                  i2check - i1check ||
+                  (i1.text < i2.text ? -1 : i1.text > i2.text ? 1 : 0)
+                );
+              });
+            } else {
+              header.items = header.items.sort((i1: ListItem, i2: ListItem) => {
+                return i1.text.localeCompare(i2.text);
+              });
+            }
+          }
+
+          this.loaded = true;
+        },
+      });
   }
 
   private quickAdd(idt: IIDText): void {
-    this.persistService.exists<ListItem>('items', (itm: ListItem) => {
-      return idt.id === itm.idHeader && itm.text.toLowerCase() === idt.text.toLowerCase();
-    }).pipe(takeUntil(this.unsubscribe$)).subscribe((exist: boolean) => {
+    this.persistService
+      .exists<ListItem>('items', (itm: ListItem) => {
+        return (
+          idt.id === itm.idHeader &&
+          itm.text.toLowerCase() === idt.text.toLowerCase()
+        );
+      })
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((exist: boolean) => {
+        if (!exist) {
+          const splitted = idt.text.split(/[,;]/);
 
-      if (!exist) {
-        const splitted = idt.text.split(/[,;]/);
+          const item = this.persistService.newItemInstance(idt.id);
+          item.text = Tools.capitalize((splitted.shift() as string).trim());
+          item.checked = true;
 
-        const item = this.persistService.newItemInstance(idt.id);
-        item.text = Tools.capitalize((splitted.shift() as string).trim());
-        item.checked = true;
-
-        this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-          const header = this.headers.find(x => x.id === idt.id);
-          if (header) {
-            header.items.push(item);
-            for (let i = 0; i < splitted.length; i++) {
-              const subItem = this.persistService.newSubitemInstance(item.id);
-              subItem.text = Tools.capitalize(splitted[i].trim());
-              subItem.rank = (i + 1);
-              this.persistService.put('subitems', subItem.id, subItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => undefined);
-            }
-          }
-        });
-      }
-    });
+          this.persistService
+            .put('items', item.id, item as IListItem)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+              const header = this.headers.find((x) => x.id === idt.id);
+              if (header) {
+                header.items.push(item);
+                for (let i = 0; i < splitted.length; i++) {
+                  const subItem = this.persistService.newSubitemInstance(
+                    item.id
+                  );
+                  subItem.text = Tools.capitalize(splitted[i].trim());
+                  subItem.rank = i + 1;
+                  this.persistService
+                    .put('subitems', subItem.id, subItem)
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe(() => undefined);
+                }
+              }
+            });
+        }
+      });
   }
 
   // If luser is starting by Liste
   private findDefaultCategory(): void {
-    this.persistService.query('categories', true).pipe(takeUntil(this.unsubscribe$)).subscribe((cat: ListCategory) => {
-      if (cat.isDefault) {
-        this.globalStateService.CurrentSelectedIdCategory = cat.id;
-        this.loadDataByCategoryId(cat.id, '');
-      }
-    });
+    this.persistService
+      .query('categories', true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cat: ListCategory) => {
+        if (cat.isDefault) {
+          this.globalStateService.CurrentSelectedIdCategory = cat.id;
+          this.loadDataByCategoryId(cat.id, '');
+        }
+      });
   }
 }
