@@ -8,7 +8,7 @@
     </mat-card-title><br />
 
     <mat-form-field *ngIf="categories">
-      <mat-select placeholder="Category" name="category" (selectionChange)="onCategorySelected($event)"
+      <mat-select placeholder="Category" name="category" (selectionChange)="onCategorySelected($event.value)"
         [(ngModel)]="header.idCategory">
         <mat-option *ngFor="let cat of categories" [value]="cat.id">
           {{ cat.text }}

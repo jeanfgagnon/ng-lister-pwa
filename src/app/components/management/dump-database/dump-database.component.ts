@@ -1,8 +1,6 @@
 import { combineLatest, Subject } from 'rxjs';
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { saveAs } from 'file-saver';
-
 import { PersistService } from 'src/app/services/persist.service';
 
 import { ListCategory } from 'src/app/models/list-category';
