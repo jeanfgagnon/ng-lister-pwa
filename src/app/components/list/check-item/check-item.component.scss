@@ -7,14 +7,20 @@
 }
 
 .main-item {
-  font-size: 13pt;
+  font-size: 12pt;
 }
 
-.mat-checkbox-frame,
-.mat-checkbox-background,
-.mat-checkbox-anim-unchecked-checked
-.mat-checkbox-anim-checked-unchecked {
+.mdc-checkbox,
+.mdc-checkbox-frame,
+.mdc-checkbox-background,
+.mdc-checkbox-anim-unchecked-checked,
+.mdc-checkbox-anim-checked-unchecked {
   transform: scale(var(--my-scale));
+}
+
+.mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control {
+  width: 32px !important;
+  height: 32px !important;
 }
 
 .striked-text {

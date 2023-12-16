@@ -116,7 +116,6 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
 
   public panelOpened(idCategory: string): void {
     this.openCategories.push(idCategory);
-    console.log('categories ouvertes: ', this.openCategories);
   }
 
   public panelClosed(idCategory: string): void {
@@ -124,7 +123,6 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
     if (index >= 0) {
       this.openCategories.splice(index, 1);
     }
-    console.log('categories ouvertes: ', this.openCategories);
   }
 
   // helpers
@@ -298,11 +296,10 @@ export class ConsolidatedViewComponent implements OnInit, OnDestroy {
 
         const header = this.headers.find(x => x.id === idt.id);
         const item = this.persistService.newItemInstance(idt.id);
-        item.text = Tools.capitalize((splitted.shift() as string).trim());
+        item.text = Tools.capitalize((splitted.shift() as string)).trim();
         item.checked = true;
         if (idt.id === 'quick') {
           item.rank = header.items.length;
-          console.log('rank ', item.rank);
         }
 
         this.persistService.put('items', item.id, item as IListItem).pipe(takeUntil(this.unsubscribe$)).subscribe(() => {

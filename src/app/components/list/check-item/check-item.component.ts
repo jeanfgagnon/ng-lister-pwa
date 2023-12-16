@@ -79,6 +79,11 @@ export class CheckItemComponent implements OnInit, OnDestroy {
     }
   }
 
+  public getFirstFlex = (): number => {
+    if (this.subItems.length === 0) return 100;
+    else return 40;
+  };
+  
   // privates
 
   private uncheckSubs(): void {

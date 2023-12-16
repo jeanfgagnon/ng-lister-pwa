@@ -1,8 +1,8 @@
 <div fxLayout='row'>
 
-  <div class="main-item kingsize" fxFlex="40" *ngIf="item">
+  <div class="main-item kingsize" [fxFlex]="getFirstFlex()" *ngIf="item">
     <mat-checkbox color="primary" (change)="onCheckboxChange($event, 0)" [checked]="item.checked">
-      <span [ngClass]="{'striked-text': isQuick && !item.checked}" title="{{item.id}}">{{ item?.text }}</span>
+      <span [ngClass]="{'striked-text': isQuick && !item.checked, 'main-item': true}" title="{{item.id}}">{{ item?.text }}</span>
     </mat-checkbox>
   </div>
 
@@ -13,7 +13,7 @@
 
   <div fxFlex="30" *ngIf="subItems.length > 1">
     <mat-checkbox color="primary" (change)="onCheckboxChange($event, 2)" [checked]="subItems[1].checked">
-      {{ subItems[1].text }}</mat-checkbox>
+      {{ subItems[1].text }}</mat-checkbox> 
   </div>
 
 </div>
