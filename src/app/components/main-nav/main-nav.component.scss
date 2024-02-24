@@ -3,7 +3,7 @@
 }
 
 .sidenav {
-  width: 200px;
+  width: 240px;
 }
 
 .sidenav .mat-toolbar {
@@ -38,6 +38,10 @@
     width: 16rem;
   }
 
+  .mat-icon.mat-icon-inline {
+    width: 24px !important;
+  }
+  
   .sidenav-header {
     background: mat.get-color-from-palette($primary, darker);
     color: mat.get-color-from-palette($primary, default-contrast);

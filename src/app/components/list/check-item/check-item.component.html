@@ -1,12 +1,12 @@
 <div fxLayout='row'>
 
-  <div class="main-item kingsize" [fxFlex]="getFirstFlex()" *ngIf="item">
+  <div class="main-item kingsize" [fxFlex]="getFlex(1)" *ngIf="item">
     <mat-checkbox color="primary" (change)="onCheckboxChange($event, 0)" [checked]="item.checked">
       <span [ngClass]="{'striked-text': isQuick && !item.checked, 'main-item': true}" title="{{item.id}}">{{ item?.text }}</span>
     </mat-checkbox>
   </div>
 
-  <div fxFlex="30" *ngIf="subItems.length > 0">
+  <div [fxFlex]="getFlex(2)" *ngIf="subItems.length > 0">
     <mat-checkbox color="primary" (change)="onCheckboxChange($event, 1)" [checked]="subItems[0].checked">
       {{ subItems[0].text }}</mat-checkbox>
   </div>

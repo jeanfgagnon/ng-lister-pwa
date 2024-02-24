@@ -8,12 +8,10 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  //overflow-y: scroll;
-  min-height: 100%;
 }
 
 .marge-50 {
-  margin-bottom: 50px;
+  margin-bottom: 50px !important;
 }
 
 .drag-placeholder {
