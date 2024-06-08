@@ -11,3 +11,12 @@ Comment modifier la bd:
               this.put('items', item.id, item).subscribe(_ => {});
             });
         }
+
+  11 Mai 2024
+
+  Comme classys (DM) ferme le site, alors je suis rendu dans une github pages. Fonctionne bien après quelques tweeks. Gratosssss. For life.
+
+  Pour que ça fonctionne sur https://jeanfgagnon.github.io/
+
+    - Il faut copier le index.html dans 404.html quand on déploie. ==> https://stackoverflow.com/questions/77755735/404-error-with-angular-routing-on-github-pages
+
