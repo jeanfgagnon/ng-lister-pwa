@@ -8,6 +8,7 @@ import { GlobalStateService } from 'src/app/services/global-state.service';
 import { ListCategory } from 'src/app/models/list-category';
 import { ThemingService } from 'src/app/services/theming.service';
 import { MatSidenav } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-nav',
@@ -32,7 +33,8 @@ export class MainNavComponent implements OnInit, OnDestroy  {
     private breakpointObserver: BreakpointObserver,
     private persistService: PersistService,
     private globalStateService: GlobalStateService,
-    private themingService: ThemingService
+    private themingService: ThemingService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {

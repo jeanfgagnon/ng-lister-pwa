@@ -1,25 +1,39 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>Menu&nbsp;<span class='small-font'>2.4.5</span></mat-toolbar>
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-toolbar>Menu&nbsp;<span class="small-font">2.4.5</span></mat-toolbar>
 
     <mat-nav-list>
-
       <div *ngIf="isHandset$ | async">
-
-        <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Consolidated']">Consolidated</a>
+        <a
+          mat-list-item
+          href="#"
+          (click)="drawer.toggle()"
+          [routerLink]="['/Consolidated']"
+          >Consolidated</a
+        >
 
         <mat-accordion multi displayMode="default">
           <mat-expansion-panel [expanded]="true" class="mat-elevation-z0">
             <mat-expansion-panel-header>
-              <mat-panel-title>
-                Categories
-              </mat-panel-title>
+              <mat-panel-title> Categories </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <a mat-list-item *ngFor="let cat of sortedCategories" href="#" (click)="drawer.toggle()"
-              [routerLink]="['/Liste', cat.id]" [ngClass]="{'fb': cat.isDefault}">{{ cat.text }}</a>
-
+            <a
+              mat-list-item
+              *ngFor="let cat of sortedCategories"
+              href="#"
+              (click)="drawer.toggle()"
+              [routerLink]="['/Liste', cat.id]"
+              [ngClass]="{ fb: cat.isDefault }"
+              >{{ cat.text }}</a
+            >
           </mat-expansion-panel>
         </mat-accordion>
 
@@ -28,59 +42,95 @@
         <mat-accordion multi displayMode="default">
           <mat-expansion-panel [expanded]="false" class="mat-elevation-z0">
             <mat-expansion-panel-header>
-              <mat-panel-title>
-                Manage
-              </mat-panel-title>
+              <mat-panel-title> Manage </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/ManageCategories']">Categories</a>
-            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/ManageLists']">Lists</a>
-            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/BackupDatabase']">Backup</a>
-            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/RestoreDatabase']">Restore</a>
+            <a
+              mat-list-item
+              href="#"
+              (click)="drawer.toggle()"
+              [routerLink]="['/Manage/ManageCategories']"
+              >Categories</a
+            >
+            <a
+              mat-list-item
+              href="#"
+              (click)="drawer.toggle()"
+              [routerLink]="['/Manage/ManageLists']"
+              >Lists</a
+            >
+            <a
+              mat-list-item
+              href="#"
+              (click)="drawer.toggle()"
+              [routerLink]="['/Manage/BackupDatabase']"
+              >Backup</a
+            >
+            <a
+              mat-list-item
+              href="#"
+              (click)="drawer.toggle()"
+              [routerLink]="['/Manage/RestoreDatabase']"
+              >Restore</a
+            >
             <a mat-list-item (click)="changeTheme(drawer)">
               <div fxLayout="row" fxLayoutGap="10">
                 <div>
                   {{ nextTheme }}
                 </div>
-                <mat-icon fxLayoutAlign="start center" [inline]="true">format_color_fill</mat-icon>
+                <mat-icon fxLayoutAlign="start center" [inline]="true"
+                  >format_color_fill</mat-icon
+                >
               </div>
-              
             </a>
-            <a mat-list-item href="#" (click)="drawer.toggle()" [routerLink]="['/Manage/EditSettings']">
+            <a
+              mat-list-item
+              href="#"
+              (click)="drawer.toggle()"
+              [routerLink]="['/Manage/EditSettings']"
+            >
               <div fxLayout="row" fxLayoutGap="10">
-                <div>
-                  Settings
-                </div>
-                <mat-icon fxLayoutAlign="start center" [inline]="true">settings</mat-icon>
-              </div>  
-            </a>           
+                <div>Settings</div>
+                <mat-icon fxLayoutAlign="start center" [inline]="true"
+                  >settings</mat-icon
+                >
+              </div>
+            </a>
           </mat-expansion-panel>
         </mat-accordion>
-
       </div>
 
       <div *ngIf="(isHandset$ | async) === false">
         <a mat-list-item href="#" [routerLink]="['/Liste']">List</a>
-        <a mat-list-item href="#" [routerLink]="['/Consolidated']">Consolidated</a>
+        <a mat-list-item href="#" [routerLink]="['/Consolidated']"
+          >Consolidated</a
+        >
         <mat-divider></mat-divider>
         <a mat-list-item href="#" [routerLink]="['/Manage']">Manage</a>
       </div>
-
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <div fxLayout='row' fxFlexFill>
-
+      <div fxLayout="row" fxFlexFill>
         <div fxFlex="70" fxLayoutAlign="start center">
-          <button type="button" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+          <button
+            type="button"
+            mat-icon-button
+            (click)="drawer.toggle()"
+            *ngIf="isHandset$ | async"
+          >
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
-          <span><b>Lister</b>&nbsp;<sup style='font-size: 8pt;'>by JFG</sup></span>
+          <span>
+            <b>Lister</b>&nbsp;<sup style="font-size: 8pt">by JFG</sup>
+          </span>
         </div>
 
-        <div fxFlex="30" fxLayoutAlign="center center" class='cat-name'>
-          {{ currentActionDisplay }}
+        <div fxFlex="30" fxLayoutAlign="center center" class="cat-name">
+          <a href="#" style="color: white; text-decoration: none;" [routerLink]="['/Consolidated']">
+            {{ currentActionDisplay }}</a
+          >
         </div>
       </div>
     </mat-toolbar>
