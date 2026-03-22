@@ -32,5 +32,5 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/lister/browser # Path to your compiled files
+          folder: dist/ng-lister-pwa
           branch: gh-pages # The branch the action will deploy to
