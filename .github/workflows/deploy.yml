@@ -27,7 +27,7 @@ jobs:
 
       - name: Add .nojekyll
         # Prevents GitHub from ignoring files starting with underscores
-        run: touch dist/lister/browser/.nojekyll
+        run: find dist/ -name "index.html" -execdir touch .nojekyll \;
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
