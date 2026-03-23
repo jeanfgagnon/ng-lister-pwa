@@ -1,5 +1,4 @@
-
-import { BrowserModule} from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -56,11 +55,12 @@ registerLocaleData(localeFr, 'fr-CA', localeFrExtra);
     MyMaterialModule,
     LayoutModule,
     ClipboardModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
-  providers: [
-    { provide: 'Window', useValue: window },
-  ],
-  bootstrap: [AppComponent]
+  providers: [{ provide: 'Window', useValue: window }],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
