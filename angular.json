@@ -71,8 +71,7 @@
               ],
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json",
-              "baseHref": "/ng-lister-pwa/",
-              "deployUrl": "/ng-lister-pwa/"
+              "baseHref": "/"
             }
           },
           "defaultConfiguration": ""

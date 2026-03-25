@@ -20,3 +20,10 @@ Comment modifier la bd:
 
     - Il faut copier le index.html dans 404.html quand on déploie. ==> https://stackoverflow.com/questions/77755735/404-error-with-angular-routing-on-github-pages
 
+
+25 mars 2026.
+
+Pour déployer en prod:
+1- ng build --configuration production --base-href /
+2- copier le dist/ng-lister-pwa/* dans /home/jfg/Dev/js/angular/jeanfgagnon.github.io/
+3- commit & push ce repo.
